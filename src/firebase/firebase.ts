@@ -23,6 +23,4 @@ export const initialiseFirebase = async () => {
   }
 };
 
-export const auth = firebase.auth();
-
-export const useAuth = () => FirebaseAuth();
+export const useAuth = () => firebase.auth();
