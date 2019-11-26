@@ -6,8 +6,10 @@ import * as serviceWorker from "./serviceWorker";
 import { initialiseFirebase } from "./firebase";
 
 (async () => {
+  const targetElement = document.getElementById("root");
+  ReactDOM.render(<p>Loading...</p>, targetElement);
   await initialiseFirebase();
-  ReactDOM.render(<App />, document.getElementById("root"));
+  ReactDOM.render(<App />, targetElement);
 })();
 
 // If you want your app to work offline and load faster, you can change
