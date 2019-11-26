@@ -22,6 +22,18 @@ Then login to Firebase
 firebase login
 ```
 
+### Install Dependencies
+
+To install the application depenencies, run
+
+```sh
+yarn
+
+# or if you are not so fancy
+
+npm install
+```
+
 ### Environment Variables
 
 To run this app setup `.env` file with your app details
