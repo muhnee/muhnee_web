@@ -1,4 +1,4 @@
-import firebase, { initializeApp, auth as FirebaseAuth } from "firebase/app";
+import firebase, { initializeApp } from "firebase/app";
 import "firebase/auth";
 
 export const initialiseFirebase = async () => {
