@@ -9,6 +9,7 @@ import { AuthenticationProvider } from "./providers/AuthenticationProvider";
 import { MuiThemeProvider } from "@material-ui/core";
 import muiTheme from "./config/theme";
 import useStyles from "./styles";
+import DashboardPage from "./pages/DashboardPage";
 
 // CoreComponent handles the router, the state in addition to Providers for hooks
 const Core: React.FC = ({ children }) => {
@@ -30,6 +31,7 @@ const App: React.FC = () => {
       <Switch>
         <Route path="/" component={LandingPage} exact />
         <Route path="/logout" component={LogoutPage} exact />
+        <Route path="/dashboard" component={DashboardPage} exact />
         <Route path="/" component={NotFoundPage} />
       </Switch>
     </Core>
