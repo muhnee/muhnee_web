@@ -4,13 +4,16 @@ import AuthenticationContext from "../../contexts/AuthenticationContext";
 import { Redirect } from "react-router";
 
 const LogoutPage: FC = () => {
-  const { isLoaded, user } = useContext(AuthenticationContext);
+  const { user } = useContext(AuthenticationContext);
+
   useEffect(() => {
     doSignOut();
   }, []);
+
   if (!user) {
     return <Redirect to="/" />;
   }
+
   return <div>Logging out...</div>;
 };
 
