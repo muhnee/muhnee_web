@@ -6,13 +6,21 @@ import NotFoundPage from "./pages/NotFoundPage";
 import LogoutPage from "./pages/LogoutPage";
 
 import { AuthenticationProvider } from "./providers/AuthenticationProvider";
+import { MuiThemeProvider } from "@material-ui/core";
+import muiTheme from "./config/theme";
+import useStyles from "./styles";
 
 // CoreComponent handles the router, the state in addition to Providers for hooks
 const Core: React.FC = ({ children }) => {
+  const classes = useStyles();
   return (
-    <Router>
-      <AuthenticationProvider>{children}</AuthenticationProvider>
-    </Router>
+    <MuiThemeProvider theme={muiTheme}>
+      <div className={classes.root}>
+        <Router>
+          <AuthenticationProvider>{children}</AuthenticationProvider>
+        </Router>
+      </div>
+    </MuiThemeProvider>
   );
 };
 
