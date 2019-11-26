@@ -5,6 +5,6 @@ export const doSignInWithGoogle = () => {
   firebase.auth().signInWithPopup(googleAuthProvider);
 };
 
-export const doSignOut = () => {
-  firebase.auth().signOut();
+export const doSignOut = async () => {
+  await firebase.auth().signOut();
 };
