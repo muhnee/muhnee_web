@@ -1,4 +1,5 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, auth } from "firebase/app";
+import "firebase/auth";
 
 export const initialiseFirebase = async () => {
   let config = null;
@@ -21,3 +22,5 @@ export const initialiseFirebase = async () => {
     console.error("No Firebase Config Provided.");
   }
 };
+
+export const useAuth = () => auth();

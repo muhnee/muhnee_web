@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { initialiseFirebase } from "./firebase";
+import { initialiseFirebase } from "./firebase/firebase";
 
 (async () => {
   const targetElement = document.getElementById("root");
