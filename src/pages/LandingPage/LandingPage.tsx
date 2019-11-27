@@ -10,10 +10,13 @@ import AuthenticationContext from "../../contexts/AuthenticationContext";
 import { doSignInWithGoogle } from "../../firebase/auth";
 
 import useStyles from "./styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const LandingPage: FC = () => {
   const { isLoaded, user } = useContext(AuthenticationContext);
+
   const classes = useStyles();
+  const isDesktop = useMediaQuery("(min-width:600px)");
 
   // if the user is logged in then redirect to dashboard
   if (isLoaded && user) {
@@ -24,19 +27,32 @@ const LandingPage: FC = () => {
     <div className={classes.root}>
       <div className={classes.leftContainer}>
         <div className={classes.loginContainer}>
-          <Typography variant="h5">Welcome to Muhnee Web</Typography>
+          <Typography variant="h5">Welcome to Muhnee</Typography>
           <Typography variant="body1" color="textSecondary">
-            Managing the muhnee
+            A simple way to manage your money.
           </Typography>
 
-          <div style={{ marginTop: "1.25rem" }}>
+          <div
+            style={{
+              marginTop: "1.25rem",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center"
+            }}
+          >
             <SignInWithGoogleButton onClick={() => doSignInWithGoogle()} />
           </div>
         </div>
       </div>
-      <div className={classes.rightContainer}>
-        <img src="/images/finance.svg" style={{ maxWidth: 300 }} alt="budget" />
-      </div>
+      {isDesktop && (
+        <div className={classes.rightContainer}>
+          <img
+            src="/images/finance.svg"
+            style={{ maxWidth: 300 }}
+            alt="budget"
+          />
+        </div>
+      )}
     </div>
   );
 };

@@ -1,22 +1,21 @@
 import React, { FC } from "react";
-import Button from "@material-ui/core/Button";
+
+import Avatar from "@material-ui/core/Avatar";
+import Chip from "@material-ui/core/Chip";
+
 import { SignInWithGoogleButtonProps } from "./types";
 
 const SignInWithGoogleButton: FC<SignInWithGoogleButtonProps> = ({
   onClick = () => {}
 }) => {
   return (
-    <Button
+    <Chip
+      size="medium"
+      style={{ backgroundColor: "#fff", border: "1px solid #ccc" }}
       onClick={onClick}
-      variant="contained"
-      style={{ backgroundColor: "#fff", padding: 18 }}
-    >
-      <img
-        src="/images/logos/google_logo.svg"
-        style={{ width: 18, marginRight: 18 }}
-      />
-      Sign in With Google
-    </Button>
+      avatar={<Avatar src="/images/logos/google_logo.svg" />}
+      label="Sign in With Google"
+    />
   );
 };
 
