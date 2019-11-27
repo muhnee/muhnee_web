@@ -7,8 +7,6 @@ import { useStyles } from "./styles";
 
 const AuthenticatedContainer: FC = ({ children }) => {
   const { isLoaded, user } = useContext(AuthenticationContext);
-  console.log("AuthenticatedContainer");
-  console.log(isLoaded, user);
   const classes = useStyles();
 
   if (isLoaded && !user) {
