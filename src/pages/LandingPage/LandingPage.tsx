@@ -7,10 +7,10 @@ import SignInWithGoogleButton from "../../components/buttons/SignInWithGoogleBut
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 
-import { doSignInWithGoogle } from "../../firebase/auth";
-
 import useStyles from "./styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+
+import { doSignInWithGoogle } from "../../firebase/firebase";
 
 const LandingPage: FC = () => {
   const { isLoaded, user } = useContext(AuthenticationContext);
@@ -18,6 +18,9 @@ const LandingPage: FC = () => {
   const classes = useStyles();
   const isDesktop = useMediaQuery("(min-width:600px)");
 
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  }
   // if the user is logged in then redirect to dashboard
   if (isLoaded && user) {
     return <Redirect to="/dashboard" />;

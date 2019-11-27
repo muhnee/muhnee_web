@@ -7,7 +7,6 @@ import MobileWarningBanner from "./components/MobileWarningBanner";
 
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import LogoutPage from "./pages/LogoutPage";
 import DashboardPage from "./pages/DashboardPage";
 
 import { AuthenticationProvider } from "./providers/AuthenticationProvider";
@@ -15,6 +14,7 @@ import { AuthenticationProvider } from "./providers/AuthenticationProvider";
 import muiTheme from "./config/theme";
 
 import useStyles from "./styles";
+import AuthenticatedContainer from "./containers/AuthenticatedContainer";
 
 // CoreComponent handles the router, the state in addition to Providers for hooks
 const Core: React.FC = ({ children }) => {
@@ -38,8 +38,9 @@ const App: React.FC = () => {
     <Core>
       <Switch>
         <Route path="/" component={LandingPage} exact />
-        <Route path="/logout" component={LogoutPage} exact />
-        <Route path="/dashboard" component={DashboardPage} exact />
+        <AuthenticatedContainer>
+          <Route path="/dashboard" component={DashboardPage} exact />
+        </AuthenticatedContainer>
         <Route path="/" component={NotFoundPage} />
       </Switch>
     </Core>

@@ -1,5 +1,6 @@
 import firebase, { initializeApp } from "firebase/app";
 import "firebase/auth";
+import googleAuthProvider from "./authProviders/googleAuthProvider";
 
 export const initialiseFirebase = async () => {
   let config = null;
@@ -24,3 +25,8 @@ export const initialiseFirebase = async () => {
 };
 
 export const useAuth = () => firebase.auth();
+
+export const doSignInWithGoogle = () =>
+  firebase.auth().signInWithPopup(googleAuthProvider);
+
+export const doSignOut = () => firebase.auth().signOut();
