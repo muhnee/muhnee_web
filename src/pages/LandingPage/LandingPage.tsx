@@ -24,12 +24,19 @@ const LandingPage: FC = () => {
     <div className={classes.root}>
       <div className={classes.leftContainer}>
         <div className={classes.loginContainer}>
-          <Typography variant="h5">Welcome to Muhnee Web</Typography>
+          <Typography variant="h5">Welcome to Muhnee</Typography>
           <Typography variant="body1" color="textSecondary">
-            Managing the muhnee
+            A simple way to manage your money.
           </Typography>
 
-          <div style={{ marginTop: "1.25rem" }}>
+          <div
+            style={{
+              marginTop: "1.25rem",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center"
+            }}
+          >
             <SignInWithGoogleButton onClick={() => doSignInWithGoogle()} />
           </div>
         </div>
