@@ -10,10 +10,13 @@ import AuthenticationContext from "../../contexts/AuthenticationContext";
 import { doSignInWithGoogle } from "../../firebase/auth";
 
 import useStyles from "./styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const LandingPage: FC = () => {
   const { isLoaded, user } = useContext(AuthenticationContext);
+
   const classes = useStyles();
+  const isDesktop = useMediaQuery("(min-width:600px)");
 
   // if the user is logged in then redirect to dashboard
   if (isLoaded && user) {
@@ -41,9 +44,15 @@ const LandingPage: FC = () => {
           </div>
         </div>
       </div>
-      <div className={classes.rightContainer}>
-        <img src="/images/finance.svg" style={{ maxWidth: 300 }} alt="budget" />
-      </div>
+      {isDesktop && (
+        <div className={classes.rightContainer}>
+          <img
+            src="/images/finance.svg"
+            style={{ maxWidth: 300 }}
+            alt="budget"
+          />
+        </div>
+      )}
     </div>
   );
 };
