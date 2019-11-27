@@ -4,10 +4,18 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { initialiseFirebase } from "./firebase/firebase";
+import { MuiThemeProvider } from "@material-ui/core";
+import LoadingContainer from "./containers/LoadingContainer";
+import muiTheme from "./config/theme";
 
 (async () => {
   const targetElement = document.getElementById("root");
-  ReactDOM.render(<p>Loading...</p>, targetElement);
+  ReactDOM.render(
+    <MuiThemeProvider theme={muiTheme}>
+      <LoadingContainer />
+    </MuiThemeProvider>,
+    targetElement
+  );
   await initialiseFirebase();
   ReactDOM.render(<App />, targetElement);
 })();
