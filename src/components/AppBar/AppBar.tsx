@@ -8,6 +8,8 @@ import Menu from "@material-ui/core/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 
+import PolicyLinks from "../PolicyLinks";
+
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 
 import { useStyles } from "./styles";
@@ -63,14 +65,7 @@ const AppBar: FC = () => {
             </div>
 
             <Divider />
-            <div className={classes.termsLink}>
-              <Typography variant="caption" color="textSecondary">
-                Privacy Policy
-              </Typography>
-              <Typography variant="caption" color="textSecondary">
-                Terms of Use
-              </Typography>
-            </div>
+            <PolicyLinks />
           </Menu>
         </div>
       </Toolbar>

@@ -1,8 +1,10 @@
 import React, { FC, useContext } from "react";
 import { Redirect } from "react-router";
 
+import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 
+import PolicyLinks from "../../components/PolicyLinks";
 import SignInWithGoogleButton from "../../components/buttons/SignInWithGoogleButton";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
@@ -37,7 +39,7 @@ const LandingPage: FC = () => {
 
           <div
             style={{
-              marginTop: "1.25rem",
+              margin: "1.25rem 0",
               display: "flex",
               flexDirection: "column",
               alignItems: "center"
@@ -45,6 +47,8 @@ const LandingPage: FC = () => {
           >
             <SignInWithGoogleButton onClick={() => doSignInWithGoogle()} />
           </div>
+          <Divider />
+          <PolicyLinks />
         </div>
       </div>
       {isDesktop && (
