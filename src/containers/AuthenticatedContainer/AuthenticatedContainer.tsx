@@ -7,23 +7,21 @@ import { useStyles } from "./styles";
 
 const AuthenticatedContainer: FC = ({ children }) => {
   const { isLoaded, user } = useContext(AuthenticationContext);
-
+  console.log("AuthenticatedContainer");
+  console.log(isLoaded, user);
   const classes = useStyles();
 
-  if (!isLoaded) {
-    return <div>Authenticating...</div>;
-  }
   if (isLoaded && !user) {
     //TODO: save previous state so when user logins state is persistent
     return <Redirect to="/" />;
-  } else {
-    return (
-      <div className={classes.root}>
-        <AppBar />
-        <>{children}</>
-      </div>
-    );
   }
+
+  return (
+    <div className={classes.root}>
+      <AppBar />
+      <>{children}</>
+    </div>
+  );
 };
 
 export default AuthenticatedContainer;

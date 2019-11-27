@@ -11,6 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 
 import { useStyles } from "./styles";
+import { doSignOut } from "../../firebase/firebase";
 
 const AppBar: FC = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -56,7 +57,7 @@ const AppBar: FC = () => {
               className={classes.userDialogHeader}
               style={{ marginTop: "0.5rem" }}
             >
-              <Button href="/logout" variant="outlined">
+              <Button onClick={() => doSignOut()} variant="outlined">
                 Sign out
               </Button>
             </div>
