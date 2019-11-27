@@ -1,7 +1,9 @@
 import React, { FC } from "react";
-import Button from "@material-ui/core/Button";
+
+import Avatar from "@material-ui/core/Avatar";
+import Chip from "@material-ui/core/Chip";
+
 import { SignInWithGoogleButtonProps } from "./types";
-import { ButtonBase, Chip, Avatar } from "@material-ui/core";
 
 const SignInWithGoogleButton: FC<SignInWithGoogleButtonProps> = ({
   onClick = () => {}
