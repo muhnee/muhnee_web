@@ -14,7 +14,6 @@ import AuthenticationContext from "../../contexts/AuthenticationContext";
 
 import { useStyles } from "./styles";
 import { doSignOut } from "../../firebase/firebase";
-import { Chip } from "@material-ui/core";
 
 const AppBar: FC = () => {
   const [anchorEl, setAnchorEl] = useState(null);

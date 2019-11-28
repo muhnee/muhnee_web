@@ -88,7 +88,6 @@ const DashboardPage: FC = () => {
             />
           </div>
         )}
-        <div>Charts and Diagrams here.</div>
       </div>
       <div className={classes.rightContainer}>
         <Typography variant="body1">Recent Transactions</Typography>
