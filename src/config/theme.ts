@@ -4,7 +4,9 @@ import { deepOrange, blue } from "@material-ui/core/colors";
 
 const theme: ThemeOptions = {
   palette: {
-    primary: blue,
+    primary: {
+      main: "#8E91F3"
+    },
     secondary: deepOrange
   }
 };
