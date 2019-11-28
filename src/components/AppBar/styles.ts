@@ -11,6 +11,7 @@ export const useStyles = makeStyles({
     borderBottom: "1px solid #ccc",
     alignItems: "center"
   },
+  logo: { color: "white" },
   navigationContainer: {
     flex: 1,
     justifyContent: "center"

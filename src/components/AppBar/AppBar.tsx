@@ -14,6 +14,7 @@ import AuthenticationContext from "../../contexts/AuthenticationContext";
 
 import { useStyles } from "./styles";
 import { doSignOut } from "../../firebase/firebase";
+import { Chip } from "@material-ui/core";
 
 const AppBar: FC = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -34,7 +35,9 @@ const AppBar: FC = () => {
     <ApplicationBar position="sticky">
       <Toolbar>
         <div className={classes.menuItems}>
-          <Typography variant="h6">Muhnee</Typography>
+          <Typography variant="h6" className={classes.logo}>
+            Muhnee
+          </Typography>
         </div>
         <div>
           <Avatar src={user.photoURL} onClick={handleClick} />
@@ -54,12 +57,25 @@ const AppBar: FC = () => {
                 {user.email}
               </Typography>
             </div>
+
             <Divider />
             <div
               className={classes.userDialogHeader}
               style={{ marginTop: "0.5rem" }}
             >
-              <Button onClick={() => doSignOut()} variant="outlined">
+              <Button
+                // onClick={() => doSignOut()}
+                variant="outlined"
+                color="primary"
+                disabled
+              >
+                My Account
+              </Button>
+              <Button
+                onClick={() => doSignOut()}
+                variant="outlined"
+                color="primary"
+              >
                 Sign out
               </Button>
             </div>
