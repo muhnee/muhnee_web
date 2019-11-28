@@ -30,6 +30,7 @@ import {
 import ExpenseIcon from "@material-ui/icons/CreditCard";
 import IncomeIcon from "@material-ui/icons/TrendingUp";
 import SummaryCard from "../../components/dashboard/SummaryCard";
+import AddTransactionModal from "../../components/AddTransactionModal";
 
 const DashboardPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -91,6 +92,7 @@ const DashboardPage: FC = () => {
       </div>
       <div className={classes.rightContainer}>
         <Typography variant="body1">Recent Transactions</Typography>
+        <AddTransactionModal />
         {loading && <CircularProgress />}
         {error && <span>An Error Occurred</span>}
         {monthlyTransactions && (
