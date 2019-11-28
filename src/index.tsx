@@ -9,6 +9,14 @@ import LoadingContainer from "./containers/LoadingContainer";
 import muiTheme from "./config/theme";
 
 (async () => {
+  // REDIRECT FROM FIREBASE HOSTED URLs
+  if (
+    window.location.hostname === "muhnee-app.web.app" ||
+    window.location.hostname === "muhnee-app.firebaseapp.com"
+  ) {
+    window.location.replace("http://web.muhneeapp.com");
+  }
+
   const targetElement = document.getElementById("root");
   ReactDOM.render(
     <MuiThemeProvider theme={muiTheme}>
