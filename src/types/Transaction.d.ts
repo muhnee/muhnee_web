@@ -18,4 +18,14 @@ export interface Transaction {
    * Timestamp
    */
   timestamp?: Date;
+
+  /**
+   * Whether or not the item is tax deductable
+   */
+  taxDeductible: boolean;
+
+  /**
+   * The type of transaction
+   */
+  type: "expense" | "income";
 }

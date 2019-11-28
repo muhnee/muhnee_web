@@ -2,7 +2,10 @@ import React, { FC, useContext } from "react";
 import firebase from "firebase";
 import moment from "moment";
 
-import { useCollectionData } from "react-firebase-hooks/firestore";
+import {
+  useCollectionData,
+  useDocumentData
+} from "react-firebase-hooks/firestore";
 
 import Typography from "@material-ui/core/Typography";
 
@@ -13,6 +16,19 @@ import { getGreeting } from "../../utils/greeting";
 import useStyles from "./styles";
 
 import { Transaction } from "../../types/Transaction";
+import { Summary } from "../../types/Summary";
+
+import {
+  List,
+  ListItem,
+  ListItemText,
+  Avatar,
+  ListItemAvatar,
+  CircularProgress
+} from "@material-ui/core";
+
+import ExpenseIcon from "@material-ui/icons/CreditCard";
+import IncomeIcon from "@material-ui/icons/TrendingUp";
 
 const DashboardPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -20,7 +36,7 @@ const DashboardPage: FC = () => {
 
   const today = moment();
   const thisMonth = `${today.year()}-${today.month()}`;
-  const [values, loading, error] = useCollectionData<Transaction>(
+  const [monthlyTransactions, loading, error] = useCollectionData<Transaction>(
     user
       ? firebase
           .firestore()
@@ -28,7 +44,18 @@ const DashboardPage: FC = () => {
           .doc(user.uid)
           .collection("budget")
           .doc(thisMonth)
-          .collection("expenses")
+          .collection("transactions")
+      : null
+  );
+
+  const [summary] = useDocumentData<Summary>(
+    user
+      ? firebase
+          .firestore()
+          .collection("users")
+          .doc(user.uid)
+          .collection("budget")
+          .doc(thisMonth)
       : null
   );
 
@@ -43,18 +70,51 @@ const DashboardPage: FC = () => {
           <Typography variant="h6">{`Good ${getGreeting(moment())}, ${
             user.displayName
           }`}</Typography>
-          <Typography variant="body1" color="textSecondary">
-            You are broke
+          <Typography variant="h5" className={classes.heading}>
+            {today.format("MMMM YYYY")}
           </Typography>
         </div>
+        {summary && (
+          <div>
+            <div>
+              <Typography variant="h5" className={classes.heading}>
+                {summary.expenses}
+              </Typography>
+              <Typography variant="h6" className={classes.heading}>
+                Expenses
+              </Typography>
+            </div>
+            <div>
+              <Typography variant="h5" className={classes.heading}>
+                {`$${summary.income}`}
+              </Typography>
+              <Typography variant="h6" className={classes.heading}>
+                income
+              </Typography>
+            </div>
+          </div>
+        )}
         <div>Charts and Diagrams here.</div>
       </div>
       <div className={classes.rightContainer}>
-        <Typography variant="body1" color="textPrimary">
-          Recent Transactions
-        </Typography>
-        {values &&
-          values.map((trans, i) => <div key={i}>{JSON.stringify(trans)}</div>)}
+        <Typography variant="body1">Recent Transactions</Typography>
+        {loading && <CircularProgress />}
+        {error && <span>An Error Occurred</span>}
+        {monthlyTransactions && (
+          <List>
+            {monthlyTransactions.map((trans: Transaction, i) => (
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar>
+                    {trans.type === "expense" && <ExpenseIcon />}
+                    {trans.type === "income" && <IncomeIcon />}
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary={trans.description} />
+              </ListItem>
+            ))}
+          </List>
+        )}
       </div>
     </div>
   );
