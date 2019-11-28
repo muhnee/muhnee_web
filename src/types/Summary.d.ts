@@ -12,10 +12,10 @@ export interface Summary {
   /**
    * total expenses for that month
    */
-  expenses?: number;
+  expenses: number;
 
   /**
    * total income for that month
    */
-  income?: number;
+  income: number;
 }

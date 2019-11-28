@@ -15,7 +15,10 @@ const useStyles = makeStyles({
     flex: 1,
     minWidth: 300
   },
-  heading: { color: "#0069E9", fontWeight: 700, fontFamily: "Montserrat" }
+  heading: { color: "#0069E9", fontWeight: 700, fontFamily: "Montserrat" },
+  summaryContainer: {
+    display: "flex"
+  }
 });
 
 export default useStyles;

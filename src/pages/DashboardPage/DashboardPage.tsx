@@ -29,6 +29,7 @@ import {
 
 import ExpenseIcon from "@material-ui/icons/CreditCard";
 import IncomeIcon from "@material-ui/icons/TrendingUp";
+import SummaryCard from "../../components/dashboard/SummaryCard";
 
 const DashboardPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -70,28 +71,21 @@ const DashboardPage: FC = () => {
           <Typography variant="h6">{`Good ${getGreeting(moment())}, ${
             user.displayName
           }`}</Typography>
-          <Typography variant="h5" className={classes.heading}>
+          <Typography variant="h5" color="primary">
             {today.format("MMMM YYYY")}
           </Typography>
         </div>
         {summary && (
-          <div>
-            <div>
-              <Typography variant="h5" className={classes.heading}>
-                {summary.expenses}
-              </Typography>
-              <Typography variant="h6" className={classes.heading}>
-                Expenses
-              </Typography>
-            </div>
-            <div>
-              <Typography variant="h5" className={classes.heading}>
-                {`$${summary.income}`}
-              </Typography>
-              <Typography variant="h6" className={classes.heading}>
-                income
-              </Typography>
-            </div>
+          <div className={classes.summaryContainer}>
+            <SummaryCard
+              title="Expenses"
+              amount={`$${summary.expenses.toFixed(2)}` || ""}
+              inverted
+            />
+            <SummaryCard
+              title="Income"
+              amount={`$${summary.income.toFixed(2)}` || ""}
+            />
           </div>
         )}
         <div>Charts and Diagrams here.</div>
