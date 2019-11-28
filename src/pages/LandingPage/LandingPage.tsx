@@ -12,7 +12,11 @@ import AuthenticationContext from "../../contexts/AuthenticationContext";
 import useStyles from "./styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
-import { doSignInWithGoogle } from "../../firebase/firebase";
+import {
+  doSignInWithGoogle,
+  doSignInWithFacebook
+} from "../../firebase/firebase";
+import SignInWithFacebookButton from "../../components/buttons/SignInWithFacebookButton";
 
 const LandingPage: FC = () => {
   const { isLoaded, user } = useContext(AuthenticationContext);
@@ -46,6 +50,7 @@ const LandingPage: FC = () => {
             }}
           >
             <SignInWithGoogleButton onClick={() => doSignInWithGoogle()} />
+            <SignInWithFacebookButton onClick={() => doSignInWithFacebook()} />
           </div>
           <Divider />
           <PolicyLinks />
