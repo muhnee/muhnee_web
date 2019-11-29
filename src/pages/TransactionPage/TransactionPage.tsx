@@ -11,12 +11,13 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";
 
+import LoadingContainer from "../../containers/LoadingContainer";
+
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 
 import { Transaction } from "../../types/Transaction";
 
 import useStyles from "./styles";
-import LoadingContainer from "../../containers/LoadingContainer";
 
 const TransactionPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -106,7 +107,7 @@ const TransactionPage: FC = () => {
         open={warningDialogOpen}
         onClose={() => setWarningDialogOpen(false)}
       >
-        <DialogTitle id="alert-dialog-title">
+        <DialogTitle>
           {"Are you sure you want to delete this transaction?"}
         </DialogTitle>
         <DialogContent>
