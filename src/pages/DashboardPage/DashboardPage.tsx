@@ -39,6 +39,7 @@ const DashboardPage: FC = () => {
           .collection("budget")
           .doc(thisMonth)
           .collection("transactions")
+          .orderBy("timestamp", "desc")
       : null
   );
 
