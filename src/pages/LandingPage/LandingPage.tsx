@@ -1,10 +1,11 @@
 import React, { FC, useContext } from "react";
 import { Redirect } from "react-router";
+import moment from "moment";
 
 import Divider from "@material-ui/core/Divider";
+import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 
-import PolicyLinks from "../../components/PolicyLinks";
 import SignInWithGoogleButton from "../../components/buttons/SignInWithGoogleButton";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
@@ -12,7 +13,11 @@ import AuthenticationContext from "../../contexts/AuthenticationContext";
 import useStyles from "./styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
-import { doSignInWithGoogle } from "../../firebase/firebase";
+import {
+  doSignInWithGoogle,
+  doSignInWithFacebook
+} from "../../firebase/firebase";
+import SignInWithFacebookButton from "../../components/buttons/SignInWithFacebookButton";
 
 const LandingPage: FC = () => {
   const { isLoaded, user } = useContext(AuthenticationContext);
@@ -46,9 +51,34 @@ const LandingPage: FC = () => {
             }}
           >
             <SignInWithGoogleButton onClick={() => doSignInWithGoogle()} />
+            <SignInWithFacebookButton onClick={() => doSignInWithFacebook()} />
           </div>
           <Divider />
-          <PolicyLinks />
+
+          <div style={{ marginTop: "0.5rem" }}>
+            <Typography variant="caption">
+              By signing in you are accepting our{" "}
+              <Link
+                href="https://www.notion.so/Privacy-13ae75755f0e49c28a1a19a607931665"
+                target="_blank"
+              >
+                Privacy Policy
+              </Link>{" "}
+              and our{" "}
+              <Link
+                href="https://www.notion.so/muhnee/Terms-of-Use-a10d1dd98f044d1b9799f39fca4e387a"
+                target="_blank"
+              >
+                Terms of Use
+              </Link>{" "}
+              policies.
+            </Typography>
+          </div>
+          <div style={{ marginTop: "0.5rem" }}>
+            <Typography variant="caption">
+              Copyright &copy; Muhnee {moment().year()}
+            </Typography>
+          </div>
         </div>
       </div>
       {isDesktop && (

@@ -14,6 +14,10 @@ const useStyles = makeStyles({
   rightContainer: {
     flex: 1,
     minWidth: 300
+  },
+  heading: { color: "#0069E9", fontWeight: 700, fontFamily: "Montserrat" },
+  summaryContainer: {
+    display: "flex"
   }
 });
 

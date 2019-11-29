@@ -2,6 +2,7 @@ import firebase, { initializeApp } from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import googleAuthProvider from "./authProviders/googleAuthProvider";
+import facebookAuthProvider from "./authProviders/facebookAuthProvider";
 
 export const initialiseFirebase = async () => {
   let config = null;
@@ -31,5 +32,8 @@ export const useFirestore = () => firebase.firestore();
 
 export const doSignInWithGoogle = () =>
   firebase.auth().signInWithPopup(googleAuthProvider);
+
+export const doSignInWithFacebook = () =>
+  firebase.auth().signInWithPopup(facebookAuthProvider);
 
 export const doSignOut = () => firebase.auth().signOut();

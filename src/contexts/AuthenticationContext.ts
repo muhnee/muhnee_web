@@ -3,10 +3,7 @@ import { AuthenticationContextState } from "./types";
 
 const AuthenticationContext = React.createContext<AuthenticationContextState>({
   isLoaded: false,
-  user: null,
-  isTokenLoaded: false,
-  token: null,
-  refreshToken: () => {}
+  user: null
 });
 
 export default AuthenticationContext;

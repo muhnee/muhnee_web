@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useCallback } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { User } from "firebase/app";
 import { useAuth } from "../firebase/firebase";
 import AuthenticationContext from "../contexts/AuthenticationContext";
@@ -14,11 +14,6 @@ export const AuthenticationProvider: FC = props => {
   const [userLoaded, setUserLoaded] = useState(false);
   const [user, setUser] = useState<Nullable<User>>(auth.currentUser);
 
-  const [tokenLoaded, setTokenLoaded] = useState(false);
-  const [token, setToken] = useState<Nullable<firebase.auth.IdTokenResult>>(
-    null
-  );
-
   useEffect(() => {
     auth.onAuthStateChanged(userInfo => {
       console.debug(
@@ -31,28 +26,11 @@ export const AuthenticationProvider: FC = props => {
     });
   }, [auth]);
 
-  useEffect(() => {
-    if (user && !token) {
-      user.getIdTokenResult(true).then(result => {
-        setToken(result);
-        setTokenLoaded(true);
-      });
-    }
-  }, [user, token, setToken]);
-
-  const refreshToken = useCallback(() => {
-    setToken(null);
-    setTokenLoaded(false);
-  }, [setToken]);
-
   return (
     <AuthenticationContext.Provider
       value={{
         isLoaded: userLoaded,
-        user,
-        isTokenLoaded: tokenLoaded,
-        token,
-        refreshToken
+        user
       }}
     >
       {props.children}
