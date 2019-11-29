@@ -45,13 +45,16 @@ const AddTransactionModal: FC = () => {
         .collection("transactions")
         .add({
           type,
-          amount,
+          amount: +amount,
           description,
           taxDeductible,
           timestamp: selectedDate.toDate()
         })
         .then(() => {
           onClose();
+        })
+        .catch(err => {
+          console.error(err);
         });
     }
   };
