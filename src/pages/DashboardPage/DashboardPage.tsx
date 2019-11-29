@@ -98,7 +98,7 @@ const DashboardPage: FC = () => {
         {monthlyTransactions && (
           <List>
             {monthlyTransactions.map((trans: Transaction, i) => (
-              <ListItem>
+              <ListItem key={i}>
                 <ListItemAvatar>
                   <Avatar>
                     {trans.type === "expense" && <ExpenseIcon />}

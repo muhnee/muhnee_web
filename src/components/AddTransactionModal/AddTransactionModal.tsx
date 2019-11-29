@@ -1,5 +1,6 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useContext } from "react";
 import moment from "moment";
+import firebase from "firebase";
 
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -18,8 +19,11 @@ import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import MomentUtils from "@date-io/moment";
 import useStyles from "./styles";
+import AuthenticationContext from "../../contexts/AuthenticationContext";
 
 const AddTransactionModal: FC = () => {
+  const { user } = useContext(AuthenticationContext);
+
   const [open, setOpen] = useState(false);
 
   const [type, setType] = useState("expense");
@@ -29,6 +33,28 @@ const AddTransactionModal: FC = () => {
   const [selectedDate, handleDateChange] = useState<MaterialUiPickersDate>(
     moment()
   );
+
+  const addData = () => {
+    if (user && selectedDate) {
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .collection("budget")
+        .doc(`${selectedDate.year()}-${selectedDate.month()}`)
+        .collection("transactions")
+        .add({
+          type,
+          amount,
+          description,
+          taxDeductible,
+          timestamp: selectedDate.toDate()
+        })
+        .then(() => {
+          onClose();
+        });
+    }
+  };
 
   const classes = useStyles();
 
@@ -42,6 +68,10 @@ const AddTransactionModal: FC = () => {
   ) => {
     setTaxDeductible(checked);
   };
+
+  if (!user || !user.uid) {
+    return <span>An Error Occured</span>;
+  }
 
   return (
     <>
@@ -108,6 +138,7 @@ const AddTransactionModal: FC = () => {
             />
           </DialogContent>
           <DialogActions>
+            <Button onClick={addData}>Add</Button>
             <Button onClick={onClose}>Cancel</Button>
           </DialogActions>
         </Dialog>
