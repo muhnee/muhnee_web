@@ -4,11 +4,6 @@ import { useParams, Redirect, useHistory } from "react-router-dom";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 
 import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";
 
 import LoadingContainer from "../../containers/LoadingContainer";
@@ -18,6 +13,7 @@ import AuthenticationContext from "../../contexts/AuthenticationContext";
 import { Transaction } from "../../types/Transaction";
 
 import useStyles from "./styles";
+import DeleteTransactionWarningDialog from "../../components/dialogs/DeleteTransactionWarningDialog";
 
 const TransactionPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -103,39 +99,13 @@ const TransactionPage: FC = () => {
       >
         Delete Transaction
       </Button>
-      <Dialog
+      <DeleteTransactionWarningDialog
         open={warningDialogOpen}
-        onClose={() => setWarningDialogOpen(false)}
-      >
-        <DialogTitle>
-          {"Are you sure you want to delete this transaction?"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Deleting this transaction is not recoverable, you will need to readd
-            this record, if you hav deleted this transaction
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => {
-              setWarningDialogOpen(false);
-            }}
-            color="primary"
-            autoFocus
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              onDeleteTransaction();
-            }}
-            color="secondary"
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onClose={() => {
+          setWarningDialogOpen(false);
+        }}
+        onDeleteTransaction={() => onDeleteTransaction()}
+      />
     </div>
   );
 };
