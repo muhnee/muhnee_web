@@ -1,6 +1,6 @@
 import React, { FC, useContext } from "react";
 import firebase from "firebase";
-import { useParams, Redirect } from "react-router-dom";
+import { useParams, Redirect, useHistory } from "react-router-dom";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 
 import Button from "@material-ui/core/Button";
@@ -15,6 +15,7 @@ import { Typography } from "@material-ui/core";
 
 const TransactionPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
+  const history = useHistory();
   let { monthId, transactionId } = useParams();
 
   const classes = useStyles();
@@ -31,6 +32,21 @@ const TransactionPage: FC = () => {
           .doc(transactionId)
       : null
   );
+
+  const onDeleteTransaction = async () => {
+    if (user) {
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .collection("budget")
+        .doc(monthId)
+        .collection("transactions")
+        .doc(transactionId)
+        .delete();
+      history.push("/dashboard");
+    }
+  };
 
   if (!user || !user.uid) {
     return <Redirect to="/" />;
@@ -70,7 +86,13 @@ const TransactionPage: FC = () => {
   return (
     <div className={classes.root}>
       <pre>{JSON.stringify(transaction, null, 2)}</pre>
-      <Button variant="outlined" color="primary">
+      <Button
+        variant="outlined"
+        color="primary"
+        onClick={() => {
+          onDeleteTransaction();
+        }}
+      >
         Delete Transaction
       </Button>
     </div>
