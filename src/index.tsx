@@ -1,12 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
-import * as serviceWorker from "./serviceWorker";
-import { initialiseFirebase } from "./firebase/firebase";
+
 import { MuiThemeProvider } from "@material-ui/core";
+
 import LoadingContainer from "./containers/LoadingContainer";
+
+import App from "./App";
+
+import { initialiseFirebase } from "./firebase/firebase";
 import muiTheme from "./config/theme";
+
+import * as serviceWorker from "./serviceWorker";
+
+import "./index.css";
 
 (async () => {
   // REDIRECT FROM FIREBASE HOSTED URLs
