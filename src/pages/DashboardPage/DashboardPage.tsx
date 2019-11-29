@@ -2,10 +2,7 @@ import React, { FC, useContext } from "react";
 import firebase from "firebase";
 import moment from "moment";
 
-import {
-  useCollectionData,
-  useDocumentData
-} from "react-firebase-hooks/firestore";
+import { useDocumentData, useCollection } from "react-firebase-hooks/firestore";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
 import List from "@material-ui/core/List";
@@ -17,7 +14,6 @@ import { getGreeting } from "../../utils/greeting";
 
 import useStyles from "./styles";
 
-import { Transaction } from "../../types/Transaction";
 import { Summary } from "../../types/Summary";
 
 import SummaryCard from "../../components/dashboard/SummaryCard";
@@ -33,7 +29,7 @@ const DashboardPage: FC = () => {
 
   const today = moment();
   const thisMonth = `${today.year()}-${today.month()}`;
-  const [monthlyTransactions, loading, error] = useCollectionData<Transaction>(
+  const [monthlyTransactions, loading, error] = useCollection(
     user
       ? firebase
           .firestore()
@@ -97,9 +93,25 @@ const DashboardPage: FC = () => {
         {error && <span>An Error Occurred</span>}
         {monthlyTransactions && (
           <List>
-            {monthlyTransactions.map((trans: Transaction, i) => (
-              <TransactionCard key={i} transaction={trans} />
-            ))}
+            {monthlyTransactions.docs.map((monthlyTransactionsSnapshot, i) => {
+              let monthlyTransaction: any = monthlyTransactionsSnapshot.data();
+
+              return (
+                <TransactionCard
+                  key={i}
+                  transaction={{
+                    amount: monthlyTransaction.amount,
+                    type: monthlyTransaction.type,
+                    category: monthlyTransaction.category,
+                    description: monthlyTransaction.description,
+                    taxDeductible: monthlyTransaction.taxDeductible,
+                    timestamp: monthlyTransaction.tiemstamp
+                  }}
+                  transactionId={monthlyTransactionsSnapshot.id}
+                  month={thisMonth}
+                />
+              );
+            })}
           </List>
         )}
       </div>
