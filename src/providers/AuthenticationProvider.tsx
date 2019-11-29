@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useCallback } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { User } from "firebase/app";
 import { useAuth } from "../firebase/firebase";
 import AuthenticationContext from "../contexts/AuthenticationContext";
