@@ -27,10 +27,9 @@ import {
   CircularProgress
 } from "@material-ui/core";
 
-import ExpenseIcon from "@material-ui/icons/CreditCard";
-import IncomeIcon from "@material-ui/icons/TrendingUp";
 import SummaryCard from "../../components/dashboard/SummaryCard";
 import AddTransactionModal from "../../components/AddTransactionModal";
+import TransactionCard from "../../components/cards/TransactionCard";
 
 const DashboardPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -98,15 +97,7 @@ const DashboardPage: FC = () => {
         {monthlyTransactions && (
           <List>
             {monthlyTransactions.map((trans: Transaction, i) => (
-              <ListItem key={i}>
-                <ListItemAvatar>
-                  <Avatar>
-                    {trans.type === "expense" && <ExpenseIcon />}
-                    {trans.type === "income" && <IncomeIcon />}
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={trans.description} />
-              </ListItem>
+              <TransactionCard key={i} transaction={trans} />
             ))}
           </List>
         )}

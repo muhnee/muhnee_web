@@ -17,7 +17,7 @@ export interface Transaction {
   /**
    * Timestamp
    */
-  timestamp?: Date;
+  timestamp?: firebase.firestore.Timestamp;
 
   /**
    * Whether or not the item is tax deductable
