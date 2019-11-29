@@ -32,6 +32,9 @@ const useStyles = makeStyles<Theme, TransactionCardProps>(theme =>
     cardCenter: {
       flex: 1,
       marginLeft: "0.5rem"
+    },
+    cardRight: {
+      textAlign: "right"
     }
   })
 );

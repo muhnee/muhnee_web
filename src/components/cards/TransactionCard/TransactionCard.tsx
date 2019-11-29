@@ -21,15 +21,17 @@ const TransactionCard: FC<TransactionCardProps> = props => {
       </div>
       <div className={classes.cardCenter}>
         <Typography variant="body2">{transaction.type}</Typography>
-        <Typography variant="body1">{transaction.description}</Typography>
+        <Typography variant="body1">
+          {transaction.description || "(no description)"}
+        </Typography>
       </div>
-      <div>
+      <div className={classes.cardRight}>
         {transaction.amount && (
-          <Typography component="strong">{`$${transaction.amount.toFixed(
+          <Typography variant="body1">{`$${transaction.amount.toFixed(
             2
           )}`}</Typography>
         )}
-        <Typography>
+        <Typography variant="body2">
           {transaction.timestamp &&
             moment(transaction.timestamp.toDate()).format("Do MMM")}
         </Typography>
