@@ -7,6 +7,8 @@ import {
   useDocumentData
 } from "react-firebase-hooks/firestore";
 
+import CircularProgress from "@material-ui/core/CircularProgress";
+import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
@@ -17,15 +19,6 @@ import useStyles from "./styles";
 
 import { Transaction } from "../../types/Transaction";
 import { Summary } from "../../types/Summary";
-
-import {
-  List,
-  ListItem,
-  ListItemText,
-  Avatar,
-  ListItemAvatar,
-  CircularProgress
-} from "@material-ui/core";
 
 import SummaryCard from "../../components/dashboard/SummaryCard";
 import AddTransactionModal from "../../components/AddTransactionModal";

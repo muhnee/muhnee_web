@@ -1,11 +1,11 @@
 import React, { FC, useContext } from "react";
 import { Redirect } from "react-router";
+import moment from "moment";
 
 import Divider from "@material-ui/core/Divider";
 import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 
-import PolicyLinks from "../../components/PolicyLinks";
 import SignInWithGoogleButton from "../../components/buttons/SignInWithGoogleButton";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
@@ -18,7 +18,6 @@ import {
   doSignInWithFacebook
 } from "../../firebase/firebase";
 import SignInWithFacebookButton from "../../components/buttons/SignInWithFacebookButton";
-import moment from "moment";
 
 const LandingPage: FC = () => {
   const { isLoaded, user } = useContext(AuthenticationContext);
