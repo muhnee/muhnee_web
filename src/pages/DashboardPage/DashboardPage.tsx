@@ -24,6 +24,9 @@ import SummaryCard from "../../components/dashboard/SummaryCard";
 import AddTransactionModal from "../../components/AddTransactionModal";
 import TransactionCard from "../../components/cards/TransactionCard";
 
+import ExpenseIcon from "@material-ui/icons/CreditCard";
+import IncomeIcon from "@material-ui/icons/TrendingUp";
+
 const DashboardPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
   const classes = useStyles();
@@ -76,10 +79,12 @@ const DashboardPage: FC = () => {
               amount={
                 summary.expenses ? `$${summary.expenses.toFixed(2)}` : "N/A"
               }
+              avatar={<ExpenseIcon />}
               inverted
             />
             <SummaryCard
               title="Income"
+              avatar={<IncomeIcon />}
               amount={summary.income ? `$${summary.income.toFixed(2)}` : "N/A"}
             />
           </div>

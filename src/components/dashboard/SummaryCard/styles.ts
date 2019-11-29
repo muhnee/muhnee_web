@@ -14,6 +14,11 @@ const useStyles = makeStyles<Theme, SummaryCardProps>(theme =>
       flexDirection: "column",
       justifyContent: "flex-end",
       flexWrap: "wrap"
+    }),
+    avatar: ({ inverted }) => ({
+      border: `2px solid ${inverted ? "#fff" : theme.palette.primary.main}`,
+      color: inverted ? "#fff" : theme.palette.primary.main,
+      backgroundColor: inverted ? theme.palette.primary.main : "#fff"
     })
   })
 );
