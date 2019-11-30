@@ -8,20 +8,17 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 
-import AuthenticationContext from "../../contexts/AuthenticationContext";
-
-import { getGreeting } from "../../utils/greeting";
-
-import useStyles from "./styles";
-
-import { Summary } from "../../types/Summary";
-
 import SummaryCard from "../../components/dashboard/SummaryCard";
 import AddTransactionModal from "../../components/AddTransactionModal";
 import TransactionCard from "../../components/cards/TransactionCard";
 
 import ExpenseIcon from "@material-ui/icons/CreditCard";
 import IncomeIcon from "@material-ui/icons/TrendingUp";
+
+import AuthenticationContext from "../../contexts/AuthenticationContext";
+import { Summary } from "../../types/Summary";
+
+import useStyles from "./styles";
 
 const DashboardPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -60,14 +57,17 @@ const DashboardPage: FC = () => {
   return (
     <div className={classes.root}>
       <div className={classes.leftContainer}>
-        <div>
-          <Typography variant="h6">{`Good ${getGreeting(moment())}, ${
-            user.displayName
-          }`}</Typography>
-          <Typography variant="h5" color="primary">
-            {today.format("MMMM YYYY")}
+        <div style={{ marginBottom: "1.25rem" }}>
+          <Typography variant="h6" style={{ fontWeight: 600 }}>
+            Welcome to
+          </Typography>
+          <Typography variant="h6" style={{ fontWeight: 300 }}>
+            Muhnee
           </Typography>
         </div>
+        <Typography variant="h6" color="primary">
+          {`This Month (${today.format("MMMM YYYY")})`}
+        </Typography>
         {summary && (
           <div className={classes.summaryContainer}>
             <SummaryCard

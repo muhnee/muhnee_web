@@ -4,6 +4,6 @@ export const useStyles = makeStyles({
   root: {
     flex: 1,
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "row"
   }
 });

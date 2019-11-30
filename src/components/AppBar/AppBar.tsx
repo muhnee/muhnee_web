@@ -1,6 +1,5 @@
 import React, { FC, useContext, useState } from "react";
 
-import ApplicationBar from "@material-ui/core/AppBar";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
@@ -31,60 +30,57 @@ const AppBar: FC = () => {
     return null;
   }
   return (
-    <ApplicationBar position="sticky">
-      <Toolbar>
-        <div className={classes.menuItems}>
-          <Typography variant="h6" className={classes.logo}>
-            Muhnee
-          </Typography>
-        </div>
-        <div>
-          <Avatar src={user.photoURL} onClick={handleClick} />
-          <Menu
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            className={classes.paper}
-            onClose={handleClick}
+    <Toolbar className={classes.root}>
+      <div className={classes.menuItems}></div>
+      <div className={classes.userMenuContainer}>
+        <Typography className={classes.displayName}>
+          <strong>{user.displayName}</strong>
+        </Typography>
+        <Avatar src={user.photoURL} onClick={handleClick} />
+        <Menu
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          className={classes.paper}
+          onClose={handleClick}
+        >
+          <div className={classes.userDialogHeader}>
+            <Avatar src={user.photoURL} className={classes.bigAvatar} />
+            <Typography variant="body1" color="textPrimary">
+              {user.displayName}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              {user.email}
+            </Typography>
+          </div>
+
+          <Divider />
+          <div
+            className={classes.userDialogHeader}
+            style={{ marginTop: "0.5rem" }}
           >
-            <div className={classes.userDialogHeader}>
-              <Avatar src={user.photoURL} className={classes.bigAvatar} />
-              <Typography variant="body1" color="textPrimary">
-                {user.displayName}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                {user.email}
-              </Typography>
-            </div>
-
-            <Divider />
-            <div
-              className={classes.userDialogHeader}
-              style={{ marginTop: "0.5rem" }}
+            <Button
+              // onClick={() => doSignOut()}
+              variant="outlined"
+              color="primary"
+              disabled
             >
-              <Button
-                // onClick={() => doSignOut()}
-                variant="outlined"
-                color="primary"
-                disabled
-              >
-                My Account
-              </Button>
-              <Button
-                onClick={() => doSignOut()}
-                variant="outlined"
-                color="primary"
-              >
-                Sign out
-              </Button>
-            </div>
+              My Account
+            </Button>
+            <Button
+              onClick={() => doSignOut()}
+              variant="outlined"
+              color="primary"
+            >
+              Sign out
+            </Button>
+          </div>
 
-            <Divider />
-            <PolicyLinks />
-          </Menu>
-        </div>
-      </Toolbar>
-    </ApplicationBar>
+          <Divider />
+          <PolicyLinks />
+        </Menu>
+      </div>
+    </Toolbar>
   );
 };
 
