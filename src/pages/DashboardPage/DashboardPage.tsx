@@ -98,7 +98,7 @@ const DashboardPage: FC = () => {
 
               return (
                 <TransactionCard
-                  key={i}
+                  key={`${monthlyTransactionsSnapshot.id}`}
                   transaction={{
                     amount: monthlyTransaction.amount,
                     type: monthlyTransaction.type,
