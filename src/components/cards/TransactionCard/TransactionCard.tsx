@@ -1,19 +1,28 @@
 import React, { FC } from "react";
+import moment from "moment";
 
-import ExpenseIcon from "@material-ui/icons/CreditCard";
+import Avatar from "@material-ui/core/Avatar";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+
 import IncomeIcon from "@material-ui/icons/TrendingUp";
+import InfoIcon from "@material-ui/icons/Info";
+import ExpenseIcon from "@material-ui/icons/CreditCard";
 
 import useStyles from "./styles";
 
 import TransactionCardProps from "./types";
-import { Avatar, Typography } from "@material-ui/core";
-import moment from "moment";
 
 const TransactionCard: FC<TransactionCardProps> = props => {
-  const { transaction, key } = props;
+  const { transaction, key, month, transactionId } = props;
   const classes = useStyles(props);
   return (
     <div className={classes.root} key={key}>
+      <div>
+        <IconButton href={`/months/${month}/transactions/${transactionId}`}>
+          <InfoIcon />
+        </IconButton>
+      </div>
       <div>
         <Avatar className={classes.avatar}>
           {transaction.type === "expense" ? <ExpenseIcon /> : <IncomeIcon />}

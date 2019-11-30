@@ -8,6 +8,7 @@ import MobileWarningBanner from "./components/MobileWarningBanner";
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import DashboardPage from "./pages/DashboardPage";
+import MonthsPage from "./pages/MonthsPage";
 
 import { AuthenticationProvider } from "./providers/AuthenticationProvider";
 
@@ -40,6 +41,7 @@ const App: React.FC = () => {
         <Route path="/" component={LandingPage} exact />
         <AuthenticatedContainer>
           <Route path="/dashboard" component={DashboardPage} exact />
+          <Route path="/months" component={MonthsPage} />
         </AuthenticatedContainer>
         <Route path="/" component={NotFoundPage} />
       </Switch>

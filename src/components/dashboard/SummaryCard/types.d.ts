@@ -1,3 +1,5 @@
+import { JSXElement } from "@babel/types";
+
 export default interface SummaryCardProps {
   /**
    * The title of the summary card
@@ -13,4 +15,9 @@ export default interface SummaryCardProps {
    * Is the inverted
    */
   inverted?: boolean;
+
+  /**
+   * Avatar
+   */
+  avatar?: JSX.Element;
 }

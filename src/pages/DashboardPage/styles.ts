@@ -17,7 +17,8 @@ const useStyles = makeStyles({
   },
   heading: { color: "#0069E9", fontWeight: 700, fontFamily: "Montserrat" },
   summaryContainer: {
-    display: "flex"
+    display: "flex",
+    flexWrap: "wrap"
   }
 });
 
