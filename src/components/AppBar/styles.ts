@@ -8,7 +8,11 @@ export const useStyles = makeStyles({
     display: "flex",
     flexDirection: "row",
     borderBottom: "1px solid #ccc",
-    alignItems: "center"
+    alignItems: "center",
+    position: "sticky",
+    backgroundColor: "#fff",
+    top: 0,
+    zIndex: 2
   },
   logo: { color: "white" },
   navigationContainer: {

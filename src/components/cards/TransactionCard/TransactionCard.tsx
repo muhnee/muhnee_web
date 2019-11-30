@@ -41,8 +41,9 @@ const TransactionCard: FC<TransactionCardProps> = props => {
           )}`}</Typography>
         )}
         <Typography variant="body2">
-          {transaction.timestamp &&
-            moment(transaction.timestamp.toDate()).format("Do MMM")}
+          {transaction.timestamp
+            ? moment(transaction.timestamp.toDate()).format("Do MMM")
+            : "N/A"}
         </Typography>
       </div>
     </div>
