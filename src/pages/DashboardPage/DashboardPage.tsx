@@ -105,7 +105,7 @@ const DashboardPage: FC = () => {
                     category: monthlyTransaction.category,
                     description: monthlyTransaction.description,
                     taxDeductible: monthlyTransaction.taxDeductible,
-                    timestamp: monthlyTransaction.tiemstamp
+                    timestamp: monthlyTransaction.timestamp
                   }}
                   transactionId={monthlyTransactionsSnapshot.id}
                   month={thisMonth}
