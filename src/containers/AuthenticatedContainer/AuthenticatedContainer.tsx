@@ -39,8 +39,11 @@ const AuthenticatedContainer: FC = ({ children }) => {
       <div
         style={{
           padding: "0.25rem 0 0.25rem 0.25rem",
-          minWidth: 200,
-          borderRight: "1px solid #ccc"
+          width: 200,
+          borderRight: "1px solid #ccc",
+          height: "100vh",
+          position: "fixed",
+          zIndex: 3
         }}
       >
         <List>
@@ -88,7 +91,16 @@ const AuthenticatedContainer: FC = ({ children }) => {
           </ListItem>
         </List>
       </div>
-      <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+          overflow: "scroll",
+          height: "100vh",
+          marginLeft: 200
+        }}
+      >
         <AppBar />
         <>{children}</>
       </div>
