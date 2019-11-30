@@ -34,8 +34,6 @@ const AuthenticatedContainer: FC = ({ children }) => {
     return <Redirect to="/" />;
   }
 
-  console.log(location);
-
   return (
     <div className={classes.root}>
       <div
@@ -53,6 +51,9 @@ const AuthenticatedContainer: FC = ({ children }) => {
               Muhnee
             </ListItemText>
           </ListItem>
+          {/**
+           * TODO: move this to individual component
+           */}
           <ListItem
             component={Link}
             href="/dashboard"

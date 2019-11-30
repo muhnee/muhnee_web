@@ -53,7 +53,6 @@ const DashboardPage: FC = () => {
   if (!user || !user.displayName) {
     return <p>An Error Occurred.</p>;
   }
-
   return (
     <div className={classes.root}>
       <div className={classes.leftContainer}>
@@ -91,7 +90,7 @@ const DashboardPage: FC = () => {
         <AddTransactionModal />
         {loading && <CircularProgress />}
         {error && <span>An Error Occurred</span>}
-        {monthlyTransactions && (
+        {!!monthlyTransactions ? (
           <List>
             {monthlyTransactions.docs.map((monthlyTransactionsSnapshot, i) => {
               let monthlyTransaction: any = monthlyTransactionsSnapshot.data();
@@ -113,6 +112,15 @@ const DashboardPage: FC = () => {
               );
             })}
           </List>
+        ) : (
+          <div>
+            <Typography variant="body1" color="textPrimary">
+              No transactions in this month
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Create a transaction to get started
+            </Typography>
+          </div>
         )}
       </div>
     </div>
