@@ -14,6 +14,8 @@ import Select from "@material-ui/core/Select";
 import Switch from "@material-ui/core/Switch";
 import TextField from "@material-ui/core/TextField";
 
+import DeleteIcon from "@material-ui/icons/Delete";
+
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 
@@ -24,6 +26,7 @@ import LoadingContainer from "../../containers/LoadingContainer";
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 
 import useStyles from "./styles";
+import { red } from "@material-ui/core/colors";
 
 const TransactionPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -201,23 +204,28 @@ const TransactionPage: FC = () => {
               />
             </div>
             <Divider />
-            <div>
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={() => {
-                  updateTransaction();
-                }}
-              >
-                Update Transaction
-              </Button>
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+              <div style={{ flex: 1 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    updateTransaction();
+                  }}
+                  style={{ color: "#fff" }}
+                >
+                  Update Transaction
+                </Button>
+              </div>
               <Button
                 variant="outlined"
                 color="primary"
                 onClick={() => {
                   setWarningDialogOpen(true);
                 }}
+                style={{ color: red[500], borderColor: red[500] }}
               >
+                <DeleteIcon />
                 Delete Transaction
               </Button>
             </div>
