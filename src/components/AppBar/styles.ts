@@ -7,7 +7,6 @@ export const useStyles = makeStyles({
   root: {
     display: "flex",
     flexDirection: "row",
-    padding: "0.75rem 1.25rem",
     borderBottom: "1px solid #ccc",
     alignItems: "center"
   },
@@ -25,6 +24,14 @@ export const useStyles = makeStyles({
     padding: "2rem 0rem",
     boxShadow:
       "0px 2px 1px -1px rgba(0,0,0,0.4), 0px 1px 1px 0px rgba(0,0,0,0.2), 0px 1px 3px 0px rgba(0,0,0,0.3);"
+  },
+  userMenuContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  displayName: {
+    marginRight: "0.25rem"
   },
   userDialogHeader: {
     display: "flex",
