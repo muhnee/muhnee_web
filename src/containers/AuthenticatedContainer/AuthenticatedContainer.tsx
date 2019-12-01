@@ -95,7 +95,9 @@ const AuthenticatedContainer: FC = ({ children }) => {
         }}
       >
         <AppBar />
-        <div style={{ padding: "0.25rem 0.5rem" }}>{children}</div>
+        <div style={{ padding: "0.25rem 0.5rem", flex: 1, display: "flex" }}>
+          {children}
+        </div>
       </div>
     </div>
   );
