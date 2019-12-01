@@ -1,4 +1,4 @@
-import React, { FC, useState, useContext } from "react";
+import React, { FC, useState, useContext, useEffect } from "react";
 import moment from "moment";
 import firebase from "firebase";
 
@@ -35,6 +35,18 @@ const AddTransactionModal: FC = () => {
     moment()
   );
 
+  const resetData = () => {
+    setType("expense");
+    setAmount(0);
+    setDescription("");
+    setTaxDeductible(false);
+    handleDateChange(moment());
+  };
+
+  useEffect(() => {
+    resetData();
+  }, [setType, setAmount, setDescription, setTaxDeductible, handleDateChange]);
+
   const addData = () => {
     if (user && selectedDate) {
       setIsSubmitting(true);
@@ -54,6 +66,7 @@ const AddTransactionModal: FC = () => {
         })
         .then(() => {
           setIsSubmitting(false);
+          resetData();
           onClose();
         })
         .catch(err => {
