@@ -1,4 +1,4 @@
-import React, { FC, useContext } from "react";
+import React, { FC, useContext, useState } from "react";
 import firebase from "firebase";
 import moment from "moment";
 
@@ -21,11 +21,14 @@ import { Summary } from "../../types/Summary";
 import useStyles from "./styles";
 
 const DashboardPage: FC = () => {
+  const today = moment();
+
   const { user } = useContext(AuthenticationContext);
+  const [thisMonth, setThisMonth] = useState(
+    `${today.year()}-${today.month()}`
+  );
   const classes = useStyles();
 
-  const today = moment();
-  const thisMonth = `${today.year()}-${today.month()}`;
   const [monthlyTransactions, loading, error] = useCollection(
     user
       ? firebase
