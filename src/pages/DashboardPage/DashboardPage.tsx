@@ -1,4 +1,4 @@
-import React, { FC, useContext } from "react";
+import React, { FC, useContext, useState } from "react";
 import firebase from "firebase";
 import moment from "moment";
 
@@ -21,11 +21,14 @@ import { Summary } from "../../types/Summary";
 import useStyles from "./styles";
 
 const DashboardPage: FC = () => {
+  const today = moment();
+
   const { user } = useContext(AuthenticationContext);
+
+  // TODO: add support for changing months on dashboard
+  const [thisMonth] = useState(`${today.year()}-${today.month()}`);
   const classes = useStyles();
 
-  const today = moment();
-  const thisMonth = `${today.year()}-${today.month()}`;
   const [monthlyTransactions, loading, error] = useCollection(
     user
       ? firebase
@@ -67,30 +70,36 @@ const DashboardPage: FC = () => {
         <Typography variant="h6" color="primary">
           {`This Month (${today.format("MMMM YYYY")})`}
         </Typography>
-        {summary && (
-          <div className={classes.summaryContainer}>
-            <SummaryCard
-              title="Expenses"
-              amount={
-                summary.expenses ? `$${summary.expenses.toFixed(2)}` : "N/A"
-              }
-              avatar={<ExpenseIcon />}
-              inverted
-            />
-            <SummaryCard
-              title="Income"
-              avatar={<IncomeIcon />}
-              amount={summary.income ? `$${summary.income.toFixed(2)}` : "N/A"}
-            />
-          </div>
-        )}
+        <div className={classes.summaryContainer}>
+          <SummaryCard
+            title="Expenses"
+            amount={
+              summary && summary.expenses
+                ? `$${summary.expenses.toFixed(2)}`
+                : "N/A"
+            }
+            avatar={<ExpenseIcon />}
+            inverted
+          />
+          <SummaryCard
+            title="Income"
+            avatar={<IncomeIcon />}
+            amount={
+              summary && summary.income
+                ? `$${summary.income.toFixed(2)}`
+                : "N/A"
+            }
+          />
+        </div>
       </div>
       <div className={classes.rightContainer}>
         <Typography variant="body1">Recent Transactions</Typography>
-        <AddTransactionModal />
+        {monthlyTransactions && monthlyTransactions.size > 0 && (
+          <AddTransactionModal />
+        )}
         {loading && <CircularProgress />}
         {error && <span>An Error Occurred</span>}
-        {!!monthlyTransactions ? (
+        {monthlyTransactions && monthlyTransactions.size > 0 ? (
           <List>
             {monthlyTransactions.docs.map((monthlyTransactionsSnapshot, i) => {
               let monthlyTransaction: any = monthlyTransactionsSnapshot.data();
@@ -113,13 +122,24 @@ const DashboardPage: FC = () => {
             })}
           </List>
         ) : (
-          <div>
+          <div
+            style={{
+              marginTop: "0.75rem",
+              display: "flex",
+              flexDirection: "column",
+              flexWrap: "wrap",
+              alignItems: "center"
+            }}
+          >
             <Typography variant="body1" color="textPrimary">
               No transactions in this month
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Create a transaction to get started
             </Typography>
+            <div style={{ marginTop: "0.25rem" }}>
+              <AddTransactionModal />
+            </div>
           </div>
         )}
       </div>
