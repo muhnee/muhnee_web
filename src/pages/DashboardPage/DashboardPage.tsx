@@ -24,9 +24,9 @@ const DashboardPage: FC = () => {
   const today = moment();
 
   const { user } = useContext(AuthenticationContext);
-  const [thisMonth, setThisMonth] = useState(
-    `${today.year()}-${today.month()}`
-  );
+
+  // TODO: add support for changing months on dashboard
+  const [thisMonth] = useState(`${today.year()}-${today.month()}`);
   const classes = useStyles();
 
   const [monthlyTransactions, loading, error] = useCollection(
@@ -94,10 +94,12 @@ const DashboardPage: FC = () => {
       </div>
       <div className={classes.rightContainer}>
         <Typography variant="body1">Recent Transactions</Typography>
-        <AddTransactionModal />
+        {monthlyTransactions && monthlyTransactions.size > 0 && (
+          <AddTransactionModal />
+        )}
         {loading && <CircularProgress />}
         {error && <span>An Error Occurred</span>}
-        {!!monthlyTransactions ? (
+        {monthlyTransactions && monthlyTransactions.size > 0 ? (
           <List>
             {monthlyTransactions.docs.map((monthlyTransactionsSnapshot, i) => {
               let monthlyTransaction: any = monthlyTransactionsSnapshot.data();
@@ -120,13 +122,24 @@ const DashboardPage: FC = () => {
             })}
           </List>
         ) : (
-          <div>
+          <div
+            style={{
+              marginTop: "0.75rem",
+              display: "flex",
+              flexDirection: "column",
+              flexWrap: "wrap",
+              alignItems: "center"
+            }}
+          >
             <Typography variant="body1" color="textPrimary">
               No transactions in this month
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Create a transaction to get started
             </Typography>
+            <div style={{ marginTop: "0.25rem" }}>
+              <AddTransactionModal />
+            </div>
           </div>
         )}
       </div>
