@@ -16,6 +16,7 @@ import muiTheme from "./config/theme";
 
 import useStyles from "./styles";
 import AuthenticatedContainer from "./containers/AuthenticatedContainer";
+import CategoriesPage from "./pages/CategoriesPage";
 
 // CoreComponent handles the router, the state in addition to Providers for hooks
 const Core: React.FC = ({ children }) => {
@@ -42,6 +43,7 @@ const App: React.FC = () => {
         <AuthenticatedContainer>
           <Route path="/dashboard" component={DashboardPage} exact />
           <Route path="/months" component={MonthsPage} />
+          <Route path="/categories" component={CategoriesPage} />
         </AuthenticatedContainer>
         <Route path="/" component={NotFoundPage} />
       </Switch>
