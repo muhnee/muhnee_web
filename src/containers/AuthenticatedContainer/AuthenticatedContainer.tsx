@@ -15,12 +15,14 @@ import {
   ListItem,
   Link,
   ListItemAvatar,
-  Avatar
+  Avatar,
+  Typography
 } from "@material-ui/core";
 
 import DashboardIcon from "@material-ui/icons/InsertChart";
 
 import { blue } from "@material-ui/core/colors";
+import moment from "moment";
 
 const AuthenticatedContainer: FC = ({ children }) => {
   const { isLoaded, user } = useContext(AuthenticationContext);
@@ -43,10 +45,12 @@ const AuthenticatedContainer: FC = ({ children }) => {
           borderRight: "1px solid #ccc",
           height: "100vh",
           position: "fixed",
-          zIndex: 3
+          zIndex: 3,
+          display: "flex",
+          flexDirection: "column"
         }}
       >
-        <List>
+        <List style={{ flex: 1 }}>
           <ListItem style={{ marginBottom: "2.5rem" }}>
             <ListItemText
               primaryTypographyProps={{ variant: "h5", color: "primary" }}
@@ -90,6 +94,22 @@ const AuthenticatedContainer: FC = ({ children }) => {
             </ListItemText>
           </ListItem>
         </List>
+        <div style={{ marginBottom: "2rem", padding: "0.25rem 0.75rem" }}>
+          <Typography variant="body1" color="textSecondary">
+            <Link
+              href="https://muhneeapp.com"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              Muhnee
+            </Link>{" "}
+            v{process.env.REACT_APP_VERSION}
+          </Typography>
+          <Typography variant="body1" color="textSecondary">
+            Copyright &copy; 2019{" "}
+            {moment().year() !== 2019 ? `- ${moment().year()}` : ``}
+          </Typography>
+        </div>
       </div>
       <div
         style={{
