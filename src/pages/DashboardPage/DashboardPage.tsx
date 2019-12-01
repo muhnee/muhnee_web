@@ -67,23 +67,27 @@ const DashboardPage: FC = () => {
         <Typography variant="h6" color="primary">
           {`This Month (${today.format("MMMM YYYY")})`}
         </Typography>
-        {summary && (
-          <div className={classes.summaryContainer}>
-            <SummaryCard
-              title="Expenses"
-              amount={
-                summary.expenses ? `$${summary.expenses.toFixed(2)}` : "N/A"
-              }
-              avatar={<ExpenseIcon />}
-              inverted
-            />
-            <SummaryCard
-              title="Income"
-              avatar={<IncomeIcon />}
-              amount={summary.income ? `$${summary.income.toFixed(2)}` : "N/A"}
-            />
-          </div>
-        )}
+        <div className={classes.summaryContainer}>
+          <SummaryCard
+            title="Expenses"
+            amount={
+              summary && summary.expenses
+                ? `$${summary.expenses.toFixed(2)}`
+                : "N/A"
+            }
+            avatar={<ExpenseIcon />}
+            inverted
+          />
+          <SummaryCard
+            title="Income"
+            avatar={<IncomeIcon />}
+            amount={
+              summary && summary.income
+                ? `$${summary.income.toFixed(2)}`
+                : "N/A"
+            }
+          />
+        </div>
       </div>
       <div className={classes.rightContainer}>
         <Typography variant="body1">Recent Transactions</Typography>
