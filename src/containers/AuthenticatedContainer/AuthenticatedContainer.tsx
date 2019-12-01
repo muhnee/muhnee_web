@@ -1,32 +1,27 @@
 import React, { FC, useContext } from "react";
-import { Redirect, useLocation } from "react-router";
+import { Redirect } from "react-router";
+import moment from "moment";
+
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import Link from "@material-ui/core/Link";
+import Typography from "@material-ui/core/Typography";
 
 import AppBar from "../../components/AppBar";
+import SidebarLink from "../../components/sidebar/SidebarLink/SidebarLink";
 
 import LoadingContainer from "../LoadingContainer";
+
+import DashboardIcon from "@material-ui/icons/InsertChart";
+import CategoriesIcon from "@material-ui/icons/Category";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 
 import { useStyles } from "./styles";
-//TODO: move to named imports
-import {
-  List,
-  ListItemText,
-  ListItem,
-  Link,
-  ListItemAvatar,
-  Avatar,
-  Typography
-} from "@material-ui/core";
-
-import DashboardIcon from "@material-ui/icons/InsertChart";
-
-import { blue } from "@material-ui/core/colors";
-import moment from "moment";
 
 const AuthenticatedContainer: FC = ({ children }) => {
   const { isLoaded, user } = useContext(AuthenticationContext);
-  const location = useLocation();
   const classes = useStyles();
   if (!isLoaded) {
     return <LoadingContainer loadingMessage="Authenticating..." />;
@@ -61,38 +56,16 @@ const AuthenticatedContainer: FC = ({ children }) => {
           {/**
            * TODO: move this to individual component
            */}
-          <ListItem
-            component={Link}
-            href="/dashboard"
-            style={{
-              color: location.pathname === "/dashboard" ? "#2e2e2e" : `#777`,
-              borderRight:
-                location.pathname === "/dashboard"
-                  ? `2px solid ${blue[500]}`
-                  : "none"
-            }}
-          >
-            <ListItemAvatar>
-              <Avatar
-                style={{
-                  color:
-                    location.pathname === "/dashboard" ? blue[500] : `#777`,
-                  backgroundColor: "white"
-                }}
-              >
-                <DashboardIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primaryTypographyProps={{
-                style: {
-                  fontWeight: location.pathname === "/dashboard" ? 600 : 500
-                }
-              }}
-            >
-              Dashboard
-            </ListItemText>
-          </ListItem>
+          <SidebarLink
+            icon={<DashboardIcon />}
+            to="/dashboard"
+            label="Dashboard"
+          />
+          <SidebarLink
+            icon={<CategoriesIcon />}
+            to="/categories"
+            label="Categories"
+          />
         </List>
         <div style={{ marginBottom: "2rem", padding: "0.25rem 0.75rem" }}>
           <Typography variant="body1" color="textSecondary">
@@ -122,7 +95,7 @@ const AuthenticatedContainer: FC = ({ children }) => {
         }}
       >
         <AppBar />
-        <>{children}</>
+        <div style={{ padding: "0.25rem 0.5rem" }}>{children}</div>
       </div>
     </div>
   );
