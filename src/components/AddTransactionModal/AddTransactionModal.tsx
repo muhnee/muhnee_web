@@ -25,6 +25,7 @@ const AddTransactionModal: FC = () => {
   const { user } = useContext(AuthenticationContext);
 
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [type, setType] = useState("expense");
   const [amount, setAmount] = useState(0);
@@ -36,6 +37,7 @@ const AddTransactionModal: FC = () => {
 
   const addData = () => {
     if (user && selectedDate) {
+      setIsSubmitting(true);
       firebase
         .firestore()
         .collection("users")
@@ -51,9 +53,12 @@ const AddTransactionModal: FC = () => {
           timestamp: selectedDate.toDate()
         })
         .then(() => {
+          setIsSubmitting(false);
           onClose();
         })
         .catch(err => {
+          setIsSubmitting(false);
+          onClose();
           console.error(err);
         });
     }
@@ -94,6 +99,7 @@ const AddTransactionModal: FC = () => {
                 onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
                   setType(event.target.value as string);
                 }}
+                disabled={isSubmitting}
               >
                 <MenuItem value={"expense"}>Expense</MenuItem>
                 <MenuItem value={"income"}>Income</MenuItem>
@@ -109,6 +115,7 @@ const AddTransactionModal: FC = () => {
               onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
                 setAmount(event.target.value as number);
               }}
+              disabled={isSubmitting}
             />
             <TextField
               required
@@ -119,6 +126,7 @@ const AddTransactionModal: FC = () => {
               onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
                 setDescription(event.target.value as string);
               }}
+              disabled={isSubmitting}
             />
             <FormControlLabel
               control={
@@ -128,6 +136,7 @@ const AddTransactionModal: FC = () => {
                   value="taxDeductible"
                   inputProps={{ "aria-label": "secondary checkbox" }}
                   color="primary"
+                  disabled={isSubmitting}
                 />
               }
               label="Tax Deductible?"
@@ -138,11 +147,16 @@ const AddTransactionModal: FC = () => {
               inputVariant="outlined"
               value={selectedDate}
               onChange={handleDateChange}
+              disabled={isSubmitting}
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={addData}>Add</Button>
-            <Button onClick={onClose}>Cancel</Button>
+            <Button onClick={addData} disabled={isSubmitting}>
+              Add
+            </Button>
+            <Button onClick={onClose} disabled={isSubmitting}>
+              Cancel
+            </Button>
           </DialogActions>
         </Dialog>
       </MuiPickersUtilsProvider>
