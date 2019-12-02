@@ -9,7 +9,7 @@ import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 
 import SummaryCard from "../../components/dashboard/SummaryCard";
-import AddTransactionModal from "../../components/AddTransactionModal";
+import AddTransactionModal from "../../components/dialogs/AddTransactionModal";
 import TransactionCard from "../../components/cards/TransactionCard";
 
 import ExpenseIcon from "@material-ui/icons/CreditCard";

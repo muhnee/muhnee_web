@@ -19,10 +19,12 @@ import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import MomentUtils from "@date-io/moment";
 import useStyles from "./styles";
-import AuthenticationContext from "../../contexts/AuthenticationContext";
+import AuthenticationContext from "../../../contexts/AuthenticationContext";
+import CategoriesContext from "../../../contexts/CategoriesContext";
 
 const AddTransactionModal: FC = () => {
   const { user } = useContext(AuthenticationContext);
+  const { incomeCategories, expenseCategories } = useContext(CategoriesContext);
 
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,6 +32,7 @@ const AddTransactionModal: FC = () => {
   const [type, setType] = useState("expense");
   const [amount, setAmount] = useState(0);
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
   const [taxDeductible, setTaxDeductible] = useState(false);
   const [selectedDate, handleDateChange] = useState<MaterialUiPickersDate>(
     moment()
@@ -116,6 +119,40 @@ const AddTransactionModal: FC = () => {
               >
                 <MenuItem value={"expense"}>Expense</MenuItem>
                 <MenuItem value={"income"}>Income</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl>
+              <InputLabel id="category-label">Category</InputLabel>
+              <Select
+                labelId="category-label"
+                id="category"
+                value={category}
+                onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+                  setCategory(event.target.value as string);
+                }}
+                disabled={isSubmitting}
+              >
+                {type === "expense"
+                  ? expenseCategories &&
+                    expenseCategories.size > 0 &&
+                    expenseCategories.docs.map(category => {
+                      let categoryData: any = category.data();
+                      return (
+                        <MenuItem value={category.id}>
+                          {categoryData.name}
+                        </MenuItem>
+                      );
+                    })
+                  : incomeCategories &&
+                    incomeCategories.size > 0 &&
+                    incomeCategories.docs.map(category => {
+                      let categoryData: any = category.data();
+                      return (
+                        <MenuItem value={category.id}>
+                          {categoryData.name}
+                        </MenuItem>
+                      );
+                    })}
               </Select>
             </FormControl>
             <TextField
