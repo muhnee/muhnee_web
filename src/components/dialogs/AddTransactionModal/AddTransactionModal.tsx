@@ -41,6 +41,7 @@ const AddTransactionModal: FC = () => {
   const resetData = () => {
     setType("expense");
     setAmount(0);
+    setCategory("");
     setDescription("");
     setTaxDeductible(false);
     handleDateChange(moment());
@@ -65,7 +66,8 @@ const AddTransactionModal: FC = () => {
           amount: +amount,
           description,
           taxDeductible,
-          timestamp: selectedDate.toDate()
+          timestamp: selectedDate.toDate(),
+          category: category
         })
         .then(() => {
           setIsSubmitting(false);
