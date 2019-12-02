@@ -68,8 +68,8 @@ const AuthenticatedContainer: FC = ({ children }) => {
             v{process.env.REACT_APP_VERSION}
           </Typography>
           <Typography variant="body1" color="textSecondary">
-            Copyright &copy; Muhnee 2018{" "}
-            {moment().year() !== 2018 ? `- ${moment().year()}` : ``}
+            Copyright &copy; Muhnee 2019{" "}
+            {moment().year() !== 2019 ? `- ${moment().year()}` : ``}
           </Typography>
         </div>
       </div>
