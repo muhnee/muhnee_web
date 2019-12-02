@@ -103,7 +103,6 @@ const DashboardPage: FC = () => {
           <List>
             {monthlyTransactions.docs.map((monthlyTransactionsSnapshot, i) => {
               let monthlyTransaction: any = monthlyTransactionsSnapshot.data();
-
               return (
                 <TransactionCard
                   key={`${monthlyTransactionsSnapshot.id}`}

@@ -2,7 +2,6 @@ import React, { FC, useContext } from "react";
 import { Redirect } from "react-router-dom";
 import firebase from "firebase";
 import AuthenticationContext from "../../contexts/AuthenticationContext";
-import { useCollection } from "react-firebase-hooks/firestore";
 
 import useStyles from "./styles";
 import {
