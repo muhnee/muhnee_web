@@ -1,4 +1,5 @@
 import { User } from "firebase/app";
+import { firestore } from "firebase";
 
 export interface AuthenticationContextState {
   /**
@@ -11,4 +12,9 @@ export interface AuthenticationContextState {
    * The currently authenticated user if available.
    */
   user: Nullable<User>;
+}
+
+export interface CategoriesContextState {
+  incomeCategories: firestore.QuerySnapshot | null | undefined;
+  expenseCategories: firestore.QuerySnapshot | null | undefined;
 }

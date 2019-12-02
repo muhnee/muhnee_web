@@ -17,6 +17,7 @@ import muiTheme from "./config/theme";
 import useStyles from "./styles";
 import AuthenticatedContainer from "./containers/AuthenticatedContainer";
 import CategoriesPage from "./pages/CategoriesPage";
+import CategoriesProvider from "./providers/CategoriesProvider";
 
 // CoreComponent handles the router, the state in addition to Providers for hooks
 const Core: React.FC = ({ children }) => {
@@ -28,7 +29,9 @@ const Core: React.FC = ({ children }) => {
       {matches && <MobileWarningBanner />}
       <div className={classes.root}>
         <Router>
-          <AuthenticationProvider>{children}</AuthenticationProvider>
+          <AuthenticationProvider>
+            <CategoriesProvider>{children}</CategoriesProvider>
+          </AuthenticationProvider>
         </Router>
       </div>
     </MuiThemeProvider>

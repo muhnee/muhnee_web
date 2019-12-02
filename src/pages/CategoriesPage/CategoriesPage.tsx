@@ -1,7 +1,6 @@
 import React, { FC, useContext } from "react";
 import { Redirect } from "react-router-dom";
 import firebase from "firebase";
-
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 import { useCollection } from "react-firebase-hooks/firestore";
 
@@ -18,34 +17,12 @@ import {
 import DeleteIcon from "@material-ui/icons/DeleteOutline";
 
 import AddCategoryContainer from "../../containers/AddCategoryContainer";
+import CategoriesContext from "../../contexts/CategoriesContext";
 
 const CategoriesPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
+  const { expenseCategories, incomeCategories } = useContext(CategoriesContext);
   const classes = useStyles();
-
-  const [expenseCategories, isExpenseCategoriesLoading] = useCollection(
-    user
-      ? firebase
-          .firestore()
-          .collection("users")
-          .doc(user.uid)
-          .collection("categories")
-          .doc("expense")
-          .collection("types")
-      : null
-  );
-
-  const [incomeCategories, isIncomeCategoriesLoading] = useCollection(
-    user
-      ? firebase
-          .firestore()
-          .collection("users")
-          .doc(user.uid)
-          .collection("categories")
-          .doc("income")
-          .collection("types")
-      : null
-  );
 
   const onAddNewCategory = (type: string, newCategory: string) => {
     if (user && user.uid) {
@@ -85,9 +62,7 @@ const CategoriesPage: FC = () => {
       <div className={classes.container}>
         <Typography variant="h6">Expenses</Typography>
         <List className={classes.categoryListContainer}>
-          {!isExpenseCategoriesLoading &&
-          expenseCategories &&
-          expenseCategories.size > 0
+          {expenseCategories && expenseCategories.size > 0
             ? expenseCategories.docs.map(category => {
                 let expenseCategory: any = category.data();
                 return (
@@ -118,9 +93,7 @@ const CategoriesPage: FC = () => {
       <div className={classes.container}>
         <Typography variant="h6">Income</Typography>
         <List className={classes.categoryListContainer}>
-          {!isIncomeCategoriesLoading &&
-          incomeCategories &&
-          incomeCategories.size > 0
+          {incomeCategories && incomeCategories && incomeCategories.size > 0
             ? incomeCategories.docs.map(category => {
                 let income: any = category.data();
                 return (
