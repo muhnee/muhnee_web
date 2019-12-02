@@ -1,6 +1,8 @@
 export interface Transaction {
   /**
    * The category of transaction
+   * the category is a UID to the doc found in the collection
+   * `/users/{uid}/categories/{type}/types/`
    */
   category?: string;
 
