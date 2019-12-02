@@ -27,15 +27,18 @@ import AuthenticationContext from "../../contexts/AuthenticationContext";
 
 import useStyles from "./styles";
 import { red } from "@material-ui/core/colors";
+import CategoriesContext from "../../contexts/CategoriesContext";
 
 const TransactionPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
+  const { incomeCategories, expenseCategories } = useContext(CategoriesContext);
 
   const [isLoading, setIsLoading] = useState(false);
   const [warningDialogOpen, setWarningDialogOpen] = useState(false);
   const [type, setType] = useState("");
   const [amount, setAmount] = useState(0);
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
   const [taxDeductible, setTaxDeductible] = useState(false);
   const [selectedDate, handleDateChange] = useState<MaterialUiPickersDate>(
     moment()
@@ -65,6 +68,7 @@ const TransactionPage: FC = () => {
           handleDateChange(moment(new Date(docData.timestamp.toDate())));
           setDescription(docData.description);
           setTaxDeductible(docData.taxDeductible);
+          setCategory(docData.category || "");
         }
         setIsLoading(false);
       }
@@ -79,7 +83,8 @@ const TransactionPage: FC = () => {
     handleDateChange,
     setDescription,
     setTaxDeductible,
-    setIsLoading
+    setIsLoading,
+    setCategory
   ]);
 
   const onDeleteTransaction = async () => {
@@ -119,7 +124,8 @@ const TransactionPage: FC = () => {
           amount: +amount,
           description,
           taxDeductible,
-          timestamp: selectedDate.toDate()
+          timestamp: selectedDate.toDate(),
+          category
         })
         .then(() => {
           history.push("/dashboard");
@@ -160,6 +166,39 @@ const TransactionPage: FC = () => {
                 >
                   <MenuItem value={"expense"}>Expense</MenuItem>
                   <MenuItem value={"income"}>Income</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl>
+                <InputLabel id="category-label">Category</InputLabel>
+                <Select
+                  labelId="category-label"
+                  id="category"
+                  value={category}
+                  onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+                    setCategory(event.target.value as string);
+                  }}
+                >
+                  {type === "expense"
+                    ? expenseCategories &&
+                      expenseCategories.size > 0 &&
+                      expenseCategories.docs.map(category => {
+                        let categoryData: any = category.data();
+                        return (
+                          <MenuItem value={category.id}>
+                            {categoryData.name}
+                          </MenuItem>
+                        );
+                      })
+                    : incomeCategories &&
+                      incomeCategories.size > 0 &&
+                      incomeCategories.docs.map(category => {
+                        let categoryData: any = category.data();
+                        return (
+                          <MenuItem value={category.id}>
+                            {categoryData.name}
+                          </MenuItem>
+                        );
+                      })}
                 </Select>
               </FormControl>
               <TextField
