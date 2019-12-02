@@ -30,10 +30,11 @@ export const useAuth = () => firebase.auth();
 
 export const useFirestore = () => firebase.firestore();
 
-export const doSignInWithGoogle = () =>
-  firebase.auth().signInWithPopup(googleAuthProvider);
+export const doSignInWithGoogle = () => {
+  return firebase.auth().signInWithRedirect(googleAuthProvider);
+};
 
 export const doSignInWithFacebook = () =>
-  firebase.auth().signInWithPopup(facebookAuthProvider);
+  firebase.auth().signInWithRedirect(facebookAuthProvider);
 
 export const doSignOut = () => firebase.auth().signOut();
