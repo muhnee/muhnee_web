@@ -1,5 +1,6 @@
 import React, { FC, useState, useContext, useEffect } from "react";
 import moment from "moment";
+import MomentUtils from "@date-io/moment";
 import firebase from "firebase";
 
 import Button from "@material-ui/core/Button";
@@ -17,14 +18,17 @@ import TextField from "@material-ui/core/TextField";
 
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
-import MomentUtils from "@date-io/moment";
-import useStyles from "./styles";
+
 import AuthenticationContext from "../../../contexts/AuthenticationContext";
 import CategoriesContext from "../../../contexts/CategoriesContext";
+import { useNotificationDispatch } from "../../../contexts/NotificationProvider";
+
+import useStyles from "./styles";
 
 const AddTransactionModal: FC = () => {
   const { user } = useContext(AuthenticationContext);
   const { incomeCategories, expenseCategories } = useContext(CategoriesContext);
+  const dispatchNotifications = useNotificationDispatch();
 
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -71,6 +75,13 @@ const AddTransactionModal: FC = () => {
         })
         .then(() => {
           setIsSubmitting(false);
+          dispatchNotifications({
+            type: "@@NOTIFICATION/PUSH",
+            notification: {
+              message: `Successfully added transaction ${description} - $${amount}!! 🚀`,
+              type: "success"
+            }
+          });
           resetData();
           onClose();
         })
