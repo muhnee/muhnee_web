@@ -33,18 +33,7 @@ const AuthenticatedContainer: FC = ({ children }) => {
 
   return (
     <div className={classes.root}>
-      <div
-        style={{
-          padding: "0.25rem 0 0.25rem 0.25rem",
-          width: 200,
-          borderRight: "1px solid #ccc",
-          height: "100vh",
-          position: "fixed",
-          zIndex: 3,
-          display: "flex",
-          flexDirection: "column"
-        }}
-      >
+      <div className={classes.sidebar}>
         <List style={{ flex: 1 }}>
           <ListItem style={{ marginBottom: "2.5rem" }}>
             <ListItemText
@@ -79,21 +68,12 @@ const AuthenticatedContainer: FC = ({ children }) => {
             v{process.env.REACT_APP_VERSION}
           </Typography>
           <Typography variant="body1" color="textSecondary">
-            Copyright &copy; 2019{" "}
+            Copyright &copy; Muhnee 2019{" "}
             {moment().year() !== 2019 ? `- ${moment().year()}` : ``}
           </Typography>
         </div>
       </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          flex: 1,
-          overflow: "scroll",
-          height: "100vh",
-          marginLeft: 200
-        }}
-      >
+      <div className={classes.mainContainer}>
         <AppBar />
         <div style={{ padding: "0.25rem 0.5rem", flex: 1, display: "flex" }}>
           {children}

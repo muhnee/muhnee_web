@@ -25,13 +25,16 @@ import LoadingContainer from "../../containers/LoadingContainer";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 
-import useStyles from "./styles";
 import { red } from "@material-ui/core/colors";
+import useStyles from "./styles";
+
 import CategoriesContext from "../../contexts/CategoriesContext";
+import { useNotificationDispatch } from "../../contexts/NotificationProvider";
 
 const TransactionPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
   const { incomeCategories, expenseCategories } = useContext(CategoriesContext);
+  const dispatchNotifications = useNotificationDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
   const [warningDialogOpen, setWarningDialogOpen] = useState(false);
@@ -98,6 +101,13 @@ const TransactionPage: FC = () => {
         .collection("transactions")
         .doc(transactionId)
         .delete();
+      dispatchNotifications({
+        type: "@@NOTIFICATION/PUSH",
+        notification: {
+          message: `Successfully deleted transaction ${description} - $${amount}!! 🚀`,
+          type: "success"
+        }
+      });
       history.push("/dashboard");
     }
   };
@@ -128,6 +138,13 @@ const TransactionPage: FC = () => {
           category
         })
         .then(() => {
+          dispatchNotifications({
+            type: "@@NOTIFICATION/PUSH",
+            notification: {
+              message: `Successfully updated transaction ${description} - $${amount}!! 🚀`,
+              type: "warning"
+            }
+          });
           history.push("/dashboard");
         })
         .catch(err => {
@@ -152,6 +169,15 @@ const TransactionPage: FC = () => {
     <>
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <div className={classes.root}>
+          <div style={{ marginBottom: "1.25rem" }}>
+            <Button
+              onClick={() => {
+                history.goBack();
+              }}
+            >
+              &larr; Go Back
+            </Button>
+          </div>
           <>
             <div className={classes.body}>
               <FormControl>

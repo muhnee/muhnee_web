@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import { MuiThemeProvider, useMediaQuery } from "@material-ui/core";
+import { MuiThemeProvider, useMediaQuery, Snackbar } from "@material-ui/core";
 
 import MobileWarningBanner from "./components/MobileWarningBanner";
 
@@ -18,6 +18,11 @@ import useStyles from "./styles";
 import AuthenticatedContainer from "./containers/AuthenticatedContainer";
 import CategoriesPage from "./pages/CategoriesPage";
 import CategoriesProvider from "./providers/CategoriesProvider";
+import NotificationProvider, {
+  useNotificationState,
+  useNotificationDispatch
+} from "./contexts/NotificationProvider";
+import SnackbarWrapper from "./components/Snackbar/Snackbar";
 
 // CoreComponent handles the router, the state in addition to Providers for hooks
 const Core: React.FC = ({ children }) => {
@@ -30,7 +35,11 @@ const Core: React.FC = ({ children }) => {
       <div className={classes.root}>
         <Router>
           <AuthenticationProvider>
-            <CategoriesProvider>{children}</CategoriesProvider>
+            <NotificationProvider>
+              <CategoriesProvider>
+                <App />
+              </CategoriesProvider>
+            </NotificationProvider>
           </AuthenticationProvider>
         </Router>
       </div>
@@ -39,8 +48,15 @@ const Core: React.FC = ({ children }) => {
 };
 
 const App: React.FC = () => {
+  const dispatch = useNotificationDispatch();
+  const { notification } = useNotificationState();
+
+  const handleClose = () => {
+    dispatch({ type: "@@NOTIFICATION/POP" });
+  };
+
   return (
-    <Core>
+    <>
       <Switch>
         <Route path="/" component={LandingPage} exact />
         <AuthenticatedContainer>
@@ -50,8 +66,21 @@ const App: React.FC = () => {
         </AuthenticatedContainer>
         <Route path="/" component={NotFoundPage} />
       </Switch>
-    </Core>
+      <Snackbar
+        open={!!notification[0]}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        {notification[0] && (
+          <SnackbarWrapper
+            message={notification[0].message}
+            variant={notification[0].type}
+            onClose={handleClose}
+          />
+        )}
+      </Snackbar>
+    </>
   );
 };
 
-export default App;
+export default Core;

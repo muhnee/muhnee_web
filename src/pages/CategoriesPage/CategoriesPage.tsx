@@ -17,10 +17,12 @@ import DeleteIcon from "@material-ui/icons/DeleteOutline";
 
 import AddCategoryContainer from "../../containers/AddCategoryContainer";
 import CategoriesContext from "../../contexts/CategoriesContext";
+import { useNotificationDispatch } from "../../contexts/NotificationProvider";
 
 const CategoriesPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
   const { expenseCategories, incomeCategories } = useContext(CategoriesContext);
+  const dispatchNotifications = useNotificationDispatch();
   const classes = useStyles();
 
   const onAddNewCategory = (type: string, newCategory: string) => {
@@ -35,10 +37,17 @@ const CategoriesPage: FC = () => {
         .add({
           name: newCategory
         });
+      dispatchNotifications({
+        type: "@@NOTIFICATION/PUSH",
+        notification: {
+          message: `Successfully added ${newCategory}!! 🚀`,
+          type: "success"
+        }
+      });
     }
   };
 
-  const onCategoryRemove = (type: string, id: string) => {
+  const onCategoryRemove = (type: string, id: string, name: string) => {
     if (user && user.uid) {
       firebase
         .firestore()
@@ -49,6 +58,13 @@ const CategoriesPage: FC = () => {
         .collection("types")
         .doc(id)
         .delete();
+      dispatchNotifications({
+        type: "@@NOTIFICATION/PUSH",
+        notification: {
+          message: `Successfully removed ${name}!! 🚀`,
+          type: "info"
+        }
+      });
     }
   };
 
@@ -70,7 +86,11 @@ const CategoriesPage: FC = () => {
                     <ListItemSecondaryAction>
                       <IconButton
                         onClick={() => {
-                          onCategoryRemove("expense", category.id);
+                          onCategoryRemove(
+                            "expense",
+                            category.id,
+                            expenseCategory.name
+                          );
                         }}
                       >
                         <DeleteIcon />
@@ -101,7 +121,7 @@ const CategoriesPage: FC = () => {
                     <ListItemSecondaryAction>
                       <IconButton
                         onClick={() => {
-                          onCategoryRemove("income", category.id);
+                          onCategoryRemove("income", category.id, income.name);
                         }}
                       >
                         <DeleteIcon />

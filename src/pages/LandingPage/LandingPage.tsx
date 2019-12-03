@@ -18,9 +18,11 @@ import {
   doSignInWithFacebook
 } from "../../firebase/firebase";
 import SignInWithFacebookButton from "../../components/buttons/SignInWithFacebookButton";
+import { useNotificationDispatch } from "../../contexts/NotificationProvider";
 
 const LandingPage: FC = () => {
   const { isLoaded, user } = useContext(AuthenticationContext);
+  const dispatch = useNotificationDispatch();
 
   const classes = useStyles();
   const isDesktop = useMediaQuery("(min-width:600px)");
@@ -50,7 +52,19 @@ const LandingPage: FC = () => {
               alignItems: "center"
             }}
           >
-            <SignInWithGoogleButton onClick={() => doSignInWithGoogle()} />
+            <SignInWithGoogleButton
+              onClick={() =>
+                doSignInWithGoogle().catch(err => {
+                  dispatch({
+                    type: "@@NOTIFICATION/PUSH",
+                    notification: {
+                      type: "error",
+                      message: err.message
+                    }
+                  });
+                })
+              }
+            />
             <SignInWithFacebookButton onClick={() => doSignInWithFacebook()} />
           </div>
           <Divider />
