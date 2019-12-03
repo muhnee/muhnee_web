@@ -17,4 +17,8 @@ export interface AuthenticationContextState {
 export interface CategoriesContextState {
   incomeCategories: firestore.QuerySnapshot | null | undefined;
   expenseCategories: firestore.QuerySnapshot | null | undefined;
+  categoryMap: {
+    income: any;
+    expense: any;
+  };
 }
