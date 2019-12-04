@@ -3,18 +3,23 @@ import React, { FC, useContext, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
+
+import MenuIcon from "@material-ui/icons/Menu";
 
 import PolicyLinks from "../PolicyLinks";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 
-import { useStyles } from "./styles";
 import { doSignOut } from "../../firebase/firebase";
 
-const AppBar: FC = () => {
+import { useStyles } from "./styles";
+import AppBarProps from "./types";
+
+const AppBar: FC<AppBarProps> = props => {
   const [anchorEl, setAnchorEl] = useState(null);
   const { user } = useContext(AuthenticationContext);
   const classes = useStyles();
@@ -31,7 +36,16 @@ const AppBar: FC = () => {
   }
   return (
     <Toolbar className={classes.root}>
-      <div className={classes.menuItems}></div>
+      <div className={classes.menuItems}>
+        <div className={classes.menuItemsInner}>
+          <IconButton onClick={() => props.onSidebarOpen()}>
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" color="primary">
+            Muhnee
+          </Typography>
+        </div>
+      </div>
       <div className={classes.userMenuContainer}>
         <Typography className={classes.displayName}>
           <strong>{user.displayName}</strong>

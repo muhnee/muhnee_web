@@ -1,4 +1,4 @@
-import React, { FC, useContext } from "react";
+import React, { FC, useContext, useState } from "react";
 import { Redirect } from "react-router";
 import moment from "moment";
 
@@ -20,9 +20,61 @@ import CategoriesIcon from "@material-ui/icons/Category";
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 
 import { useStyles } from "./styles";
+import { Drawer } from "@material-ui/core";
+
+const SidebarInner: FC = () => {
+  return (
+    <>
+      <List style={{ flex: 1 }}>
+        <ListItem style={{ marginBottom: "2.5rem" }}>
+          <ListItemText
+            primaryTypographyProps={{ variant: "h5", color: "primary" }}
+          >
+            Muhnee
+          </ListItemText>
+        </ListItem>
+        {/**
+         * TODO: move this to individual component
+         */}
+        <SidebarLink
+          icon={<DashboardIcon />}
+          to="/dashboard"
+          label="Dashboard"
+        />
+        <SidebarLink
+          icon={<MonthlySummaryIcon />}
+          to="/months"
+          label="Summary"
+        />
+        <SidebarLink
+          icon={<CategoriesIcon />}
+          to="/categories"
+          label="Categories"
+        />
+      </List>
+      <div style={{ marginBottom: "2rem", padding: "0.25rem 0.75rem" }}>
+        <Typography variant="body1" color="textSecondary">
+          <Link
+            href="https://muhneeapp.com"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Muhnee
+          </Link>{" "}
+          v{process.env.REACT_APP_VERSION}
+        </Typography>
+        <Typography variant="body1" color="textSecondary">
+          Copyright &copy; Muhnee 2019{" "}
+          {moment().year() !== 2019 ? `- ${moment().year()}` : ``}
+        </Typography>
+      </div>
+    </>
+  );
+};
 
 const AuthenticatedContainer: FC = ({ children }) => {
   const { isLoaded, user } = useContext(AuthenticationContext);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const classes = useStyles();
   if (!isLoaded) {
     return <LoadingContainer loadingMessage="Authenticating..." />;
@@ -35,52 +87,13 @@ const AuthenticatedContainer: FC = ({ children }) => {
   return (
     <div className={classes.root}>
       <div className={classes.sidebar}>
-        <List style={{ flex: 1 }}>
-          <ListItem style={{ marginBottom: "2.5rem" }}>
-            <ListItemText
-              primaryTypographyProps={{ variant: "h5", color: "primary" }}
-            >
-              Muhnee
-            </ListItemText>
-          </ListItem>
-          {/**
-           * TODO: move this to individual component
-           */}
-          <SidebarLink
-            icon={<DashboardIcon />}
-            to="/dashboard"
-            label="Dashboard"
-          />
-          <SidebarLink
-            icon={<MonthlySummaryIcon />}
-            to="/months"
-            label="Summary"
-          />
-          <SidebarLink
-            icon={<CategoriesIcon />}
-            to="/categories"
-            label="Categories"
-          />
-        </List>
-        <div style={{ marginBottom: "2rem", padding: "0.25rem 0.75rem" }}>
-          <Typography variant="body1" color="textSecondary">
-            <Link
-              href="https://muhneeapp.com"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              Muhnee
-            </Link>{" "}
-            v{process.env.REACT_APP_VERSION}
-          </Typography>
-          <Typography variant="body1" color="textSecondary">
-            Copyright &copy; Muhnee 2019{" "}
-            {moment().year() !== 2019 ? `- ${moment().year()}` : ``}
-          </Typography>
-        </div>
+        <SidebarInner />
       </div>
+      <Drawer open={sidebarOpen} onClose={() => setSidebarOpen(false)}>
+        <SidebarInner />
+      </Drawer>
       <div className={classes.mainContainer}>
-        <AppBar />
+        <AppBar onSidebarOpen={() => setSidebarOpen(true)} />
         <div style={{ padding: "0.25rem 0.5rem", flex: 1, display: "flex" }}>
           {children}
         </div>
