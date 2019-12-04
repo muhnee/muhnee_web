@@ -24,6 +24,7 @@ import useStyles from "./styles";
 
 const DashboardPage: FC = () => {
   const today = moment();
+  const lastMonth = moment().subtract(1, "month");
   const history = useHistory();
 
   const { user } = useContext(AuthenticationContext);
@@ -57,6 +58,17 @@ const DashboardPage: FC = () => {
       : null
   );
 
+  const [lastMonthSummary] = useDocumentData<Summary>(
+    user
+      ? firebase
+          .firestore()
+          .collection("users")
+          .doc(user.uid)
+          .collection("budget")
+          .doc(`${lastMonth.year()}-${lastMonth.month()}`)
+      : null
+  );
+
   if (!user || !user.displayName) {
     return <p>An Error Occurred.</p>;
   }
@@ -78,22 +90,16 @@ const DashboardPage: FC = () => {
           <div className={classes.summaryContainer}>
             <SummaryCard
               title="Expenses"
-              amount={
-                summary && summary.expenses
-                  ? `$${summary.expenses.toFixed(2)}`
-                  : "N/A"
-              }
+              amount={(summary && summary.expenses) || 0}
               avatar={<ExpenseIcon />}
+              lastMonth={(lastMonthSummary && lastMonthSummary.expenses) || 0}
               inverted
             />
             <SummaryCard
               title="Income"
               avatar={<IncomeIcon />}
-              amount={
-                summary && summary.income
-                  ? `$${summary.income.toFixed(2)}`
-                  : "N/A"
-              }
+              amount={(summary && summary.income) || 0}
+              lastMonth={(lastMonthSummary && lastMonthSummary.income) || 0}
             />
           </div>
           <div className={classes.summaryButtonContainer}>
@@ -108,7 +114,9 @@ const DashboardPage: FC = () => {
         </div>
       </div>
       <div className={classes.rightContainer}>
-        <Typography variant="body1">Recent Transactions</Typography>
+        <Typography variant="body1">
+          Recent Transactions - This Month
+        </Typography>
         {monthlyTransactions && monthlyTransactions.size > 0 && (
           <AddTransactionModal />
         )}
