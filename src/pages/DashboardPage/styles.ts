@@ -19,6 +19,11 @@ const useStyles = makeStyles({
   summaryContainer: {
     display: "flex",
     flexWrap: "wrap"
+  },
+  summaryButtonContainer: {
+    marginTop: "1.25rem",
+    display: "flex",
+    flexWrap: "wrap"
   }
 });
 

@@ -14,6 +14,7 @@ import SidebarLink from "../../components/sidebar/SidebarLink/SidebarLink";
 import LoadingContainer from "../LoadingContainer";
 
 import DashboardIcon from "@material-ui/icons/InsertChart";
+import MonthlySummaryIcon from "@material-ui/icons/TrendingUp";
 import CategoriesIcon from "@material-ui/icons/Category";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
@@ -49,6 +50,11 @@ const AuthenticatedContainer: FC = ({ children }) => {
             icon={<DashboardIcon />}
             to="/dashboard"
             label="Dashboard"
+          />
+          <SidebarLink
+            icon={<MonthlySummaryIcon />}
+            to="/months"
+            label="Summary"
           />
           <SidebarLink
             icon={<CategoriesIcon />}

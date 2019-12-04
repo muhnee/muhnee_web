@@ -1,16 +1,17 @@
 import React, { FC, useState, useContext } from "react";
 import firebase from "firebase";
 import moment from "moment";
-import { useDocumentData, useCollection } from "react-firebase-hooks/firestore";
+import { useCollection } from "react-firebase-hooks/firestore";
 
-import { Animation } from "@devexpress/dx-react-chart";
 import {
-  Chart,
-  PieSeries,
-  Title,
-  Legend,
-  Tooltip
-} from "@devexpress/dx-react-chart-material-ui";
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend
+} from "recharts";
 
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
@@ -20,17 +21,22 @@ import RightArrowIcon from "@material-ui/icons/ChevronRight";
 import useStyles from "./styles";
 import AuthenticationContext from "../../../contexts/AuthenticationContext";
 
-import CategoriesContext from "../../../contexts/CategoriesContext";
+type Summary = {
+  income: number;
+  expense: number;
+};
+type MonthlySummary = {
+  [timestamp: string]: Summary;
+};
 
 const MonthSummaryPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
-  const { categoryMap } = useContext(CategoriesContext);
   const [currentMonth, setCurrentMonth] = useState(moment());
 
   const classes = useStyles();
 
   const monthRef = `${currentMonth.year()}-${currentMonth.month()}`;
-  const [monthlyTransactions, loading, error] = useCollection(
+  const [monthlyTransactions, loading] = useCollection(
     user
       ? firebase
           .firestore()
@@ -39,42 +45,49 @@ const MonthSummaryPage: FC = () => {
           .collection("budget")
           .doc(monthRef)
           .collection("transactions")
-          .orderBy("timestamp", "desc")
+          .orderBy("timestamp", "asc")
       : null
   );
 
-  let categorySummary: any = { income: {}, expense: {} };
+  const days = currentMonth.daysInMonth();
+  let monthlySummary: MonthlySummary = {};
+  for (let i = 0; i < days; i++) {
+    let date = moment(currentMonth)
+      .startOf("month")
+      .add(i, "days");
+    monthlySummary[date.format("YYYY-MM-DD")] = {
+      income: 0,
+      expense: 0
+    };
+  }
 
   if (!loading && monthlyTransactions) {
     monthlyTransactions.docs.forEach(doc => {
       let docData: any = doc.data();
-      if (categorySummary[docData.type][docData.category]) {
-        categorySummary[docData.type][docData.category]["amount"] +=
-          docData.amount;
-      } else {
-        if (docData.type === "income") {
-          categorySummary[docData.type][docData.category] = {
-            amount: docData.amount,
-            name: categoryMap["income"][docData.category]
-          };
+      const date: string = moment(docData.timestamp.toDate()).format(
+        "YYYY-MM-DD"
+      );
+      if (monthlySummary[date]) {
+        if (docData.type === "expense") {
+          monthlySummary[date]["expense"] += docData.amount;
         } else {
-          categorySummary[docData.type][docData.category] = {
-            amount: docData.amount,
-            name: categoryMap["expense"][docData.category]
-          };
+          monthlySummary[date]["income"] += docData.amount;
         }
       }
     });
   }
 
-  const expenseData = Object.keys(categorySummary.expense).map(key => {
-    const expenseCategory = categorySummary.expense[key];
-    return { name: expenseCategory.name, amount: expenseCategory.amount };
+  const summary = Object.keys(monthlySummary).map(date => {
+    return {
+      displayDate: moment(date).format("DD/MM/YYYY"),
+      date: moment(date).toDate(),
+      label: moment(date).format("DD"),
+      ...monthlySummary[date]
+    };
   });
-  console.log(expenseData);
 
   return (
-    <div>
+    <div className={classes.root}>
       <div className={classes.monthControl}>
         <IconButton
           onClick={() =>
@@ -90,14 +103,26 @@ const MonthSummaryPage: FC = () => {
           <RightArrowIcon />
         </IconButton>
       </div>
-      <div>
-        <Chart data={expenseData}>
-          <PieSeries valueField="amount" argumentField="name" />
-          <Legend />
+      <div className={classes.summaryChartRow}>
+        <BarChart
+          width={700}
+          height={300}
+          data={summary}
+          margin={{
+            top: 20,
+            right: 30,
+            left: 20,
+            bottom: 5
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="label"></XAxis>
+          <YAxis />
           <Tooltip />
-          <Title text="Expense by category" />
-          <Animation />
-        </Chart>
+          <Legend />
+          <Bar dataKey="income" stackId="a" fill="#8884d8" />
+          <Bar dataKey="expense" stackId="a" fill="#82ca9d" />
+        </BarChart>
       </div>
     </div>
   );
