@@ -12,6 +12,7 @@ const useStyles = makeStyles({
     flex: 1,
     padding: "0.5rem 0.5rem",
     display: "flex",
+    minWidth: 280,
     flexDirection: "column"
   },
   categoryListContainer: {

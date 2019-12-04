@@ -9,7 +9,7 @@ export default interface SummaryCardProps {
   /**
    * The actual amount
    */
-  amount: string | number;
+  amount: number;
 
   /**
    * Is the inverted
@@ -20,4 +20,6 @@ export default interface SummaryCardProps {
    * Avatar
    */
   avatar?: JSX.Element;
+
+  lastMonth?: number;
 }
