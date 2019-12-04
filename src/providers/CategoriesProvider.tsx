@@ -33,8 +33,30 @@ const CategoriesProvider: FC = ({ children }) => {
       : null
   );
 
+  let income: any = {};
+  if (incomeCategories) {
+    incomeCategories.docs.forEach(doc => {
+      let docData: any = doc.data();
+      income[doc.id] = docData.name;
+    });
+  }
+
+  let expense: any = {};
+  if (expenseCategories) {
+    expenseCategories.docs.forEach(doc => {
+      let docData: any = doc.data();
+      expense[doc.id] = docData.name;
+    });
+  }
+
   return (
-    <CategoriesContext.Provider value={{ expenseCategories, incomeCategories }}>
+    <CategoriesContext.Provider
+      value={{
+        expenseCategories,
+        incomeCategories,
+        categoryMap: { income, expense }
+      }}
+    >
       {children}
     </CategoriesContext.Provider>
   );

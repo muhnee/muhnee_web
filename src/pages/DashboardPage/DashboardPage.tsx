@@ -1,9 +1,11 @@
 import React, { FC, useContext, useState } from "react";
+import { useHistory } from "react-router-dom";
 import firebase from "firebase";
 import moment from "moment";
 
 import { useDocumentData, useCollection } from "react-firebase-hooks/firestore";
 
+import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
@@ -22,6 +24,7 @@ import useStyles from "./styles";
 
 const DashboardPage: FC = () => {
   const today = moment();
+  const history = useHistory();
 
   const { user } = useContext(AuthenticationContext);
 
@@ -39,6 +42,7 @@ const DashboardPage: FC = () => {
           .doc(thisMonth)
           .collection("transactions")
           .orderBy("timestamp", "desc")
+          .limit(10)
       : null
   );
 
@@ -70,26 +74,37 @@ const DashboardPage: FC = () => {
         <Typography variant="h6" color="primary">
           {`This Month (${today.format("MMMM YYYY")})`}
         </Typography>
-        <div className={classes.summaryContainer}>
-          <SummaryCard
-            title="Expenses"
-            amount={
-              summary && summary.expenses
-                ? `$${summary.expenses.toFixed(2)}`
-                : "N/A"
-            }
-            avatar={<ExpenseIcon />}
-            inverted
-          />
-          <SummaryCard
-            title="Income"
-            avatar={<IncomeIcon />}
-            amount={
-              summary && summary.income
-                ? `$${summary.income.toFixed(2)}`
-                : "N/A"
-            }
-          />
+        <div>
+          <div className={classes.summaryContainer}>
+            <SummaryCard
+              title="Expenses"
+              amount={
+                summary && summary.expenses
+                  ? `$${summary.expenses.toFixed(2)}`
+                  : "N/A"
+              }
+              avatar={<ExpenseIcon />}
+              inverted
+            />
+            <SummaryCard
+              title="Income"
+              avatar={<IncomeIcon />}
+              amount={
+                summary && summary.income
+                  ? `$${summary.income.toFixed(2)}`
+                  : "N/A"
+              }
+            />
+          </div>
+          <div className={classes.summaryButtonContainer}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => history.push("/months")}
+            >
+              View Month Summary
+            </Button>
+          </div>
         </div>
       </div>
       <div className={classes.rightContainer}>
