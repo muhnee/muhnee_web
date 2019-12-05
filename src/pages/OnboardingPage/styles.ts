@@ -7,23 +7,21 @@ const useStyles = makeStyles({
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "column",
-    padding: "0.25rem 0.75rem"
+    backgroundColor: "#ccc"
   },
-  textContainer: {
-    minWidth: 200,
-    maxWidth: 500,
-    margin: "1.25rem 0"
-  },
-  images: {
-    width: "30%",
+  paper: {
+    display: "flex",
+    flexDirection: "column",
+    height: 700,
+    width: "50%",
     minWidth: 280,
-    maxHeight: 230
+    alignItems: "center",
+    padding: "0.75rem 0.5rem"
   },
   stepContainer: {
     display: "flex",
-    width: "100%",
-    flexWrap: "wrap",
-    justifyContent: "space-evenly"
+    maxWidth: 500,
+    width: "80%"
   }
 });
 
