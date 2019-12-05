@@ -19,9 +19,12 @@ import {
 } from "../../firebase/firebase";
 import SignInWithFacebookButton from "../../components/buttons/SignInWithFacebookButton";
 import { useNotificationDispatch } from "../../contexts/NotificationProvider";
+import { UserContext } from "../../contexts/UserContext";
 
 const LandingPage: FC = () => {
   const { isLoaded, user } = useContext(AuthenticationContext);
+  const { onboarded, loaded } = useContext(UserContext);
+
   const dispatch = useNotificationDispatch();
 
   const classes = useStyles();
@@ -30,8 +33,13 @@ const LandingPage: FC = () => {
   if (!isLoaded) {
     return <div>Loading...</div>;
   }
+
+  if (isLoaded && user && loaded && !onboarded) {
+    return <Redirect to="/start" />;
+  }
+
   // if the user is logged in then redirect to dashboard
-  if (isLoaded && user) {
+  if (loaded && onboarded && isLoaded && user) {
     return <Redirect to="/dashboard" />;
   }
 

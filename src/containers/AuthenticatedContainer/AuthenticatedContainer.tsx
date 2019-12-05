@@ -21,6 +21,7 @@ import AuthenticationContext from "../../contexts/AuthenticationContext";
 
 import { useStyles } from "./styles";
 import { Drawer } from "@material-ui/core";
+import { UserContext } from "../../contexts/UserContext";
 
 const SidebarInner: FC = () => {
   return (
@@ -74,6 +75,8 @@ const SidebarInner: FC = () => {
 
 const AuthenticatedContainer: FC = ({ children }) => {
   const { isLoaded, user } = useContext(AuthenticationContext);
+  const { loaded, onboarded } = useContext(UserContext);
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const classes = useStyles();
   if (!isLoaded) {
@@ -82,6 +85,9 @@ const AuthenticatedContainer: FC = ({ children }) => {
   if (isLoaded && !user) {
     //TODO: save previous state so when user logins state is persistent
     return <Redirect to="/" />;
+  }
+  if (loaded && !onboarded) {
+    return <Redirect to="/start" />;
   }
 
   return (
