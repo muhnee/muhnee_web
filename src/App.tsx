@@ -9,6 +9,7 @@ import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import DashboardPage from "./pages/DashboardPage";
 import MonthsPage from "./pages/MonthsPage";
+import OnboardingPage from "./pages/OnboardingPage";
 
 import { AuthenticationProvider } from "./providers/AuthenticationProvider";
 
@@ -23,6 +24,7 @@ import NotificationProvider, {
   useNotificationDispatch
 } from "./contexts/NotificationProvider";
 import SnackbarWrapper from "./components/Snackbar/Snackbar";
+import UserProvider from "./providers/UserProvider";
 
 // CoreComponent handles the router, the state in addition to Providers for hooks
 const Core: React.FC = ({ children }) => {
@@ -37,7 +39,9 @@ const Core: React.FC = ({ children }) => {
           <AuthenticationProvider>
             <NotificationProvider>
               <CategoriesProvider>
-                <App />
+                <UserProvider>
+                  <App />
+                </UserProvider>
               </CategoriesProvider>
             </NotificationProvider>
           </AuthenticationProvider>
@@ -59,6 +63,7 @@ const App: React.FC = () => {
     <>
       <Switch>
         <Route path="/" component={LandingPage} exact />
+        <Route path="/start" component={OnboardingPage} />
         <AuthenticatedContainer>
           <Route path="/dashboard" component={DashboardPage} exact />
           <Route path="/months" component={MonthsPage} />
