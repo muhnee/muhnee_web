@@ -16,7 +16,7 @@ import useStyles from "./styles";
 
 const AccountPage: FC = () => {
   const { user, isLoaded } = useContext(AuthenticationContext);
-  const {} = useContext(UserContext);
+  const { onboarded } = useContext(UserContext);
 
   const classes = useStyles();
 
@@ -41,6 +41,9 @@ const AccountPage: FC = () => {
           {`Saving Money Since ${moment(user.metadata.creationTime).format(
             "Do MMM YYYY"
           )}`}
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          {onboarded ? "User Onboarded" : "User not onboarded"}
         </Typography>
       </div>
       <Divider />
