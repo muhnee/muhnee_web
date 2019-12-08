@@ -2,16 +2,21 @@ import React, { FC, useContext } from "react";
 import moment from "moment";
 
 import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
-import AuthenticationContext from "../../contexts/AuthenticationContext";
 import LoadingContainer from "../../containers/LoadingContainer";
+
+import AuthenticationContext from "../../contexts/AuthenticationContext";
+import { UserContext } from "../../contexts/UserContext";
 
 import useStyles from "./styles";
 
 const AccountPage: FC = () => {
   const { user, isLoaded } = useContext(AuthenticationContext);
+  const {} = useContext(UserContext);
 
   const classes = useStyles();
 
@@ -45,11 +50,16 @@ const AccountPage: FC = () => {
         </Typography>
       </div>
       <Divider />
-
       <div className={classes.container}>
         <Typography variant="h6" color="textPrimary">
-          Account Settings
+          Budget Tool Settings
         </Typography>
+        <div className={classes.row}>
+          <div>
+            <TextField label="Savings Target" fullWidth />
+          </div>
+        </div>
+        <Button>Update Settings</Button>
       </div>
     </div>
   );

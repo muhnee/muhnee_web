@@ -30,6 +30,7 @@ import useStyles from "./styles";
 
 import CategoriesContext from "../../contexts/CategoriesContext";
 import { useNotificationDispatch } from "../../contexts/NotificationProvider";
+import { Link } from "@material-ui/core";
 
 const TransactionPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -46,6 +47,7 @@ const TransactionPage: FC = () => {
   const [selectedDate, handleDateChange] = useState<MaterialUiPickersDate>(
     moment()
   );
+  const [recieptFilePath, setReceiptFilePath] = useState("");
 
   const history = useHistory();
   let { monthId, transactionId } = useParams();
@@ -72,6 +74,15 @@ const TransactionPage: FC = () => {
           setDescription(docData.description);
           setTaxDeductible(docData.taxDeductible);
           setCategory(docData.category || "");
+          if (docData.receipt) {
+            const filePath = await firebase
+              .storage()
+              .refFromURL(`gs://muhnee-app.appspot.com/${docData.receipt}`)
+              .getDownloadURL();
+            setReceiptFilePath(filePath);
+          } else {
+            setReceiptFilePath("");
+          }
         }
         setIsLoading(false);
       }
@@ -87,7 +98,8 @@ const TransactionPage: FC = () => {
     setDescription,
     setTaxDeductible,
     setIsLoading,
-    setCategory
+    setCategory,
+    setReceiptFilePath
   ]);
 
   const onDeleteTransaction = async () => {
@@ -267,6 +279,11 @@ const TransactionPage: FC = () => {
                 value={selectedDate}
                 onChange={handleDateChange}
               />
+              {recieptFilePath && (
+                <Link href={recieptFilePath} target="_blank">
+                  Download receipt
+                </Link>
+              )}
             </div>
             <Divider />
             <div style={{ display: "flex", flexWrap: "wrap" }}>

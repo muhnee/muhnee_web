@@ -30,4 +30,9 @@ export interface Transaction {
    * The type of transaction
    */
   type: "expense" | "income";
+
+  /**
+   * The Firestore Storage Link to the Upload
+   */
+  receipt?: string | null;
 }

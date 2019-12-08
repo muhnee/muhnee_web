@@ -15,9 +15,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Switch from "@material-ui/core/Switch";
 import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
+import { DropzoneArea } from "material-ui-dropzone";
 
 import AuthenticationContext from "../../../contexts/AuthenticationContext";
 import CategoriesContext from "../../../contexts/CategoriesContext";
@@ -41,6 +43,7 @@ const AddTransactionModal: FC = () => {
   const [selectedDate, handleDateChange] = useState<MaterialUiPickersDate>(
     moment()
   );
+  const [files, setFiles] = useState<File[]>([]);
 
   const resetData = () => {
     setType("expense");
@@ -49,15 +52,21 @@ const AddTransactionModal: FC = () => {
     setDescription("");
     setTaxDeductible(false);
     handleDateChange(moment());
+    setFiles([]);
   };
 
   useEffect(() => {
     resetData();
   }, [setType, setAmount, setDescription, setTaxDeductible, handleDateChange]);
 
-  const addData = () => {
+  const addData = async () => {
     if (user && selectedDate) {
       setIsSubmitting(true);
+      let filesMetadata;
+      if (files.length > 0) {
+        filesMetadata = await uploadFiles();
+        console.log(filesMetadata);
+      }
       firebase
         .firestore()
         .collection("users")
@@ -71,7 +80,10 @@ const AddTransactionModal: FC = () => {
           description,
           taxDeductible,
           timestamp: selectedDate.toDate(),
-          category: category
+          category: category,
+          receipt: filesMetadata
+            ? filesMetadata.metadata.fullPath || null
+            : null
         })
         .then(() => {
           setIsSubmitting(false);
@@ -93,6 +105,24 @@ const AddTransactionModal: FC = () => {
     }
   };
 
+  const uploadFiles = () => {
+    if (user && user.uid && files) {
+      return firebase
+        .storage()
+        .ref()
+        .child(
+          `/users/${user.uid}/uploads/${moment().toISOString()}-${
+            files[0].name
+          }`
+        )
+        .put(files[0])
+        .then(snapshot => {
+          console.log(snapshot);
+          return snapshot;
+        });
+    }
+  };
+
   const classes = useStyles();
 
   const onClose = () => {
@@ -110,6 +140,9 @@ const AddTransactionModal: FC = () => {
     return <span>An Error Occured</span>;
   }
 
+  if (files) {
+    console.log(files);
+  }
   return (
     <>
       <Button onClick={() => setOpen(true)} variant="outlined" color="primary">
@@ -212,6 +245,15 @@ const AddTransactionModal: FC = () => {
               onChange={handleDateChange}
               disabled={isSubmitting}
             />
+            <div>
+              <Typography>Receipt Photo</Typography>
+              <DropzoneArea
+                onChange={files => setFiles(files)}
+                filesLimit={1}
+                acceptedFiles={["image/*", "application/pdf"]}
+                dropzoneText="Drag and Drop"
+              />
+            </div>
           </DialogContent>
           <DialogActions>
             <Button onClick={addData} disabled={isSubmitting}>

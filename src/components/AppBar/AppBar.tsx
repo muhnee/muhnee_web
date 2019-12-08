@@ -1,4 +1,5 @@
 import React, { FC, useContext, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -21,6 +22,7 @@ import AppBarProps from "./types";
 
 const AppBar: FC<AppBarProps> = props => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const history = useHistory();
   const { user } = useContext(AuthenticationContext);
   const classes = useStyles();
 
@@ -38,7 +40,11 @@ const AppBar: FC<AppBarProps> = props => {
     <Toolbar className={classes.root}>
       <div className={classes.menuItems}>
         <div className={classes.menuItemsInner}>
-          <IconButton onClick={() => props.onSidebarOpen()}>
+          <IconButton
+            onClick={() => {
+              props.onSidebarOpen();
+            }}
+          >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" color="primary">
@@ -74,10 +80,12 @@ const AppBar: FC<AppBarProps> = props => {
             style={{ marginTop: "0.5rem" }}
           >
             <Button
-              // onClick={() => doSignOut()}
+              onClick={() => {
+                history.push("/account");
+                handleClick(null);
+              }}
               variant="outlined"
               color="primary"
-              disabled
             >
               My Account
             </Button>
