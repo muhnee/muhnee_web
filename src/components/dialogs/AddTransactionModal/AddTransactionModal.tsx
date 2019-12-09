@@ -66,7 +66,6 @@ const AddTransactionModal: FC = () => {
       let filesMetadata;
       if (files.length > 0) {
         filesMetadata = await uploadFiles();
-        console.log(filesMetadata);
       }
       firebase
         .firestore()
@@ -118,7 +117,6 @@ const AddTransactionModal: FC = () => {
         )
         .put(files[0])
         .then(snapshot => {
-          console.log(snapshot);
           return snapshot;
         });
     }
@@ -139,10 +137,6 @@ const AddTransactionModal: FC = () => {
 
   if (!user || !user.uid) {
     return <span>An Error Occured</span>;
-  }
-
-  if (files) {
-    console.log(files);
   }
   return (
     <>

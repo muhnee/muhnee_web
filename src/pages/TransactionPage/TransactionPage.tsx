@@ -135,6 +135,23 @@ const TransactionPage: FC = () => {
 
   const onDeleteTransaction = async () => {
     if (user) {
+      if (gsStorageURL) {
+        try {
+          await firebase
+            .storage()
+            .refFromURL(gsStorageURL)
+            .delete();
+        } catch {}
+      }
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .collection("budget")
+        .doc(monthId)
+        .collection("transactions")
+        .doc(transactionId)
+        .delete();
       dispatchNotifications({
         type: "@@NOTIFICATION/PUSH",
         notification: {
@@ -158,7 +175,6 @@ const TransactionPage: FC = () => {
       let filesMetadata;
       if (files.length > 0) {
         filesMetadata = await uploadFiles();
-        console.log(filesMetadata);
       }
       firebase
         .firestore()
@@ -204,7 +220,6 @@ const TransactionPage: FC = () => {
             .refFromURL(gsStorageURL)
             .delete();
         } catch {
-          console.log("Cannot delete file.");
         }
       }
       return firebase
