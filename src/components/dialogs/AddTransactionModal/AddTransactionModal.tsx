@@ -26,6 +26,7 @@ import CategoriesContext from "../../../contexts/CategoriesContext";
 import { useNotificationDispatch } from "../../../contexts/NotificationProvider";
 
 import useStyles from "./styles";
+import { FILE_UPLOAD } from "../../../config/settings";
 
 const AddTransactionModal: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -65,7 +66,6 @@ const AddTransactionModal: FC = () => {
       let filesMetadata;
       if (files.length > 0) {
         filesMetadata = await uploadFiles();
-        console.log(filesMetadata);
       }
       firebase
         .firestore()
@@ -117,7 +117,6 @@ const AddTransactionModal: FC = () => {
         )
         .put(files[0])
         .then(snapshot => {
-          console.log(snapshot);
           return snapshot;
         });
     }
@@ -138,10 +137,6 @@ const AddTransactionModal: FC = () => {
 
   if (!user || !user.uid) {
     return <span>An Error Occured</span>;
-  }
-
-  if (files) {
-    console.log(files);
   }
   return (
     <>
@@ -250,7 +245,7 @@ const AddTransactionModal: FC = () => {
               <DropzoneArea
                 onChange={files => setFiles(files)}
                 filesLimit={1}
-                acceptedFiles={["image/*", "application/pdf"]}
+                acceptedFiles={FILE_UPLOAD.ACCEPTED_MIME_TYPES}
                 dropzoneText="Drag and Drop"
               />
             </div>

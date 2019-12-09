@@ -14,6 +14,8 @@ import Select from "@material-ui/core/Select";
 import Switch from "@material-ui/core/Switch";
 import TextField from "@material-ui/core/TextField";
 
+import { DropzoneDialog } from "material-ui-dropzone";
+
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
@@ -30,7 +32,8 @@ import useStyles from "./styles";
 
 import CategoriesContext from "../../contexts/CategoriesContext";
 import { useNotificationDispatch } from "../../contexts/NotificationProvider";
-import { Link } from "@material-ui/core";
+import { Link, Typography } from "@material-ui/core";
+import { FILE_UPLOAD } from "../../config/settings";
 
 const TransactionPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -39,6 +42,9 @@ const TransactionPage: FC = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [warningDialogOpen, setWarningDialogOpen] = useState(false);
+  const [fileUpdateDialogOpen, setFileUpdateDialogOpen] = useState(false);
+  const [files, setUpdateFiles] = useState<File[]>([]);
+
   const [type, setType] = useState("");
   const [amount, setAmount] = useState(0);
   const [description, setDescription] = useState("");
@@ -48,6 +54,7 @@ const TransactionPage: FC = () => {
     moment()
   );
   const [recieptFilePath, setReceiptFilePath] = useState("");
+  const [gsStorageURL, setGSStorageURL] = useState("");
 
   const history = useHistory();
   let { monthId, transactionId } = useParams();
@@ -75,13 +82,36 @@ const TransactionPage: FC = () => {
           setTaxDeductible(docData.taxDeductible);
           setCategory(docData.category || "");
           if (docData.receipt) {
-            const filePath = await firebase
+            const firebaseRef = firebase
               .storage()
-              .refFromURL(`gs://muhnee-app.appspot.com/${docData.receipt}`)
-              .getDownloadURL();
-            setReceiptFilePath(filePath);
+              .refFromURL(`gs://muhnee-app.appspot.com/${docData.receipt}`);
+            try {
+              setGSStorageURL(`gs://muhnee-app.appspot.com/${docData.receipt}`);
+              setReceiptFilePath(await firebaseRef.getDownloadURL());
+            } catch (e) {
+              console.error(e);
+              setReceiptFilePath("");
+              if (e.code === "storage/object-not-found") {
+                dispatchNotifications({
+                  type: "@@NOTIFICATION/PUSH",
+                  notification: {
+                    message: `Cannot find receipt`,
+                    type: "error"
+                  }
+                });
+              } else {
+                dispatchNotifications({
+                  type: "@@NOTIFICATION/PUSH",
+                  notification: {
+                    message: `an unknown error occurred.`,
+                    type: "error"
+                  }
+                });
+              }
+            }
           } else {
             setReceiptFilePath("");
+            setGSStorageURL("");
           }
         }
         setIsLoading(false);
@@ -99,11 +129,20 @@ const TransactionPage: FC = () => {
     setTaxDeductible,
     setIsLoading,
     setCategory,
-    setReceiptFilePath
+    setReceiptFilePath,
+    dispatchNotifications
   ]);
 
   const onDeleteTransaction = async () => {
     if (user) {
+      if (gsStorageURL) {
+        try {
+          await firebase
+            .storage()
+            .refFromURL(gsStorageURL)
+            .delete();
+        } catch {}
+      }
       await firebase
         .firestore()
         .collection("users")
@@ -131,8 +170,12 @@ const TransactionPage: FC = () => {
     setTaxDeductible(checked);
   };
 
-  const updateTransaction = () => {
+  const updateTransaction = async () => {
     if (user && selectedDate) {
+      let filesMetadata;
+      if (files.length > 0) {
+        filesMetadata = await uploadFiles();
+      }
       firebase
         .firestore()
         .collection("users")
@@ -147,7 +190,10 @@ const TransactionPage: FC = () => {
           description,
           taxDeductible,
           timestamp: selectedDate.toDate(),
-          category
+          category,
+          receipt: filesMetadata
+            ? filesMetadata.metadata.fullPath || null
+            : null
         })
         .then(() => {
           dispatchNotifications({
@@ -161,6 +207,32 @@ const TransactionPage: FC = () => {
         })
         .catch(err => {
           console.error(err);
+        });
+    }
+  };
+
+  const uploadFiles = async () => {
+    if (user && user.uid && files) {
+      if (gsStorageURL) {
+        try {
+          await firebase
+            .storage()
+            .refFromURL(gsStorageURL)
+            .delete();
+        } catch {
+        }
+      }
+      return firebase
+        .storage()
+        .ref()
+        .child(
+          `/users/${user.uid}/uploads/${moment().toISOString()}-${
+            files[0].name
+          }`
+        )
+        .put(files[0])
+        .then(snapshot => {
+          return snapshot;
         });
     }
   };
@@ -279,11 +351,18 @@ const TransactionPage: FC = () => {
                 value={selectedDate}
                 onChange={handleDateChange}
               />
-              {recieptFilePath && (
-                <Link href={recieptFilePath} target="_blank">
-                  Download receipt
-                </Link>
-              )}
+              <Divider />
+              <Typography variant="body1">Receipt</Typography>
+              <div className={classes.receipt}>
+                {recieptFilePath && (
+                  <Link href={recieptFilePath} target="_blank">
+                    Download receipt
+                  </Link>
+                )}
+                <Button onClick={() => setFileUpdateDialogOpen(true)}>
+                  Update File
+                </Button>
+              </div>
             </div>
             <Divider />
             <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -321,6 +400,17 @@ const TransactionPage: FC = () => {
           onDeleteTransaction={() => onDeleteTransaction()}
         />
       </MuiPickersUtilsProvider>
+      <DropzoneDialog
+        open={fileUpdateDialogOpen}
+        acceptedFiles={FILE_UPLOAD.ACCEPTED_MIME_TYPES}
+        showPreviews={true}
+        filesLimit={1}
+        onClose={() => setFileUpdateDialogOpen(false)}
+        onSave={(files: File[]) => {
+          setUpdateFiles(files);
+          setFileUpdateDialogOpen(false);
+        }}
+      />
     </>
   );
 };
