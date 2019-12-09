@@ -14,6 +14,12 @@ const useStyles = makeStyles({
   },
   switch: {
     margin: "1.25rem 0"
+  },
+  receipt: {
+    marginTop: "0.25rem",
+    display: "flex",
+    alignItems: "center",
+    flexWrap: "wrap"
   }
 });
 

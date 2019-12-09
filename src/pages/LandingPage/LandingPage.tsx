@@ -8,6 +8,8 @@ import Typography from "@material-ui/core/Typography";
 
 import SignInWithGoogleButton from "../../components/buttons/SignInWithGoogleButton";
 
+import LoadingContainer from "../../containers/LoadingContainer";
+
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 
 import useStyles from "./styles";
@@ -31,7 +33,7 @@ const LandingPage: FC = () => {
   const isDesktop = useMediaQuery("(min-width:600px)");
 
   if (!isLoaded) {
-    return <div>Loading...</div>;
+    return <LoadingContainer />;
   }
 
   if (isLoaded && user && loaded && !onboarded) {

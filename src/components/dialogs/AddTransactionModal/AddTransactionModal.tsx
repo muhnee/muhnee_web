@@ -26,6 +26,7 @@ import CategoriesContext from "../../../contexts/CategoriesContext";
 import { useNotificationDispatch } from "../../../contexts/NotificationProvider";
 
 import useStyles from "./styles";
+import { FILE_UPLOAD } from "../../../config/settings";
 
 const AddTransactionModal: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -250,7 +251,7 @@ const AddTransactionModal: FC = () => {
               <DropzoneArea
                 onChange={files => setFiles(files)}
                 filesLimit={1}
-                acceptedFiles={["image/*", "application/pdf"]}
+                acceptedFiles={FILE_UPLOAD.ACCEPTED_MIME_TYPES}
                 dropzoneText="Drag and Drop"
               />
             </div>
