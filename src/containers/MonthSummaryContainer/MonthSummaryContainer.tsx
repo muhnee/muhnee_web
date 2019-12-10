@@ -1,28 +1,13 @@
-import React, { FC, useState, useContext } from "react";
-import firebase from "firebase";
+import React, { FC } from "react";
 import moment from "moment";
-import { useCollection } from "react-firebase-hooks/firestore";
 
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend
-} from "recharts";
+import { XAxis, Tooltip, LineChart, Line } from "recharts";
 
 import Paper from "@material-ui/core/Paper";
-
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 
-import LeftArrowIcon from "@material-ui/icons/ChevronLeft";
-import RightArrowIcon from "@material-ui/icons/ChevronRight";
-import useStyles from "./styles";
-import AuthenticationContext from "../../../contexts/AuthenticationContext";
 import { blueGrey } from "@material-ui/core/colors";
+import { MonthSummaryContainerProps } from "./types";
 
 type Summary = {
   income: number;
@@ -88,26 +73,11 @@ const ChartLabel: FC<ChartLabelProps> = ({ payload, active }) => {
   return null;
 };
 
-const MonthSummaryPage: FC = () => {
-  const { user } = useContext(AuthenticationContext);
-  const [currentMonth, setCurrentMonth] = useState(moment());
-
-  const classes = useStyles();
-
-  const monthRef = `${currentMonth.year()}-${currentMonth.month()}`;
-  const [monthlyTransactions, loading] = useCollection(
-    user
-      ? firebase
-          .firestore()
-          .collection("users")
-          .doc(user.uid)
-          .collection("budget")
-          .doc(monthRef)
-          .collection("transactions")
-          .orderBy("timestamp", "asc")
-      : null
-  );
-
+const MonthSummaryContainer: FC<MonthSummaryContainerProps> = ({
+  currentMonth,
+  transactions,
+  isLoading
+}) => {
   const days = currentMonth.daysInMonth();
   let monthlySummary: MonthlySummary = {};
   for (let i = 0; i < days; i++) {
@@ -120,8 +90,8 @@ const MonthSummaryPage: FC = () => {
     };
   }
 
-  if (!loading && monthlyTransactions) {
-    monthlyTransactions.docs.forEach(doc => {
+  if (!isLoading && transactions) {
+    transactions.docs.forEach(doc => {
       let docData: any = doc.data();
       const date: string = moment(docData.timestamp.toDate()).format(
         "YYYY-MM-DD"
@@ -148,45 +118,23 @@ const MonthSummaryPage: FC = () => {
   );
 
   return (
-    <div className={classes.root}>
-      <div className={classes.monthControl}>
-        <IconButton
-          onClick={() =>
-            setCurrentMonth(moment(currentMonth.subtract(1, "month")))
-          }
-        >
-          <LeftArrowIcon />
-        </IconButton>
-        <Typography>{currentMonth.format("MMM YYYY")}</Typography>
-        <IconButton
-          onClick={() => setCurrentMonth(moment(currentMonth.add(1, "month")))}
-        >
-          <RightArrowIcon />
-        </IconButton>
-      </div>
-      <div className={classes.summaryChartRow}>
-        <BarChart
-          width={700}
-          height={300}
-          data={summary}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 20,
-            bottom: 5
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="label"></XAxis>
-          <YAxis />
-          <Tooltip content={ChartLabel} />
-          <Legend />
-          <Bar dataKey="income" stackId="a" fill="#8884d8" unit="$" />
-          <Bar dataKey="expense" stackId="a" fill="#82ca9d" unit="$" />
-        </BarChart>
-      </div>
-    </div>
+    <LineChart
+      width={700}
+      height={300}
+      data={summary}
+      margin={{
+        top: 20,
+        right: 30,
+        left: 20,
+        bottom: 5
+      }}
+    >
+      <XAxis dataKey="label"></XAxis>
+      <Tooltip content={ChartLabel} />
+      <Line type="monotone" dataKey="income" stroke="#82ca9d" unit="$" />
+      <Line type="monotone" dataKey="expense" stroke="#8884d8" unit="$" />
+    </LineChart>
   );
 };
 
-export default MonthSummaryPage;
+export default MonthSummaryContainer;

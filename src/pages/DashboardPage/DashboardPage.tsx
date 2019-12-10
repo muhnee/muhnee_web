@@ -19,6 +19,7 @@ import AuthenticationContext from "../../contexts/AuthenticationContext";
 import { Summary } from "../../types/Summary";
 
 import useStyles from "./styles";
+import MonthSummaryContainer from "../../containers/MonthSummaryContainer";
 
 const DashboardPage: FC = () => {
   const lastMonth = moment().subtract(1, "month");
@@ -32,7 +33,11 @@ const DashboardPage: FC = () => {
 
   const targetDate = `${thisMonth.year()}-${thisMonth.month()}`;
 
-  const [monthlyTransactions, loading, error] = useCollection(
+  const [
+    monthlyTransactions,
+    isMonthlyTransactionsLoading,
+    error
+  ] = useCollection(
     user
       ? firebase
           .firestore()
@@ -74,9 +79,12 @@ const DashboardPage: FC = () => {
     <div className={classes.root}>
       <div className={classes.row}>
         <div style={{ flex: 1 }}>
-          <Typography variant="h6">{`Overview - ${thisMonth.format(
-            "MMMM YYYY"
-          )}`}</Typography>
+          <Typography variant="h5">
+            <strong>Overview -</strong>{" "}
+            <span style={{ fontWeight: 300 }}>
+              {thisMonth.format("MMMM YYYY")}
+            </span>
+          </Typography>
         </div>
         <ButtonGroup color="primary" aria-label=" outlined button group">
           <Button
@@ -132,12 +140,20 @@ const DashboardPage: FC = () => {
               </Button>
             </div>
           </div>
+          <div style={{ marginTop: "0.75rem" }}>
+            <Typography variant="h6">Charts</Typography>
+            <MonthSummaryContainer
+              currentMonth={thisMonth}
+              transactions={monthlyTransactions}
+              isLoading={isMonthlyTransactionsLoading}
+            />
+          </div>
         </div>
         <div className={classes.rightContainer}>
           <Typography variant="body1">
             Recent Transactions - This Month
           </Typography>
-          {loading && <CircularProgress />}
+          {isMonthlyTransactionsLoading && <CircularProgress />}
           {error && <span>An Error Occurred</span>}
           {monthlyTransactions && monthlyTransactions.size > 0 ? (
             <List>
@@ -180,7 +196,7 @@ const DashboardPage: FC = () => {
               </Typography>
             </div>
           )}
-          {!loading && (
+          {!isMonthlyTransactionsLoading && (
             <div style={{ marginTop: "0.25rem" }}>
               <AddTransactionModal />
             </div>

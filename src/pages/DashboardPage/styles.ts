@@ -14,8 +14,10 @@ const useStyles = makeStyles({
     flexWrap: "wrap"
   },
   leftContainer: {
-    flex: 2,
-    minWidth: 300
+    flex: 3,
+    minWidth: 300,
+    display: "flex",
+    flexDirection: "column"
   },
   rightContainer: {
     flex: 1,
