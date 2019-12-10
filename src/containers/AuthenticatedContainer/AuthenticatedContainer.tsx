@@ -15,7 +15,6 @@ import SidebarLink from "../../components/sidebar/SidebarLink/SidebarLink";
 import LoadingContainer from "../LoadingContainer";
 
 import DashboardIcon from "@material-ui/icons/InsertChart";
-import MonthlySummaryIcon from "@material-ui/icons/TrendingUp";
 import CategoriesIcon from "@material-ui/icons/Category";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
