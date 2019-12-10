@@ -42,6 +42,7 @@ export const useStyles = makeStyles(theme =>
       }
     },
     userCardRoot: {
+      textAlign: "left",
       display: "flex",
       flex: 1,
       padding: "0.5rem 0.25rem",

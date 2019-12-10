@@ -114,17 +114,15 @@ const DashboardPage: FC = () => {
           <div>
             <div className={classes.summaryContainer}>
               <SummaryCard
-                title="Expenses"
-                amount={(summary && summary.expenses) || 0}
-                avatar={<ExpenseIcon />}
-                lastMonth={(lastMonthSummary && lastMonthSummary.expenses) || 0}
-                inverted
-              />
-              <SummaryCard
                 title="Income"
-                avatar={<IncomeIcon />}
                 amount={(summary && summary.income) || 0}
                 lastMonth={(lastMonthSummary && lastMonthSummary.income) || 0}
+              />
+              <SummaryCard
+                title="Expenses"
+                amount={(summary && summary.expenses) || 0}
+                lastMonth={(lastMonthSummary && lastMonthSummary.expenses) || 0}
+                inverted
               />
             </div>
             <div className={classes.summaryButtonContainer}>

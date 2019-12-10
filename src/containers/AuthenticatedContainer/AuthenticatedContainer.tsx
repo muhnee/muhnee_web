@@ -102,7 +102,7 @@ const AuthenticatedContainer: FC = ({ children }) => {
           <ButtonBase onClick={() => history.push("/account")}>
             <div className={classes.userCardRoot}>
               {user.photoURL && (
-                <div style={{ marginRight: "0.25rem" }}>
+                <div style={{ marginRight: "0.5rem" }}>
                   <Avatar src={user.photoURL} />
                 </div>
               )}
