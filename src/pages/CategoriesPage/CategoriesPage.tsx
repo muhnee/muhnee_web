@@ -1,9 +1,10 @@
-import React, { FC, useContext } from "react";
+import React, { FC, useContext, useState } from "react";
 import { Redirect } from "react-router-dom";
 import firebase from "firebase";
 
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
+import { DropzoneDialog } from "material-ui-dropzone";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 
@@ -13,11 +14,17 @@ import AddCategoryContainer from "../../containers/AddCategoryContainer";
 import CategoriesContext from "../../contexts/CategoriesContext";
 import { useNotificationDispatch } from "../../contexts/NotificationProvider";
 import CategoriesListItem from "../../components/CategoriesListItem";
+import { TransactionTypes } from "../../types/Transaction";
 
 const CategoriesPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
   const { expenseCategories, incomeCategories } = useContext(CategoriesContext);
   const dispatchNotifications = useNotificationDispatch();
+
+  const [avatarIdFileUpload, setAvatarIdFileUpload] = useState("");
+  const [avatarIdType, setAvatarIdType] = useState<TransactionTypes>("income");
+  const [categoryName, setCategoryName] = useState("");
+
   const classes = useStyles();
 
   const onAddNewCategory = (type: string, newCategory: string) => {
@@ -63,6 +70,39 @@ const CategoriesPage: FC = () => {
     }
   };
 
+  const onUpdateAvatar = async (file: File[]) => {
+    if (user && user.uid) {
+      const filesMetadata = await firebase
+        .storage()
+        .ref()
+        .child(
+          `/users/${user.uid}/uploads/avatar/${avatarIdFileUpload}.${file[0].type}`
+        )
+        .put(file[0])
+        .then(snapshot => {
+          return snapshot;
+        });
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .collection("categories")
+        .doc(avatarIdType)
+        .collection("types")
+        .doc(avatarIdFileUpload)
+        .update({
+          icon: filesMetadata ? filesMetadata.metadata.fullPath || null : null
+        });
+      dispatchNotifications({
+        type: "@@NOTIFICATION/PUSH",
+        notification: {
+          message: `Successfully updated avatar!! 🚀`,
+          type: "info"
+        }
+      });
+    }
+  };
+
   if (!user || !user.uid) {
     return <Redirect to="/" />;
   }
@@ -78,16 +118,18 @@ const CategoriesPage: FC = () => {
                 return (
                   <CategoriesListItem
                     category={{
-                      id: expenseCategory.id,
+                      id: category.id,
                       name: expenseCategory.name,
                       icon: expenseCategory.icon
                     }}
-                    onRemove={() => {
-                      onCategoryRemove(
-                        "expense",
-                        category.id,
-                        expenseCategory.name
-                      );
+                    type="expense"
+                    onRemove={(type, id, name) => {
+                      onCategoryRemove(type, id, name);
+                    }}
+                    onAvatarClick={(id, type, name) => {
+                      setAvatarIdType(type);
+                      setAvatarIdFileUpload(id);
+                      setCategoryName(name);
                     }}
                   />
                 );
@@ -115,8 +157,14 @@ const CategoriesPage: FC = () => {
                       name: income.name,
                       icon: income.icon
                     }}
-                    onRemove={() => {
-                      onCategoryRemove("income", category.id, income.name);
+                    type="income"
+                    onRemove={(type, id, name) => {
+                      onCategoryRemove(type, id, name);
+                    }}
+                    onAvatarClick={(type, id, name) => {
+                      setAvatarIdType(type);
+                      setAvatarIdFileUpload(id);
+                      setCategoryName(name);
                     }}
                   />
                 );
@@ -131,6 +179,18 @@ const CategoriesPage: FC = () => {
           />
         </div>
       </div>
+      <DropzoneDialog
+        open={!!avatarIdFileUpload}
+        acceptedFiles={["image/*"]}
+        showPreviews={true}
+        filesLimit={1}
+        maxFileSize={2000000}
+        onClose={() => setAvatarIdFileUpload("")}
+        onSave={(files: File[]) => {
+          onUpdateAvatar(files);
+          setAvatarIdFileUpload("");
+        }}
+      />
     </div>
   );
 };
