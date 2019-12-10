@@ -5,6 +5,12 @@ const useStyles = makeStyles({
     flex: 1,
     padding: "1rem",
     display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "column"
+  },
+  row: {
+    padding: "1rem",
+    display: "flex",
     flexWrap: "wrap"
   },
   leftContainer: {

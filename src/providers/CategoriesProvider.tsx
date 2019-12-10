@@ -5,7 +5,11 @@ import { useCollection } from "react-firebase-hooks/firestore";
 
 import CategoriesContext from "../contexts/CategoriesContext";
 import AuthenticationContext from "../contexts/AuthenticationContext";
+import { Category } from "../types/Category";
 
+interface _Category {
+  [id: string]: Category;
+}
 const CategoriesProvider: FC = ({ children }) => {
   const { user } = useContext(AuthenticationContext);
 
@@ -33,19 +37,27 @@ const CategoriesProvider: FC = ({ children }) => {
       : null
   );
 
-  let income: any = {};
+  let income: _Category = {};
   if (incomeCategories) {
     incomeCategories.docs.forEach(doc => {
       let docData: any = doc.data();
-      income[doc.id] = docData.name;
+      income[doc.id] = {
+        id: doc.id,
+        name: docData.name,
+        icon: docData.icon
+      };
     });
   }
 
-  let expense: any = {};
+  let expense: _Category = {};
   if (expenseCategories) {
     expenseCategories.docs.forEach(doc => {
       let docData: any = doc.data();
-      expense[doc.id] = docData.name;
+      expense[doc.id] = {
+        id: doc.id,
+        name: docData.name,
+        icon: docData.icon
+      };
     });
   }
 

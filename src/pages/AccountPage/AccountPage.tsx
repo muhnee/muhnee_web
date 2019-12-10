@@ -13,6 +13,7 @@ import AuthenticationContext from "../../contexts/AuthenticationContext";
 import { UserContext } from "../../contexts/UserContext";
 
 import useStyles from "./styles";
+import { doSignOut } from "../../firebase/firebase";
 
 const AccountPage: FC = () => {
   const { user, isLoaded } = useContext(AuthenticationContext);
@@ -62,8 +63,9 @@ const AccountPage: FC = () => {
             <TextField label="Savings Target" fullWidth />
           </div>
         </div>
-        <Button>Update Settings</Button>
       </div>
+      <Button>Update Settings</Button>
+      <Button onClick={() => doSignOut()}>Logout</Button>
     </div>
   );
 };

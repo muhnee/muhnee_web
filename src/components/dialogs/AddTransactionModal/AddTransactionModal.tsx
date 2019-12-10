@@ -140,7 +140,12 @@ const AddTransactionModal: FC = () => {
   }
   return (
     <>
-      <Button onClick={() => setOpen(true)} variant="outlined" color="primary">
+      <Button
+        onClick={() => setOpen(true)}
+        variant="outlined"
+        color="primary"
+        fullWidth
+      >
         Add Transaction
       </Button>
       <MuiPickersUtilsProvider utils={MomentUtils}>

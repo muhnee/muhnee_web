@@ -1,11 +1,12 @@
 import React, { FC, useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import firebase from "firebase";
-import moment from "moment";
+import moment, { Moment } from "moment";
 
 import { useDocumentData, useCollection } from "react-firebase-hooks/firestore";
 
 import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
@@ -23,15 +24,16 @@ import { Summary } from "../../types/Summary";
 import useStyles from "./styles";
 
 const DashboardPage: FC = () => {
-  const today = moment();
   const lastMonth = moment().subtract(1, "month");
   const history = useHistory();
 
   const { user } = useContext(AuthenticationContext);
 
   // TODO: add support for changing months on dashboard
-  const [thisMonth] = useState(`${today.year()}-${today.month()}`);
+  const [thisMonth, setThisMonth] = useState<Moment>(moment());
   const classes = useStyles();
+
+  const targetDate = `${thisMonth.year()}-${thisMonth.month()}`;
 
   const [monthlyTransactions, loading, error] = useCollection(
     user
@@ -40,10 +42,9 @@ const DashboardPage: FC = () => {
           .collection("users")
           .doc(user.uid)
           .collection("budget")
-          .doc(thisMonth)
+          .doc(targetDate)
           .collection("transactions")
           .orderBy("timestamp", "desc")
-          .limit(10)
       : null
   );
 
@@ -54,7 +55,7 @@ const DashboardPage: FC = () => {
           .collection("users")
           .doc(user.uid)
           .collection("budget")
-          .doc(thisMonth)
+          .doc(targetDate)
       : null
   );
 
@@ -74,96 +75,122 @@ const DashboardPage: FC = () => {
   }
   return (
     <div className={classes.root}>
-      <div className={classes.leftContainer}>
-        <div style={{ marginBottom: "1.25rem" }}>
-          <Typography variant="h6" style={{ fontWeight: 600 }}>
-            Welcome to
-          </Typography>
-          <Typography variant="h6" style={{ fontWeight: 300 }}>
-            Muhnee
-          </Typography>
+      <div className={classes.row}>
+        <div style={{ flex: 1 }}>
+          <Typography variant="h6">{`Overview - ${thisMonth.format(
+            "MMMM YYYY"
+          )}`}</Typography>
         </div>
-        <Typography variant="h6" color="primary">
-          {`This Month (${today.format("MMMM YYYY")})`}
-        </Typography>
-        <div>
-          <div className={classes.summaryContainer}>
-            <SummaryCard
-              title="Expenses"
-              amount={(summary && summary.expenses) || 0}
-              avatar={<ExpenseIcon />}
-              lastMonth={(lastMonthSummary && lastMonthSummary.expenses) || 0}
-              inverted
-            />
-            <SummaryCard
-              title="Income"
-              avatar={<IncomeIcon />}
-              amount={(summary && summary.income) || 0}
-              lastMonth={(lastMonthSummary && lastMonthSummary.income) || 0}
-            />
-          </div>
-          <div className={classes.summaryButtonContainer}>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => history.push("/months")}
-            >
-              View Month Summary
-            </Button>
-          </div>
-        </div>
-      </div>
-      <div className={classes.rightContainer}>
-        <Typography variant="body1">
-          Recent Transactions - This Month
-        </Typography>
-        {monthlyTransactions && monthlyTransactions.size > 0 && (
-          <AddTransactionModal />
-        )}
-        {loading && <CircularProgress />}
-        {error && <span>An Error Occurred</span>}
-        {monthlyTransactions && monthlyTransactions.size > 0 ? (
-          <List>
-            {monthlyTransactions.docs.map((monthlyTransactionsSnapshot, i) => {
-              let monthlyTransaction: any = monthlyTransactionsSnapshot.data();
-              return (
-                <TransactionCard
-                  key={`${monthlyTransactionsSnapshot.id}`}
-                  transaction={{
-                    amount: monthlyTransaction.amount,
-                    type: monthlyTransaction.type,
-                    category: monthlyTransaction.category,
-                    description: monthlyTransaction.description,
-                    taxDeductible: monthlyTransaction.taxDeductible,
-                    timestamp: monthlyTransaction.timestamp
-                  }}
-                  transactionId={monthlyTransactionsSnapshot.id}
-                  month={thisMonth}
-                />
-              );
-            })}
-          </List>
-        ) : (
-          <div
-            style={{
-              marginTop: "0.75rem",
-              display: "flex",
-              flexDirection: "column",
-              flexWrap: "wrap",
-              alignItems: "center"
-            }}
+        <ButtonGroup color="primary" aria-label=" outlined button group">
+          <Button
+            variant={
+              targetDate === `${moment().year()}-${moment().month()}`
+                ? "contained"
+                : "outlined"
+            }
+            onClick={() => setThisMonth(moment())}
           >
-            <Typography variant="body1" color="textPrimary">
-              No transactions in this month
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Create a transaction to get started
-            </Typography>
+            This Month
+          </Button>
+          <Button
+            variant={
+              targetDate ===
+              `${moment()
+                .subtract(1, "month")
+                .year()}-${moment()
+                .subtract(1, "month")
+                .month()}`
+                ? "contained"
+                : "outlined"
+            }
+            onClick={() => setThisMonth(moment().subtract(1, "month"))}
+          >
+            Last Month
+          </Button>
+        </ButtonGroup>
+      </div>
+      <div className={classes.row}>
+        <div className={classes.leftContainer}>
+          <div>
+            <div className={classes.summaryContainer}>
+              <SummaryCard
+                title="Expenses"
+                amount={(summary && summary.expenses) || 0}
+                avatar={<ExpenseIcon />}
+                lastMonth={(lastMonthSummary && lastMonthSummary.expenses) || 0}
+                inverted
+              />
+              <SummaryCard
+                title="Income"
+                avatar={<IncomeIcon />}
+                amount={(summary && summary.income) || 0}
+                lastMonth={(lastMonthSummary && lastMonthSummary.income) || 0}
+              />
+            </div>
+            <div className={classes.summaryButtonContainer}>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => history.push("/months")}
+              >
+                View Month Summary
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div className={classes.rightContainer}>
+          <Typography variant="body1">
+            Recent Transactions - This Month
+          </Typography>
+          {loading && <CircularProgress />}
+          {error && <span>An Error Occurred</span>}
+          {monthlyTransactions && monthlyTransactions.size > 0 ? (
+            <List>
+              {monthlyTransactions.docs
+                .slice(0, 6)
+                .map((monthlyTransactionsSnapshot, i) => {
+                  let monthlyTransaction: any = monthlyTransactionsSnapshot.data();
+                  return (
+                    <TransactionCard
+                      key={`${monthlyTransactionsSnapshot.id}`}
+                      transaction={{
+                        amount: monthlyTransaction.amount,
+                        type: monthlyTransaction.type,
+                        category: monthlyTransaction.category,
+                        description: monthlyTransaction.description,
+                        taxDeductible: monthlyTransaction.taxDeductible,
+                        timestamp: monthlyTransaction.timestamp
+                      }}
+                      transactionId={monthlyTransactionsSnapshot.id}
+                      month={targetDate}
+                    />
+                  );
+                })}
+            </List>
+          ) : (
+            <div
+              style={{
+                marginTop: "0.75rem",
+                display: "flex",
+                flexDirection: "column",
+                flexWrap: "wrap",
+                alignItems: "center"
+              }}
+            >
+              <Typography variant="body1" color="textPrimary">
+                No transactions in this month
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                Create a transaction to get started
+              </Typography>
+            </div>
+          )}
+          {!loading && (
             <div style={{ marginTop: "0.25rem" }}>
               <AddTransactionModal />
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
