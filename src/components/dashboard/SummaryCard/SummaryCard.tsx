@@ -17,8 +17,6 @@ const SummaryCard: FC<SummaryCardProps> = props => {
   const diff = amount - (lastMonth || 0);
   const percentage = (diff / (lastMonth || 1)) * 100;
 
-  console.log(diff, percentage);
-
   return (
     <div className={classes.root}>
       <Typography color="inherit" variant="body1">

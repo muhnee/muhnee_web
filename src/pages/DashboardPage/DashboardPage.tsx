@@ -15,9 +15,6 @@ import SummaryCard from "../../components/dashboard/SummaryCard";
 import AddTransactionModal from "../../components/dialogs/AddTransactionModal";
 import TransactionCard from "../../components/cards/TransactionCard";
 
-import ExpenseIcon from "@material-ui/icons/CreditCard";
-import IncomeIcon from "@material-ui/icons/TrendingUp";
-
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 import { Summary } from "../../types/Summary";
 
