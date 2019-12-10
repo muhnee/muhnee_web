@@ -16,6 +16,8 @@ import AuthenticationContext from "../../../contexts/AuthenticationContext";
 import useStyles from "./styles";
 
 import TransactionCardProps from "./types";
+import { Category } from "../../../types/Category";
+import CategoryIconAvatar from "../../CategoryIconAvatar";
 
 const TransactionCard: FC<TransactionCardProps> = props => {
   const { user } = useContext(AuthenticationContext);
@@ -23,7 +25,7 @@ const TransactionCard: FC<TransactionCardProps> = props => {
 
   const classes = useStyles(props);
 
-  const [transactionCategory] = useDocumentData<{ name: string }>(
+  const [transactionCategory] = useDocumentData<Category>(
     user && transaction.category
       ? firebase
           .firestore()
@@ -41,9 +43,15 @@ const TransactionCard: FC<TransactionCardProps> = props => {
   return (
     <ButtonBase className={classes.root} key={key} href={link}>
       <div>
-        <Avatar className={classes.avatar}>
-          {transaction.type === "expense" ? <ExpenseIcon /> : <IncomeIcon />}
-        </Avatar>
+        {transactionCategory && transactionCategory.icon ? (
+          <CategoryIconAvatar
+            category={{ id: transaction.category, ...transactionCategory }}
+          />
+        ) : (
+          <Avatar className={classes.avatar}>
+            {transaction.type === "expense" ? <ExpenseIcon /> : <IncomeIcon />}
+          </Avatar>
+        )}
       </div>
       <div className={classes.cardCenter}>
         <Typography variant="body2">

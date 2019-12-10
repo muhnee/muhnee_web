@@ -6,15 +6,16 @@ import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import { DropzoneDialog } from "material-ui-dropzone";
 
-import AuthenticationContext from "../../contexts/AuthenticationContext";
-
-import useStyles from "./styles";
+import CategoriesListItem from "../../components/CategoriesListItem";
 
 import AddCategoryContainer from "../../containers/AddCategoryContainer";
+
+import AuthenticationContext from "../../contexts/AuthenticationContext";
 import CategoriesContext from "../../contexts/CategoriesContext";
+
 import { useNotificationDispatch } from "../../contexts/NotificationProvider";
-import CategoriesListItem from "../../components/CategoriesListItem";
-import { TransactionTypes } from "../../types/Transaction";
+
+import useStyles from "./styles";
 
 const CategoriesPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -22,8 +23,7 @@ const CategoriesPage: FC = () => {
   const dispatchNotifications = useNotificationDispatch();
 
   const [avatarIdFileUpload, setAvatarIdFileUpload] = useState("");
-  const [avatarIdType, setAvatarIdType] = useState<TransactionTypes>("income");
-  const [categoryName, setCategoryName] = useState("");
+  const [avatarIdType, setAvatarIdType] = useState("");
 
   const classes = useStyles();
 
@@ -75,9 +75,7 @@ const CategoriesPage: FC = () => {
       const filesMetadata = await firebase
         .storage()
         .ref()
-        .child(
-          `/users/${user.uid}/uploads/avatar/${avatarIdFileUpload}.${file[0].type}`
-        )
+        .child(`/users/${user.uid}/uploads/avatar/${avatarIdFileUpload}`)
         .put(file[0])
         .then(snapshot => {
           return snapshot;
@@ -126,10 +124,9 @@ const CategoriesPage: FC = () => {
                     onRemove={(type, id, name) => {
                       onCategoryRemove(type, id, name);
                     }}
-                    onAvatarClick={(id, type, name) => {
+                    onAvatarClick={(id, type) => {
                       setAvatarIdType(type);
                       setAvatarIdFileUpload(id);
-                      setCategoryName(name);
                     }}
                   />
                 );
@@ -161,10 +158,9 @@ const CategoriesPage: FC = () => {
                     onRemove={(type, id, name) => {
                       onCategoryRemove(type, id, name);
                     }}
-                    onAvatarClick={(type, id, name) => {
+                    onAvatarClick={(type, id) => {
                       setAvatarIdType(type);
                       setAvatarIdFileUpload(id);
-                      setCategoryName(name);
                     }}
                   />
                 );
