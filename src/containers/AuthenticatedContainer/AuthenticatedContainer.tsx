@@ -37,11 +37,6 @@ const SidebarInner: FC = () => {
           label="Dashboard"
         />
         <SidebarLink
-          icon={<MonthlySummaryIcon />}
-          to="/months"
-          label="Summary"
-        />
-        <SidebarLink
           icon={<CategoriesIcon />}
           to="/categories"
           label="Categories"
