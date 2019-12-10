@@ -1,6 +1,9 @@
 import { User } from "firebase/app";
 import { firestore } from "firebase";
 
+export interface _Category {
+  [id: string]: Category;
+}
 export interface AuthenticationContextState {
   /**
    * This value should be `true` once the initial loading of
@@ -18,7 +21,7 @@ export interface CategoriesContextState {
   incomeCategories: firestore.QuerySnapshot | null | undefined;
   expenseCategories: firestore.QuerySnapshot | null | undefined;
   categoryMap: {
-    income: any;
-    expense: any;
+    income: _Category;
+    expense: _Category;
   };
 }

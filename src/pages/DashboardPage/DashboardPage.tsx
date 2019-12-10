@@ -1,5 +1,4 @@
 import React, { FC, useContext, useState } from "react";
-import { useHistory } from "react-router-dom";
 import firebase from "firebase";
 import moment, { Moment } from "moment";
 
@@ -23,7 +22,6 @@ import MonthSummaryContainer from "../../containers/MonthSummaryContainer";
 
 const DashboardPage: FC = () => {
   const lastMonth = moment().subtract(1, "month");
-  const history = useHistory();
 
   const { user } = useContext(AuthenticationContext);
 
@@ -130,18 +128,8 @@ const DashboardPage: FC = () => {
                 inverted
               />
             </div>
-            <div className={classes.summaryButtonContainer}>
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={() => history.push("/months")}
-              >
-                View Month Summary
-              </Button>
-            </div>
           </div>
-          <div style={{ marginTop: "0.75rem" }}>
-            <Typography variant="h6">Charts</Typography>
+          <div style={{ marginTop: "0.75rem", minWidth: 280 }}>
             <MonthSummaryContainer
               currentMonth={thisMonth}
               transactions={monthlyTransactions}

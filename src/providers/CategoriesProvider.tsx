@@ -5,11 +5,9 @@ import { useCollection } from "react-firebase-hooks/firestore";
 
 import CategoriesContext from "../contexts/CategoriesContext";
 import AuthenticationContext from "../contexts/AuthenticationContext";
-import { Category } from "../types/Category";
 
-interface _Category {
-  [id: string]: Category;
-}
+import { _Category } from "../contexts/types";
+
 const CategoriesProvider: FC = ({ children }) => {
   const { user } = useContext(AuthenticationContext);
 

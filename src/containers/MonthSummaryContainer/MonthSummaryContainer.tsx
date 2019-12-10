@@ -7,39 +7,12 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
 import { blueGrey } from "@material-ui/core/colors";
-import { MonthSummaryContainerProps } from "./types";
-
-type Summary = {
-  income: number;
-  expense: number;
-};
-type MonthlySummary = {
-  [timestamp: string]: Summary;
-};
-
-type MonthlySummaryItem = {
-  date: moment.Moment;
-  displayDate: string;
-  expense: number;
-  income: number;
-  label: string;
-};
-
-type ChartTooltipItem = {
-  color?: string;
-  datekey?: string;
-  fill?: string;
-  formatter?: string;
-  payload: MonthlySummaryItem;
-  type?: string;
-  unit?: string;
-  value: number;
-};
-
-interface ChartLabelProps {
-  payload: ChartTooltipItem[];
-  active: boolean;
-}
+import {
+  MonthSummaryContainerProps,
+  ChartLabelProps,
+  MonthlySummary,
+  MonthlySummaryItem
+} from "./types";
 
 const ChartLabel: FC<ChartLabelProps> = ({ payload, active }) => {
   if (active) {
@@ -111,7 +84,7 @@ const MonthSummaryContainer: FC<MonthSummaryContainerProps> = ({
       return {
         displayDate: moment(date).format("DD/MM/YYYY"),
         date: moment(date),
-        label: moment(date).format("DD/MM"),
+        label: moment(date).format("Do MMM"),
         ...monthlySummary[date]
       };
     }
@@ -119,7 +92,7 @@ const MonthSummaryContainer: FC<MonthSummaryContainerProps> = ({
 
   return (
     <LineChart
-      width={700}
+      width={280}
       height={300}
       data={summary}
       margin={{

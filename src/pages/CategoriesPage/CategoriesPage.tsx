@@ -1,23 +1,18 @@
 import React, { FC, useContext } from "react";
 import { Redirect } from "react-router-dom";
 import firebase from "firebase";
+
+import List from "@material-ui/core/List";
+import Typography from "@material-ui/core/Typography";
+
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 
 import useStyles from "./styles";
-import {
-  Typography,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction
-} from "@material-ui/core";
-
-import DeleteIcon from "@material-ui/icons/DeleteOutline";
 
 import AddCategoryContainer from "../../containers/AddCategoryContainer";
 import CategoriesContext from "../../contexts/CategoriesContext";
 import { useNotificationDispatch } from "../../contexts/NotificationProvider";
+import CategoriesListItem from "../../components/CategoriesListItem";
 
 const CategoriesPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -81,22 +76,20 @@ const CategoriesPage: FC = () => {
             ? expenseCategories.docs.map(category => {
                 let expenseCategory: any = category.data();
                 return (
-                  <ListItem key={category.id}>
-                    <ListItemText primary={expenseCategory.name} />
-                    <ListItemSecondaryAction>
-                      <IconButton
-                        onClick={() => {
-                          onCategoryRemove(
-                            "expense",
-                            category.id,
-                            expenseCategory.name
-                          );
-                        }}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
+                  <CategoriesListItem
+                    category={{
+                      id: expenseCategory.id,
+                      name: expenseCategory.name,
+                      icon: expenseCategory.icon
+                    }}
+                    onRemove={() => {
+                      onCategoryRemove(
+                        "expense",
+                        category.id,
+                        expenseCategory.name
+                      );
+                    }}
+                  />
                 );
               })
             : null}
@@ -116,18 +109,16 @@ const CategoriesPage: FC = () => {
             ? incomeCategories.docs.map(category => {
                 let income: any = category.data();
                 return (
-                  <ListItem key={category.id}>
-                    <ListItemText primary={income.name} />
-                    <ListItemSecondaryAction>
-                      <IconButton
-                        onClick={() => {
-                          onCategoryRemove("income", category.id, income.name);
-                        }}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
+                  <CategoriesListItem
+                    category={{
+                      id: category.id,
+                      name: income.name,
+                      icon: income.icon
+                    }}
+                    onRemove={() => {
+                      onCategoryRemove("income", category.id, income.name);
+                    }}
+                  />
                 );
               })
             : null}
