@@ -75,7 +75,9 @@ const CategoriesPage: FC = () => {
       const filesMetadata = await firebase
         .storage()
         .ref()
-        .child(`/users/${user.uid}/uploads/avatar/${avatarIdFileUpload}`)
+        .child(
+          `/users/${user.uid}/uploads/icons/${avatarIdType}/${avatarIdFileUpload}`
+        )
         .put(file[0])
         .then(snapshot => {
           return snapshot;
@@ -124,7 +126,7 @@ const CategoriesPage: FC = () => {
                     onRemove={(type, id, name) => {
                       onCategoryRemove(type, id, name);
                     }}
-                    onAvatarClick={(id, type) => {
+                    onAvatarClick={(type, id) => {
                       setAvatarIdType(type);
                       setAvatarIdFileUpload(id);
                     }}

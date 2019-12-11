@@ -22,25 +22,7 @@ const CategoryIconAvatar: FC<CategoryIconAvatarProps> = ({
         try {
           setAvatarIcon(await firebaseRef.getDownloadURL());
         } catch (e) {
-          console.error(e);
           setAvatarIcon("");
-          if (e.code === "storage/object-not-found") {
-            dispatchNotifications({
-              type: "@@NOTIFICATION/PUSH",
-              notification: {
-                message: `Cannot find receipt`,
-                type: "error"
-              }
-            });
-          } else {
-            dispatchNotifications({
-              type: "@@NOTIFICATION/PUSH",
-              notification: {
-                message: `an unknown error occurred.`,
-                type: "error"
-              }
-            });
-          }
         }
       } else {
         setAvatarIcon("");
