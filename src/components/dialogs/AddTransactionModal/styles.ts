@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/styles";
+import { green } from "@material-ui/core/colors";
 
 const useStyles = makeStyles({
   dialogContent: {
@@ -7,6 +8,10 @@ const useStyles = makeStyles({
   },
   switch: {
     margin: "1.25rem 0"
+  },
+  actionButton: {
+    backgroundColor: green[500],
+    color: "white"
   }
 });
 

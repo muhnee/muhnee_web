@@ -137,6 +137,12 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
   if (!user || !user.uid) {
     return <span>An Error Occured</span>;
   }
+
+  /**
+   * Determins whether or not is the form filled so that we can submit
+   */
+  const isFormFilled = type && amount && description && selectedDate;
+
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <Dialog open={open} maxWidth="md" fullWidth>
@@ -246,8 +252,13 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={addData} disabled={isSubmitting}>
-            Add
+          <Button
+            onClick={addData}
+            disabled={!isFormFilled || isSubmitting}
+            variant="contained"
+            className={classes.actionButton}
+          >
+            Add Transaction
           </Button>
           <Button onClick={onClose} disabled={isSubmitting}>
             Cancel
