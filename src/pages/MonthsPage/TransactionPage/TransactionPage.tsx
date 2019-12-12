@@ -21,19 +21,19 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 
-import DeleteTransactionWarningDialog from "../../components/dialogs/DeleteTransactionWarningDialog";
+import DeleteTransactionWarningDialog from "../../../components/dialogs/DeleteTransactionWarningDialog";
 
-import LoadingContainer from "../../containers/LoadingContainer";
+import LoadingContainer from "../../../containers/LoadingContainer";
 
-import AuthenticationContext from "../../contexts/AuthenticationContext";
+import AuthenticationContext from "../../../contexts/AuthenticationContext";
 
 import { red } from "@material-ui/core/colors";
 import useStyles from "./styles";
 
-import CategoriesContext from "../../contexts/CategoriesContext";
-import { useNotificationDispatch } from "../../contexts/NotificationProvider";
+import CategoriesContext from "../../../contexts/CategoriesContext";
+import { useNotificationDispatch } from "../../../contexts/NotificationProvider";
 import { Link, Typography } from "@material-ui/core";
-import { FILE_UPLOAD } from "../../config/settings";
+import { FILE_UPLOAD } from "../../../config/settings";
 
 const TransactionPage: FC = () => {
   const { user } = useContext(AuthenticationContext);

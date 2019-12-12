@@ -33,7 +33,7 @@ const DashboardPage: FC = () => {
   const [addTransactionModaOpen, setAddTransactionModalOpen] = useState(false);
   const classes = useStyles();
 
-  const targetDate = `${thisMonth.year()}-${thisMonth.month()}`;
+  const targetDate = `${thisMonth.year()}-${thisMonth.month() + 1}`;
 
   const [
     monthlyTransactions,
@@ -70,7 +70,7 @@ const DashboardPage: FC = () => {
           .collection("users")
           .doc(user.uid)
           .collection("budget")
-          .doc(`${lastMonth.year()}-${lastMonth.month()}`)
+          .doc(`${lastMonth.year()}-${lastMonth.month() + 1}`)
       : null
   );
 
@@ -91,7 +91,7 @@ const DashboardPage: FC = () => {
         <ButtonGroup color="primary" aria-label=" outlined button group">
           <Button
             variant={
-              targetDate === `${moment().year()}-${moment().month()}`
+              targetDate === `${moment().year()}-${moment().month() + 1}`
                 ? "contained"
                 : "outlined"
             }
@@ -106,7 +106,7 @@ const DashboardPage: FC = () => {
                 .subtract(1, "month")
                 .year()}-${moment()
                 .subtract(1, "month")
-                .month()}`
+                .month() + 1}`
                 ? "contained"
                 : "outlined"
             }

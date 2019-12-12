@@ -75,7 +75,7 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
         .collection("users")
         .doc(user.uid)
         .collection("budget")
-        .doc(`${selectedDate.year()}-${selectedDate.month()}`)
+        .doc(`${selectedDate.year()}-${selectedDate.month() + 1}`)
         .collection("transactions")
         .add({
           type,
