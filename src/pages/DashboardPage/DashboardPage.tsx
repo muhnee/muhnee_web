@@ -6,6 +6,7 @@ import { useDocumentData, useCollection } from "react-firebase-hooks/firestore";
 
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import Fab from "@material-ui/core/Fab";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
@@ -13,6 +14,8 @@ import Typography from "@material-ui/core/Typography";
 import SummaryCard from "../../components/dashboard/SummaryCard";
 import AddTransactionModal from "../../components/dialogs/AddTransactionModal";
 import TransactionCard from "../../components/cards/TransactionCard";
+
+import NavigationIcon from "@material-ui/icons/Navigation";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 import { Summary } from "../../types/Summary";
@@ -27,6 +30,7 @@ const DashboardPage: FC = () => {
 
   // TODO: add support for changing months on dashboard
   const [thisMonth, setThisMonth] = useState<Moment>(moment());
+  const [addTransactionModaOpen, setAddTransactionModalOpen] = useState(false);
   const classes = useStyles();
 
   const targetDate = `${thisMonth.year()}-${thisMonth.month()}`;
@@ -186,11 +190,23 @@ const DashboardPage: FC = () => {
           )}
           {!isMonthlyTransactionsLoading && (
             <div style={{ marginTop: "0.25rem" }}>
-              <AddTransactionModal />
+              <AddTransactionModal
+                open={addTransactionModaOpen}
+                onClose={() => setAddTransactionModalOpen(false)}
+              />
             </div>
           )}
         </div>
       </div>
+      <Fab
+        variant="extended"
+        className={classes.fab}
+        color="primary"
+        onClick={() => setAddTransactionModalOpen(true)}
+      >
+        <NavigationIcon className={classes.extendedIcon} />
+        Add Transaction
+      </Fab>
     </div>
   );
 };

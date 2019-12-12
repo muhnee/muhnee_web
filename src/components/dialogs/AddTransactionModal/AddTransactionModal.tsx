@@ -27,13 +27,16 @@ import { useNotificationDispatch } from "../../../contexts/NotificationProvider"
 
 import useStyles from "./styles";
 import { FILE_UPLOAD } from "../../../config/settings";
+import AddTransactionModalProps from "./types";
 
-const AddTransactionModal: FC = () => {
+const AddTransactionModal: FC<AddTransactionModalProps> = ({
+  open = false,
+  onClose = () => {}
+}) => {
   const { user } = useContext(AuthenticationContext);
   const { incomeCategories, expenseCategories } = useContext(CategoriesContext);
   const dispatchNotifications = useNotificationDispatch();
 
-  const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [type, setType] = useState("expense");
@@ -124,10 +127,6 @@ const AddTransactionModal: FC = () => {
 
   const classes = useStyles();
 
-  const onClose = () => {
-    setOpen(false);
-  };
-
   const handleToggle = (
     event: React.ChangeEvent<HTMLInputElement>,
     checked: boolean
@@ -139,133 +138,123 @@ const AddTransactionModal: FC = () => {
     return <span>An Error Occured</span>;
   }
   return (
-    <>
-      <Button
-        onClick={() => setOpen(true)}
-        variant="outlined"
-        color="primary"
-        fullWidth
-      >
-        Add Transaction
-      </Button>
-      <MuiPickersUtilsProvider utils={MomentUtils}>
-        <Dialog open={open} maxWidth="md" fullWidth>
-          <DialogTitle>Add new Transaction</DialogTitle>
-          <DialogContent className={classes.dialogContent}>
-            <FormControl>
-              <InputLabel id="transaction-type-label">Type</InputLabel>
-              <Select
-                labelId="transaction-type-label"
-                id="transaction-type"
-                value={type}
-                onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-                  setType(event.target.value as string);
-                }}
-                disabled={isSubmitting}
-              >
-                <MenuItem value={"expense"}>Expense</MenuItem>
-                <MenuItem value={"income"}>Income</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl>
-              <InputLabel id="category-label">Category</InputLabel>
-              <Select
-                labelId="category-label"
-                id="category"
-                value={category}
-                onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-                  setCategory(event.target.value as string);
-                }}
-                disabled={isSubmitting}
-              >
-                {type === "expense"
-                  ? expenseCategories &&
-                    expenseCategories.size > 0 &&
-                    expenseCategories.docs.map(category => {
-                      let categoryData: any = category.data();
-                      return (
-                        <MenuItem value={category.id}>
-                          {categoryData.name}
-                        </MenuItem>
-                      );
-                    })
-                  : incomeCategories &&
-                    incomeCategories.size > 0 &&
-                    incomeCategories.docs.map(category => {
-                      let categoryData: any = category.data();
-                      return (
-                        <MenuItem value={category.id}>
-                          {categoryData.name}
-                        </MenuItem>
-                      );
-                    })}
-              </Select>
-            </FormControl>
-            <TextField
-              required
-              id="amount"
-              label="Amount"
-              value={amount}
-              margin="normal"
-              type="number"
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+      <Dialog open={open} maxWidth="md" fullWidth>
+        <DialogTitle>Add new Transaction</DialogTitle>
+        <DialogContent className={classes.dialogContent}>
+          <FormControl>
+            <InputLabel id="transaction-type-label">Type</InputLabel>
+            <Select
+              labelId="transaction-type-label"
+              id="transaction-type"
+              value={type}
               onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-                setAmount(event.target.value as number);
+                setType(event.target.value as string);
               }}
               disabled={isSubmitting}
-            />
-            <TextField
-              required
-              id="description"
-              label="Description"
-              value={description}
-              margin="normal"
+            >
+              <MenuItem value={"expense"}>Expense</MenuItem>
+              <MenuItem value={"income"}>Income</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl>
+            <InputLabel id="category-label">Category</InputLabel>
+            <Select
+              labelId="category-label"
+              id="category"
+              value={category}
               onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-                setDescription(event.target.value as string);
+                setCategory(event.target.value as string);
               }}
               disabled={isSubmitting}
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={taxDeductible}
-                  onChange={handleToggle}
-                  value="taxDeductible"
-                  inputProps={{ "aria-label": "secondary checkbox" }}
-                  color="primary"
-                  disabled={isSubmitting}
-                />
-              }
-              label="Tax Deductible?"
-              className={classes.switch}
-            />
-            <DateTimePicker
-              label="Transaction Date Time"
-              inputVariant="outlined"
-              value={selectedDate}
-              onChange={handleDateChange}
-              disabled={isSubmitting}
-            />
-            <div>
-              <Typography>Receipt Photo</Typography>
-              <DropzoneArea
-                onChange={files => setFiles(files)}
-                filesLimit={1}
-                acceptedFiles={FILE_UPLOAD.ACCEPTED_MIME_TYPES}
-                dropzoneText="Drag and Drop"
+            >
+              {type === "expense"
+                ? expenseCategories &&
+                  expenseCategories.size > 0 &&
+                  expenseCategories.docs.map(category => {
+                    let categoryData: any = category.data();
+                    return (
+                      <MenuItem value={category.id}>
+                        {categoryData.name}
+                      </MenuItem>
+                    );
+                  })
+                : incomeCategories &&
+                  incomeCategories.size > 0 &&
+                  incomeCategories.docs.map(category => {
+                    let categoryData: any = category.data();
+                    return (
+                      <MenuItem value={category.id}>
+                        {categoryData.name}
+                      </MenuItem>
+                    );
+                  })}
+            </Select>
+          </FormControl>
+          <TextField
+            required
+            id="amount"
+            label="Amount"
+            value={amount}
+            margin="normal"
+            type="number"
+            onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+              setAmount(event.target.value as number);
+            }}
+            disabled={isSubmitting}
+          />
+          <TextField
+            required
+            id="description"
+            label="Description"
+            value={description}
+            margin="normal"
+            onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+              setDescription(event.target.value as string);
+            }}
+            disabled={isSubmitting}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={taxDeductible}
+                onChange={handleToggle}
+                value="taxDeductible"
+                inputProps={{ "aria-label": "secondary checkbox" }}
+                color="primary"
+                disabled={isSubmitting}
               />
-            </div>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={addData} disabled={isSubmitting}>
-              Add
-            </Button>
-            <Button onClick={onClose} disabled={isSubmitting}>
-              Cancel
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </MuiPickersUtilsProvider>
-    </>
+            }
+            label="Tax Deductible?"
+            className={classes.switch}
+          />
+          <DateTimePicker
+            label="Transaction Date Time"
+            inputVariant="outlined"
+            value={selectedDate}
+            onChange={handleDateChange}
+            disabled={isSubmitting}
+          />
+          <div>
+            <Typography>Receipt Photo</Typography>
+            <DropzoneArea
+              onChange={files => setFiles(files)}
+              filesLimit={1}
+              acceptedFiles={FILE_UPLOAD.ACCEPTED_MIME_TYPES}
+              dropzoneText="Drag and Drop"
+            />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={addData} disabled={isSubmitting}>
+            Add
+          </Button>
+          <Button onClick={onClose} disabled={isSubmitting}>
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </MuiPickersUtilsProvider>
   );
 };
 
