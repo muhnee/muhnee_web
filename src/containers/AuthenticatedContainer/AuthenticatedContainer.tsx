@@ -41,18 +41,28 @@ const SidebarInner: FC = () => {
           label="Categories"
         />
       </List>
-      <div style={{ marginBottom: "2rem", padding: "0.25rem 0.75rem" }}>
-        <Typography variant="body1" color="textSecondary">
+      <div
+        style={{
+          marginBottom: "2rem",
+          padding: "0.25rem 0.75rem",
+          color: "white"
+        }}
+      >
+        <Typography variant="body1" color="inherit">
           <Link
             href="https://muhneeapp.com"
             target="_blank"
             rel="noreferrer noopener"
+            color="inherit"
+            style={{
+              textDecoration: "underline"
+            }}
           >
             Muhnee
           </Link>{" "}
           v{process.env.REACT_APP_VERSION}
         </Typography>
-        <Typography variant="body1" color="textSecondary">
+        <Typography variant="body1" color="inherit">
           Copyright &copy; Muhnee 2019{" "}
           {moment().year() !== 2019 ? `- ${moment().year()}` : ``}
         </Typography>
