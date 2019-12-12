@@ -20,7 +20,8 @@ export const useStyles = makeStyles<Theme>(theme =>
       position: "sticky",
       backgroundColor: "#fff",
       top: 0,
-      zIndex: 2
+      zIndex: 2,
+      flex: 1
     },
     logo: { color: "white" },
     navigationContainer: {

@@ -16,10 +16,5 @@ export default interface SummaryCardProps {
    */
   inverted?: boolean;
 
-  /**
-   * Avatar
-   */
-  avatar?: JSX.Element;
-
   lastMonth?: number;
 }

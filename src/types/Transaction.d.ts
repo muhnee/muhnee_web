@@ -1,3 +1,5 @@
+export type TransactionTypes = "expense" | "income";
+
 export interface Transaction {
   /**
    * The category of transaction
@@ -29,7 +31,7 @@ export interface Transaction {
   /**
    * The type of transaction
    */
-  type: "expense" | "income";
+  type: TransactionTypes;
 
   /**
    * The Firestore Storage Link to the Upload
