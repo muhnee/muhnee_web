@@ -2,24 +2,24 @@ import { makeStyles } from "@material-ui/styles";
 
 const useStyles = makeStyles({
   root: {
-    padding: "1rem 0.5rem",
     display: "flex",
     flexDirection: "column",
     flex: 1
   },
-  body: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column"
+  header: {
+    padding: "0.5rem 0.75rem",
+    backgroundColor: "#eee"
   },
-  switch: {
-    margin: "1.25rem 0"
-  },
-  receipt: {
-    marginTop: "0.25rem",
+  monthlySummaryContainer: {
     display: "flex",
-    alignItems: "center",
     flexWrap: "wrap"
+  },
+  monthlySummaryCard: {
+    flex: 1,
+    margin: "0.25rem 0"
+  },
+  main: {
+    padding: "0.5rem 0.75rem"
   }
 });
 

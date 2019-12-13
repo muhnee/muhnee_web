@@ -22,9 +22,11 @@ import { Summary } from "../../types/Summary";
 
 import useStyles from "./styles";
 import MonthSummaryContainer from "../../containers/MonthSummaryContainer";
+import { useHistory } from "react-router";
 
 const DashboardPage: FC = () => {
   const lastMonth = moment().subtract(1, "month");
+  const history = useHistory();
 
   const { user } = useContext(AuthenticationContext);
 
@@ -196,6 +198,17 @@ const DashboardPage: FC = () => {
               />
             </div>
           )}
+          <div className={classes.actionButtonContainer}>
+            <Button
+              onClick={() => {
+                history.push(
+                  `/months/${thisMonth.year()}-${thisMonth.month() + 1}`
+                );
+              }}
+            >
+              View All Transactions
+            </Button>
+          </div>
         </div>
       </div>
       <Fab

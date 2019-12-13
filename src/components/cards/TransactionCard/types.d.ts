@@ -5,7 +5,7 @@ export default interface TransactionCardProps {
 
   key: number | string;
 
-  month: string;
+  month?: string;
 
   transactionId: string;
 }
