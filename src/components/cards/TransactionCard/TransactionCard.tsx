@@ -21,7 +21,7 @@ import CategoryIconAvatar from "../../CategoryIconAvatar";
 
 const TransactionCard: FC<TransactionCardProps> = props => {
   const { user } = useContext(AuthenticationContext);
-  const { transaction, key, month, transactionId } = props;
+  const { transaction, month, transactionId } = props;
 
   const classes = useStyles(props);
 
@@ -41,7 +41,7 @@ const TransactionCard: FC<TransactionCardProps> = props => {
   const link = `/months/${month}/transactions/${transactionId}`;
 
   return (
-    <ButtonBase className={classes.root} key={key} href={link}>
+    <ButtonBase className={classes.root} href={link}>
       <div>
         {transactionCategory && transactionCategory.icon ? (
           <CategoryIconAvatar

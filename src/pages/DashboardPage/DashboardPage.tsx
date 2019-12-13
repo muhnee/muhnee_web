@@ -7,13 +7,12 @@ import { useDocumentData, useCollection } from "react-firebase-hooks/firestore";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Fab from "@material-ui/core/Fab";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 
 import SummaryCard from "../../components/dashboard/SummaryCard";
-import AddTransactionModal from "../../components/dialogs/AddTransactionModal";
-import TransactionCard from "../../components/cards/TransactionCard";
+
+import MonthSummaryContainer from "../../containers/MonthSummaryContainer";
+import MonthTransactionsContainer from "../../containers/MonthTransactionsContainer";
 
 import AddIcon from "@material-ui/icons/AddBox";
 
@@ -21,7 +20,6 @@ import AuthenticationContext from "../../contexts/AuthenticationContext";
 import { Summary } from "../../types/Summary";
 
 import useStyles from "./styles";
-import MonthSummaryContainer from "../../containers/MonthSummaryContainer";
 import { useHistory } from "react-router";
 
 const DashboardPage: FC = () => {
@@ -37,11 +35,7 @@ const DashboardPage: FC = () => {
 
   const targetDate = `${thisMonth.year()}-${thisMonth.month() + 1}`;
 
-  const [
-    monthlyTransactions,
-    isMonthlyTransactionsLoading,
-    error
-  ] = useCollection(
+  const [monthlyTransactions, isMonthlyTransactionsLoading] = useCollection(
     user
       ? firebase
           .firestore()
@@ -147,57 +141,13 @@ const DashboardPage: FC = () => {
           <Typography variant="body1">
             Recent Transactions - This Month
           </Typography>
-          {isMonthlyTransactionsLoading && <CircularProgress />}
-          {error && <span>An Error Occurred</span>}
-          {monthlyTransactions && monthlyTransactions.size > 0 ? (
-            <List>
-              {monthlyTransactions.docs
-                .slice(0, 6)
-                .map((monthlyTransactionsSnapshot, i) => {
-                  let monthlyTransaction: any = monthlyTransactionsSnapshot.data();
-                  return (
-                    <TransactionCard
-                      key={`${monthlyTransactionsSnapshot.id}`}
-                      transaction={{
-                        amount: monthlyTransaction.amount,
-                        type: monthlyTransaction.type,
-                        category: monthlyTransaction.category,
-                        description: monthlyTransaction.description,
-                        taxDeductible: monthlyTransaction.taxDeductible,
-                        timestamp: monthlyTransaction.timestamp
-                      }}
-                      transactionId={monthlyTransactionsSnapshot.id}
-                      month={targetDate}
-                    />
-                  );
-                })}
-            </List>
-          ) : (
-            <div
-              style={{
-                marginTop: "0.75rem",
-                display: "flex",
-                flexDirection: "column",
-                flexWrap: "wrap",
-                alignItems: "center"
-              }}
-            >
-              <Typography variant="body1" color="textPrimary">
-                No transactions in this month
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                Create a transaction to get started
-              </Typography>
-            </div>
-          )}
-          {!isMonthlyTransactionsLoading && (
-            <div style={{ marginTop: "0.25rem" }}>
-              <AddTransactionModal
-                open={addTransactionModaOpen}
-                onClose={() => setAddTransactionModalOpen(false)}
-              />
-            </div>
-          )}
+          <MonthTransactionsContainer
+            month={thisMonth}
+            shouldDisplayAddTransactionModal={true}
+            onAddTransactionModalClose={() => setAddTransactionModalOpen(false)}
+            isAddTransactionModalOpen={addTransactionModaOpen}
+            maxTransactions={5}
+          />
           <div className={classes.actionButtonContainer}>
             <Button
               onClick={() => {

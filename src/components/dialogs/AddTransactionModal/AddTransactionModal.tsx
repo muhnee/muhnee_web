@@ -177,20 +177,20 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
               {type === "expense"
                 ? expenseCategories &&
                   expenseCategories.size > 0 &&
-                  expenseCategories.docs.map(category => {
+                  expenseCategories.docs.map((category, i) => {
                     let categoryData: any = category.data();
                     return (
-                      <MenuItem value={category.id}>
+                      <MenuItem value={category.id} key={i}>
                         {categoryData.name}
                       </MenuItem>
                     );
                   })
                 : incomeCategories &&
                   incomeCategories.size > 0 &&
-                  incomeCategories.docs.map(category => {
+                  incomeCategories.docs.map((category, i) => {
                     let categoryData: any = category.data();
                     return (
-                      <MenuItem value={category.id}>
+                      <MenuItem value={category.id} key={i}>
                         {categoryData.name}
                       </MenuItem>
                     );
