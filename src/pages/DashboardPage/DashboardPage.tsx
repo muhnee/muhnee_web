@@ -15,7 +15,7 @@ import SummaryCard from "../../components/dashboard/SummaryCard";
 import AddTransactionModal from "../../components/dialogs/AddTransactionModal";
 import TransactionCard from "../../components/cards/TransactionCard";
 
-import NavigationIcon from "@material-ui/icons/Navigation";
+import AddIcon from "@material-ui/icons/AddBox";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 import { Summary } from "../../types/Summary";
@@ -217,7 +217,7 @@ const DashboardPage: FC = () => {
         color="primary"
         onClick={() => setAddTransactionModalOpen(true)}
       >
-        <NavigationIcon className={classes.extendedIcon} />
+        <AddIcon className={classes.extendedIcon} />
         Add Transaction
       </Fab>
     </div>
