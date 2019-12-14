@@ -91,6 +91,7 @@ const AccountPage: FC = () => {
         <Typography variant="body2" color="textSecondary">
           {onboarded ? "User Onboarded" : "User not onboarded"}
         </Typography>
+        <Button onClick={() => doSignOut()}>Logout of Muhnee</Button>
       </div>
       <Divider />
       <div className={classes.container}>
@@ -132,8 +133,6 @@ const AccountPage: FC = () => {
           </div>
         </div>
       </div>
-
-      <Button onClick={() => doSignOut()}>Logout</Button>
     </div>
   );
 };
