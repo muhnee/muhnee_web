@@ -1,6 +1,6 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles<Theme>(theme => ({
   root: {
     display: "flex",
     flexDirection: "column",
@@ -20,7 +20,16 @@ const useStyles = makeStyles({
   },
   main: {
     padding: "0.5rem 0.75rem"
+  },
+  fab: {
+    position: "fixed",
+    bottom: "2vh",
+    right: "2vw",
+    color: "white"
+  },
+  extendedIcon: {
+    marginRight: theme.spacing(1)
   }
-});
+}));
 
 export default useStyles;

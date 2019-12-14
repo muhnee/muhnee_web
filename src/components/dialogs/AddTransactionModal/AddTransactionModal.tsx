@@ -28,6 +28,7 @@ import { useNotificationDispatch } from "../../../contexts/NotificationProvider"
 import useStyles from "./styles";
 import { FILE_UPLOAD } from "../../../config/settings";
 import AddTransactionModalProps from "./types";
+import { TransactionTypes } from "../../../types/Transaction";
 
 const AddTransactionModal: FC<AddTransactionModalProps> = ({
   open = false,
@@ -39,7 +40,7 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [type, setType] = useState("expense");
+  const [type, setType] = useState<TransactionTypes>("expense");
   const [amount, setAmount] = useState(0);
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
@@ -155,7 +156,11 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
               id="transaction-type"
               value={type}
               onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-                setType(event.target.value as string);
+                if (event.target.value === "expense") {
+                  setType("expense");
+                } else {
+                  setType("income");
+                }
               }}
               disabled={isSubmitting}
             >
@@ -220,20 +225,22 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
             }}
             disabled={isSubmitting}
           />
-          <FormControlLabel
-            control={
-              <Switch
-                checked={taxDeductible}
-                onChange={handleToggle}
-                value="taxDeductible"
-                inputProps={{ "aria-label": "secondary checkbox" }}
-                color="primary"
-                disabled={isSubmitting}
-              />
-            }
-            label="Tax Deductible?"
-            className={classes.switch}
-          />
+          {type === "expense" && (
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={taxDeductible}
+                  onChange={handleToggle}
+                  value="taxDeductible"
+                  inputProps={{ "aria-label": "secondary checkbox" }}
+                  color="primary"
+                  disabled={isSubmitting}
+                />
+              }
+              label="Tax Deductible?"
+              className={classes.switch}
+            />
+          )}
           <DateTimePicker
             label="Transaction Date Time"
             inputVariant="outlined"

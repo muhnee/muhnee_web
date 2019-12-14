@@ -1,4 +1,5 @@
 import React, { FC, useContext, useState } from "react";
+import { useHistory } from "react-router-dom";
 import firebase from "firebase";
 import moment, { Moment } from "moment";
 
@@ -20,7 +21,6 @@ import AuthenticationContext from "../../contexts/AuthenticationContext";
 import { Summary } from "../../types/Summary";
 
 import useStyles from "./styles";
-import { useHistory } from "react-router";
 
 const DashboardPage: FC = () => {
   const lastMonth = moment().subtract(1, "month");
