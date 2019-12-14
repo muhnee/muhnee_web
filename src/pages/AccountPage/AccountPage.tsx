@@ -18,6 +18,7 @@ import { UserContext } from "../../contexts/UserContext";
 import { useNotificationDispatch } from "../../contexts/NotificationProvider";
 
 import useStyles from "./styles";
+import { InputAdornment } from "@material-ui/core";
 
 const AccountPage: FC = () => {
   const { user, isLoaded } = useContext(AuthenticationContext);
@@ -120,6 +121,11 @@ const AccountPage: FC = () => {
               }}
               onBlur={event => {
                 updateSavingsGoal();
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">$</InputAdornment>
+                )
               }}
               fullWidth
             />
