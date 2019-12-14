@@ -59,7 +59,8 @@ const MonthSummaryContainer: FC<MonthSummaryContainerProps> = ({
       .add(i, "days");
     monthlySummary[date.format("YYYY-MM-DD")] = {
       income: 0,
-      expense: 0
+      expense: 0,
+      savingsGoal: 0
     };
   }
 

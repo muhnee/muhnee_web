@@ -12,7 +12,8 @@ const useStyles = makeStyles<Theme>(theme => ({
   },
   monthlySummaryContainer: {
     display: "flex",
-    flexWrap: "wrap"
+    flexWrap: "wrap",
+    marginTop: "1.25rem"
   },
   monthlySummaryCard: {
     flex: 1,

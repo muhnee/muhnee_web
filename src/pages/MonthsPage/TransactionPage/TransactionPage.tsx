@@ -219,8 +219,7 @@ const TransactionPage: FC = () => {
             .storage()
             .refFromURL(gsStorageURL)
             .delete();
-        } catch {
-        }
+        } catch {}
       }
       return firebase
         .storage()
@@ -294,7 +293,7 @@ const TransactionPage: FC = () => {
                       expenseCategories.docs.map(category => {
                         let categoryData: any = category.data();
                         return (
-                          <MenuItem value={category.id}>
+                          <MenuItem value={category.id} key={category.id}>
                             {categoryData.name}
                           </MenuItem>
                         );
@@ -304,7 +303,7 @@ const TransactionPage: FC = () => {
                       incomeCategories.docs.map(category => {
                         let categoryData: any = category.data();
                         return (
-                          <MenuItem value={category.id}>
+                          <MenuItem value={category.id} key={category.id}>
                             {categoryData.name}
                           </MenuItem>
                         );

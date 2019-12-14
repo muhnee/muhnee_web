@@ -21,6 +21,7 @@ export interface MonthSummaryContainerProps {
 export type Summary = {
   income: number;
   expense: number;
+  savingsGoal: number;
 };
 
 export type MonthlySummary = {
