@@ -20,7 +20,7 @@ export interface MonthSummaryContainerProps {
 
 export type Summary = {
   income: number;
-  expense: number;
+  expenses: number;
   savingsGoal: number;
 };
 
@@ -31,7 +31,7 @@ export type MonthlySummary = {
 export type MonthlySummaryItem = {
   date: moment.Moment;
   displayDate: string;
-  expense: number;
+  expenses: number;
   income: number;
   label: string;
 };

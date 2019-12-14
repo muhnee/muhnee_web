@@ -47,6 +47,8 @@ const TransactionsPage: FC = () => {
       : null
   );
 
+  console.log(summary);
+
   const classes = useStyles();
 
   if (!monthId) {
@@ -56,7 +58,7 @@ const TransactionsPage: FC = () => {
   let savings;
 
   if (summary) {
-    savings = (summary.income || 0) - (summary.expense || 0);
+    savings = (summary.income || 0) - (summary.expenses || 0);
   }
 
   return (
@@ -82,7 +84,7 @@ const TransactionsPage: FC = () => {
           <MonthlySummaryCard
             title="Expenses this month"
             value={`$${
-              summary && summary.expense ? summary.expense.toFixed(2) : "0.00"
+              summary && summary.expenses ? summary.expenses.toFixed(2) : "0.00"
             }`}
             isLoading={isSummaryLoading}
             hasErrored={Boolean(hasSummaryErrored)}

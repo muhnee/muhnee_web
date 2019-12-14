@@ -28,7 +28,7 @@ const ChartLabel: FC<ChartLabelProps> = ({ payload, active }) => {
           <div style={{ flex: 1, marginRight: "0.75rem" }}>
             <Typography variant="body1">{`Expense`}</Typography>
           </div>
-          <Typography variant="body1">{`$${data.expense.toFixed(
+          <Typography variant="body1">{`$${data.expenses.toFixed(
             2
           )}`}</Typography>
         </div>
@@ -59,7 +59,7 @@ const MonthSummaryContainer: FC<MonthSummaryContainerProps> = ({
       .add(i, "days");
     monthlySummary[date.format("YYYY-MM-DD")] = {
       income: 0,
-      expense: 0,
+      expenses: 0,
       savingsGoal: 0
     };
   }
@@ -71,8 +71,8 @@ const MonthSummaryContainer: FC<MonthSummaryContainerProps> = ({
         "YYYY-MM-DD"
       );
       if (monthlySummary[date]) {
-        if (docData.type === "expense") {
-          monthlySummary[date]["expense"] += docData.amount;
+        if (docData.type === "expenses") {
+          monthlySummary[date]["expenses"] += docData.amount;
         } else {
           monthlySummary[date]["income"] += docData.amount;
         }
