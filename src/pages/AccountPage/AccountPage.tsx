@@ -7,6 +7,7 @@ import { doSignOut } from "../../firebase/firebase";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
@@ -18,11 +19,9 @@ import { UserContext } from "../../contexts/UserContext";
 import { useNotificationDispatch } from "../../contexts/NotificationProvider";
 
 import useStyles from "./styles";
-import { InputAdornment } from "@material-ui/core";
 
 const AccountPage: FC = () => {
   const { user, isLoaded } = useContext(AuthenticationContext);
-  const { onboarded } = useContext(UserContext);
   const dispatchNotifications = useNotificationDispatch();
 
   const [monthlySavingsGoal, setMonthlySavingsGoal] = useState(0);
@@ -83,13 +82,11 @@ const AccountPage: FC = () => {
         {user.displayName && (
           <Typography variant="h6">{user.displayName}</Typography>
         )}
+        {user.email && <Typography variant="body1">{user.email}</Typography>}
         <Typography variant="body1" color="textSecondary">
           {`Saving Money Since ${moment(user.metadata.creationTime).format(
             "Do MMM YYYY"
           )}`}
-        </Typography>
-        <Typography variant="body2" color="textSecondary">
-          {onboarded ? "User Onboarded" : "User not onboarded"}
         </Typography>
         <Button onClick={() => doSignOut()}>Logout of Muhnee</Button>
       </div>
