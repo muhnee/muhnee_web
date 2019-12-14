@@ -122,6 +122,7 @@ const CategoriesPage: FC = () => {
                       name: expenseCategory.name,
                       icon: expenseCategory.icon
                     }}
+                    key={category.id}
                     type="expense"
                     onRemove={(type, id, name) => {
                       onCategoryRemove(type, id, name);
@@ -151,6 +152,7 @@ const CategoriesPage: FC = () => {
                 let income: any = category.data();
                 return (
                   <CategoriesListItem
+                    key={category.id}
                     category={{
                       id: category.id,
                       name: income.name,
