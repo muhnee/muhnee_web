@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 
 import TransactionPage from "./TransactionPage";
-import TransactionsPage from "./TransactionsPage";
+import MonthlySummaryPage from "./MonthlySummaryPage";
 
 const MonthsPage: FC = () => {
   let match = useRouteMatch();
@@ -10,7 +10,7 @@ const MonthsPage: FC = () => {
   return (
     <Switch>
       <Route path={`${match.path}/:monthId`} exact>
-        <TransactionsPage />
+        <MonthlySummaryPage />
       </Route>
       <Route path={`${match.path}/:monthId/transactions/:transactionId`}>
         <TransactionPage />

@@ -23,9 +23,9 @@ import useStyles from "./styles";
 import AuthenticationContext from "../../../contexts/AuthenticationContext";
 
 /**
- * This page lists all the transactions for the month
+ * This page lists summarises the transactions for the month
  */
-const TransactionsPage: FC = () => {
+const MonthlySummaryPage: FC = () => {
   // React Router Hooks
   const history = useHistory();
   let { monthId } = useParams();
@@ -151,4 +151,4 @@ const TransactionsPage: FC = () => {
   );
 };
 
-export default TransactionsPage;
+export default MonthlySummaryPage;
