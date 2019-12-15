@@ -20,7 +20,18 @@ const useStyles = makeStyles<Theme>(theme => ({
     margin: "0.25rem 0"
   },
   main: {
-    padding: "0.5rem 0.75rem"
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  leftContainer: {
+    padding: "0.5rem 0.75rem",
+    minWidth: 300,
+    flex: 3
+  },
+  rightContainer: {
+    padding: "0.5rem 0.75rem",
+    minWidth: 300,
+    flex: 2
   },
   fab: {
     position: "fixed",

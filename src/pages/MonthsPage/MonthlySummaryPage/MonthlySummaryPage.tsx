@@ -75,7 +75,7 @@ const MonthlySummaryPage: FC = () => {
           <Button onClick={() => history.goBack()}>&larr; Go Back</Button>
         </div>
         <div>
-          <Typography variant="h6">{`Transactions for ${date.format(
+          <Typography variant="h6">{`Summary for ${date.format(
             "MMMM YYYY"
           )}`}</Typography>
         </div>
@@ -123,15 +123,24 @@ const MonthlySummaryPage: FC = () => {
         </div>
       </div>
       <div className={classes.main}>
-        <Typography variant="h6" color="textSecondary">
-          Transactions this month
-        </Typography>
-        <MonthTransactionsContainer
-          month={date}
-          shouldDisplayAddTransactionModal={true}
-          isAddTransactionModalOpen={isAddTransactionModalOpen}
-          onAddTransactionModalClose={() => setIsAddTransactionModalOpen(false)}
-        />
+        <div className={classes.leftContainer}>
+          <Typography variant="h6" color="textSecondary">
+            Transactions this month
+          </Typography>
+          <MonthTransactionsContainer
+            month={date}
+            shouldDisplayAddTransactionModal={true}
+            isAddTransactionModalOpen={isAddTransactionModalOpen}
+            onAddTransactionModalClose={() =>
+              setIsAddTransactionModalOpen(false)
+            }
+          />
+        </div>
+        <div className={classes.rightContainer}>
+          <Typography variant="h6" color="textSecondary">
+            Spending by Category
+          </Typography>
+        </div>
       </div>
       <Fab
         variant="extended"
