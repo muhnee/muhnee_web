@@ -13,7 +13,6 @@ import AuthenticationContext from "../../../contexts/AuthenticationContext";
 import { useNotificationDispatch } from "../../../contexts/NotificationProvider";
 
 import { UpdateMonthlyGoalDialogProps } from "./types";
-import useStyles from "./styles";
 
 const UpdateMonthlyGoalDialog: FC<UpdateMonthlyGoalDialogProps> = ({
   open,
@@ -65,7 +64,6 @@ const UpdateMonthlyGoalDialog: FC<UpdateMonthlyGoalDialogProps> = ({
       });
     }
   };
-  const classes = useStyles();
 
   return (
     <Dialog open={open} onClose={() => onClose()} maxWidth="md" fullWidth>

@@ -14,7 +14,6 @@ import Typography from "@material-ui/core/Typography";
 import LoadingContainer from "../../containers/LoadingContainer";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
-import { UserContext } from "../../contexts/UserContext";
 
 import { useNotificationDispatch } from "../../contexts/NotificationProvider";
 
