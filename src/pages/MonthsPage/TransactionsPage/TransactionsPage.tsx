@@ -5,18 +5,22 @@ import moment, { Moment } from "moment";
 
 import { useDocumentData } from "react-firebase-hooks/firestore";
 
+import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Fab from "@material-ui/core/Fab";
 
+import AddIcon from "@material-ui/icons/AddBox";
+import EditIcon from "@material-ui/icons/Edit";
+
+import MonthlySummaryCard from "../../../components/cards/MonthlySummaryCard";
+import UpdateMonthlyGoalDialog from "../../../components/dialogs/UpdateMonthlyGoalDialog";
+
 import MonthTransactionsContainer from "../../../containers/MonthTransactionsContainer";
+import { Summary } from "../../../containers/MonthSummaryContainer/types";
 
 import useStyles from "./styles";
-import { Button } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/AddBox";
 import AuthenticationContext from "../../../contexts/AuthenticationContext";
-
-import { Summary } from "../../../containers/MonthSummaryContainer/types";
-import MonthlySummaryCard from "../../../components/cards/MonthlySummaryCard";
 
 /**
  * This page lists all the transactions for the month
@@ -29,10 +33,15 @@ const TransactionsPage: FC = () => {
 
   // Contexts
   const { user } = useContext(AuthenticationContext);
+
   // State
   const [isAddTransactionModalOpen, setIsAddTransactionModalOpen] = useState(
     false
   );
+  const [
+    isUpdateMonthlyGoalModalOpen,
+    setIsUpdateMonthlyGoalModalOpen
+  ] = useState(false);
 
   const [summary, isSummaryLoading, hasSummaryErrored] = useDocumentData<
     Summary
@@ -46,8 +55,6 @@ const TransactionsPage: FC = () => {
           .doc(`${date.year()}-${date.month() + 1}`)
       : null
   );
-
-  console.log(summary);
 
   const classes = useStyles();
 
@@ -104,6 +111,14 @@ const TransactionsPage: FC = () => {
             }`}
             isLoading={isSummaryLoading}
             hasErrored={Boolean(hasSummaryErrored)}
+            secondaryAction={
+              <IconButton
+                style={{ padding: "0.1rem" }}
+                onClick={() => setIsUpdateMonthlyGoalModalOpen(true)}
+              >
+                <EditIcon style={{ width: "0.75rem", height: "0.75rem" }} />
+              </IconButton>
+            }
           />
         </div>
       </div>
@@ -127,6 +142,11 @@ const TransactionsPage: FC = () => {
         <AddIcon className={classes.extendedIcon} />
         Add Transaction
       </Fab>
+      <UpdateMonthlyGoalDialog
+        open={isUpdateMonthlyGoalModalOpen}
+        date={date}
+        onClose={() => setIsUpdateMonthlyGoalModalOpen(false)}
+      />
     </div>
   );
 };

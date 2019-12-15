@@ -10,7 +10,8 @@ const MonthlySummaryCard: FC<MonthlySummaryCardProps> = ({
   isLoading,
   hasErrored,
   title,
-  value
+  value,
+  secondaryAction
 }) => {
   const classes = useStyles();
 
@@ -43,9 +44,16 @@ const MonthlySummaryCard: FC<MonthlySummaryCardProps> = ({
       <Typography variant="body2" color="textSecondary">
         {title}
       </Typography>
-      <Typography variant="body1" color="textPrimary">
-        {value}
-      </Typography>
+      <div className={classes.value}>
+        <Typography
+          variant="body1"
+          color="textPrimary"
+          style={{ marginRight: "0.1rem" }}
+        >
+          {value}
+        </Typography>
+        {secondaryAction}
+      </div>
     </div>
   );
 };

@@ -1,14 +1,10 @@
 import { makeStyles, Theme } from "@material-ui/core";
+import { green } from "@material-ui/core/colors";
 
 const useStyles = makeStyles<Theme>(theme => ({
-  root: {
-    flex: 1,
-    margin: "0.25rem 0"
-  },
-  value: {
-    display: "flex",
-    flexWrap: "wrap",
-    alignItems: "center"
+  actionButton: {
+    backgroundColor: green[500],
+    color: "white"
   }
 }));
 

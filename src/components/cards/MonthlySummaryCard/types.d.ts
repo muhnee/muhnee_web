@@ -18,4 +18,9 @@ export interface MonthlySummaryCardProps {
    * The value
    */
   value: string;
+
+  /**
+   * secondary action
+   */
+  secondaryAction?: JSX.Element | JSX.Element[];
 }
