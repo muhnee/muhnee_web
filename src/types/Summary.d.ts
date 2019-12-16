@@ -18,4 +18,6 @@ export interface Summary {
    * total income for that month
    */
   income: number;
+
+  savingsGoal: number;
 }
