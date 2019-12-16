@@ -9,6 +9,7 @@
     "@material-ui/lab": "^4.0.0-alpha.35",
     "@material-ui/pickers": "^3.2.8",
     "@types/recharts": "^1.8.3",
+    "clsx": "^1.0.4",
     "firebase": "^7.5.0",
     "material-ui-dropzone": "^2.4.7",
     "moment": "^2.24.0",

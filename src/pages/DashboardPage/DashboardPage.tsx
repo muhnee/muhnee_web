@@ -1,4 +1,5 @@
 import React, { FC, useContext, useState } from "react";
+import clsx from "clsx";
 import { useHistory } from "react-router-dom";
 import firebase from "firebase";
 import moment, { Moment } from "moment";
@@ -7,6 +8,7 @@ import { useDocumentData, useCollection } from "react-firebase-hooks/firestore";
 
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import Divider from "@material-ui/core/Divider";
 import Fab from "@material-ui/core/Fab";
 import Typography from "@material-ui/core/Typography";
 
@@ -14,6 +16,7 @@ import SummaryCard from "../../components/dashboard/SummaryCard";
 
 import MonthSummaryContainer from "../../containers/MonthSummaryContainer";
 import MonthTransactionsContainer from "../../containers/MonthTransactionsContainer";
+import MonthlySpendingByCategoryContainer from "../../containers/MonthlySpendingByCategoryContainer";
 
 import AddIcon from "@material-ui/icons/AddBox";
 
@@ -113,8 +116,8 @@ const DashboardPage: FC = () => {
         </ButtonGroup>
       </div>
       <div className={classes.row}>
-        <div className={classes.leftContainer}>
-          <div>
+        <div className={clsx(classes.row)} style={{ flex: 2 }}>
+          <div className={classes.leftContainer}>
             <div className={classes.summaryContainer}>
               <SummaryCard
                 title="Income"
@@ -127,9 +130,23 @@ const DashboardPage: FC = () => {
                 lastMonth={(lastMonthSummary && lastMonthSummary.expenses) || 0}
                 inverted
               />
+              <SummaryCard
+                title="Savings"
+                amount={(summary && summary.income - summary.expenses) || 0}
+                lastMonth={(summary && summary.savingsGoal) || 0}
+                inverted
+              />
+            </div>
+            <Divider style={{ margin: "0.25rem 0" }} />
+            <div style={{ marginTop: "1.25rem" }}>
+              <Typography variant="h6">Spend by Category</Typography>
+              <MonthlySpendingByCategoryContainer date={thisMonth} />
             </div>
           </div>
-          <div style={{ marginTop: "0.75rem", minWidth: 280 }}>
+          <div
+            className={classes.rightContainer}
+            style={{ marginTop: "0.75rem", minWidth: 280 }}
+          >
             <MonthSummaryContainer
               currentMonth={thisMonth}
               transactions={monthlyTransactions}

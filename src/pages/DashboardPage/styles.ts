@@ -15,7 +15,7 @@ const useStyles = makeStyles<Theme>(theme => ({
     flexWrap: "wrap"
   },
   leftContainer: {
-    flex: 3,
+    flex: 2,
     minWidth: 300,
     display: "flex",
     flexDirection: "column"
