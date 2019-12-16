@@ -14,7 +14,8 @@ const CategoriesListItem: FC<CategoriesListItemProps> = ({
   onRemove,
   category,
   onAvatarClick = () => {},
-  type
+  type,
+  secondaryTitle
 }) => {
   return (
     <ListItem key={category.id}>
@@ -26,12 +27,16 @@ const CategoriesListItem: FC<CategoriesListItemProps> = ({
           category={category}
         />
       </ListItemAvatar>
-      <ListItemText primary={category.name} />
-      <ListItemSecondaryAction>
-        <IconButton onClick={() => onRemove(type, category.id, category.name)}>
-          <DeleteIcon />
-        </IconButton>
-      </ListItemSecondaryAction>
+      <ListItemText primary={category.name} secondary={secondaryTitle} />
+      {onRemove && (
+        <ListItemSecondaryAction>
+          <IconButton
+            onClick={() => onRemove(type, category.id, category.name)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </ListItemSecondaryAction>
+      )}
     </ListItem>
   );
 };

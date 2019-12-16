@@ -17,10 +17,12 @@ import MonthlySummaryCard from "../../../components/cards/MonthlySummaryCard";
 import UpdateMonthlyGoalDialog from "../../../components/dialogs/UpdateMonthlyGoalDialog";
 
 import MonthTransactionsContainer from "../../../containers/MonthTransactionsContainer";
+import MonthlySpendingByCategoryContainer from "../../../containers/MonthlySpendingByCategoryContainer";
 import { Summary } from "../../../containers/MonthSummaryContainer/types";
 
-import useStyles from "./styles";
 import AuthenticationContext from "../../../contexts/AuthenticationContext";
+
+import useStyles from "./styles";
 
 /**
  * This page lists summarises the transactions for the month
@@ -140,6 +142,7 @@ const MonthlySummaryPage: FC = () => {
           <Typography variant="h6" color="textSecondary">
             Spending by Category
           </Typography>
+          <MonthlySpendingByCategoryContainer date={date} />
         </div>
       </div>
       <Fab

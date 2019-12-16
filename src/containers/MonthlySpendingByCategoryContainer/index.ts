@@ -1,0 +1,2 @@
+import MonthlySpendingByCategoryContainer from "./MonthlySpendingByCategoryContainer";
+export default MonthlySpendingByCategoryContainer;

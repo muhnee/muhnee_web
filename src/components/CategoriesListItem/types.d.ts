@@ -5,7 +5,7 @@ export default interface CategoriesListItemProps {
   /**
    * triggered when the remove button gets clicked
    */
-  onRemove: (
+  onRemove?: (
     type: TransactionTypes,
     id: Category.id,
     name: Category.name
@@ -29,4 +29,6 @@ export default interface CategoriesListItemProps {
     id: Category.id,
     name: Category.name
   ) => void;
+
+  secondaryTitle?: string;
 }
