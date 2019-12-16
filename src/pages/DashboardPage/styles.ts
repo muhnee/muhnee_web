@@ -42,6 +42,10 @@ const useStyles = makeStyles<Theme>(theme => ({
     bottom: "2vh",
     right: "2vw",
     color: "white"
+  },
+  actionButtonContainer: {
+    display: "flex",
+    justifyContent: "flex-end"
   }
 }));
 

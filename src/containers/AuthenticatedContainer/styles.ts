@@ -37,7 +37,6 @@ export const useStyles = makeStyles(theme =>
       display: "none",
       [theme.breakpoints.down("sm")]: {
         display: "flex",
-        flex: 1,
         width: "100%"
       }
     },

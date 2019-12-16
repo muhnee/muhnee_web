@@ -1,4 +1,5 @@
 import React, { FC, useContext, useState } from "react";
+import { useHistory } from "react-router-dom";
 import firebase from "firebase";
 import moment, { Moment } from "moment";
 
@@ -7,24 +8,23 @@ import { useDocumentData, useCollection } from "react-firebase-hooks/firestore";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Fab from "@material-ui/core/Fab";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 
 import SummaryCard from "../../components/dashboard/SummaryCard";
-import AddTransactionModal from "../../components/dialogs/AddTransactionModal";
-import TransactionCard from "../../components/cards/TransactionCard";
 
-import NavigationIcon from "@material-ui/icons/Navigation";
+import MonthSummaryContainer from "../../containers/MonthSummaryContainer";
+import MonthTransactionsContainer from "../../containers/MonthTransactionsContainer";
+
+import AddIcon from "@material-ui/icons/AddBox";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 import { Summary } from "../../types/Summary";
 
 import useStyles from "./styles";
-import MonthSummaryContainer from "../../containers/MonthSummaryContainer";
 
 const DashboardPage: FC = () => {
   const lastMonth = moment().subtract(1, "month");
+  const history = useHistory();
 
   const { user } = useContext(AuthenticationContext);
 
@@ -33,13 +33,9 @@ const DashboardPage: FC = () => {
   const [addTransactionModaOpen, setAddTransactionModalOpen] = useState(false);
   const classes = useStyles();
 
-  const targetDate = `${thisMonth.year()}-${thisMonth.month()}`;
+  const targetDate = `${thisMonth.year()}-${thisMonth.month() + 1}`;
 
-  const [
-    monthlyTransactions,
-    isMonthlyTransactionsLoading,
-    error
-  ] = useCollection(
+  const [monthlyTransactions, isMonthlyTransactionsLoading] = useCollection(
     user
       ? firebase
           .firestore()
@@ -70,7 +66,7 @@ const DashboardPage: FC = () => {
           .collection("users")
           .doc(user.uid)
           .collection("budget")
-          .doc(`${lastMonth.year()}-${lastMonth.month()}`)
+          .doc(`${lastMonth.year()}-${lastMonth.month() + 1}`)
       : null
   );
 
@@ -91,7 +87,7 @@ const DashboardPage: FC = () => {
         <ButtonGroup color="primary" aria-label=" outlined button group">
           <Button
             variant={
-              targetDate === `${moment().year()}-${moment().month()}`
+              targetDate === `${moment().year()}-${moment().month() + 1}`
                 ? "contained"
                 : "outlined"
             }
@@ -106,7 +102,7 @@ const DashboardPage: FC = () => {
                 .subtract(1, "month")
                 .year()}-${moment()
                 .subtract(1, "month")
-                .month()}`
+                .month() + 1}`
                 ? "contained"
                 : "outlined"
             }
@@ -145,57 +141,24 @@ const DashboardPage: FC = () => {
           <Typography variant="body1">
             Recent Transactions - This Month
           </Typography>
-          {isMonthlyTransactionsLoading && <CircularProgress />}
-          {error && <span>An Error Occurred</span>}
-          {monthlyTransactions && monthlyTransactions.size > 0 ? (
-            <List>
-              {monthlyTransactions.docs
-                .slice(0, 6)
-                .map((monthlyTransactionsSnapshot, i) => {
-                  let monthlyTransaction: any = monthlyTransactionsSnapshot.data();
-                  return (
-                    <TransactionCard
-                      key={`${monthlyTransactionsSnapshot.id}`}
-                      transaction={{
-                        amount: monthlyTransaction.amount,
-                        type: monthlyTransaction.type,
-                        category: monthlyTransaction.category,
-                        description: monthlyTransaction.description,
-                        taxDeductible: monthlyTransaction.taxDeductible,
-                        timestamp: monthlyTransaction.timestamp
-                      }}
-                      transactionId={monthlyTransactionsSnapshot.id}
-                      month={targetDate}
-                    />
-                  );
-                })}
-            </List>
-          ) : (
-            <div
-              style={{
-                marginTop: "0.75rem",
-                display: "flex",
-                flexDirection: "column",
-                flexWrap: "wrap",
-                alignItems: "center"
+          <MonthTransactionsContainer
+            month={thisMonth}
+            shouldDisplayAddTransactionModal={true}
+            onAddTransactionModalClose={() => setAddTransactionModalOpen(false)}
+            isAddTransactionModalOpen={addTransactionModaOpen}
+            maxTransactions={5}
+          />
+          <div className={classes.actionButtonContainer}>
+            <Button
+              onClick={() => {
+                history.push(
+                  `/months/${thisMonth.year()}-${thisMonth.month() + 1}`
+                );
               }}
             >
-              <Typography variant="body1" color="textPrimary">
-                No transactions in this month
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                Create a transaction to get started
-              </Typography>
-            </div>
-          )}
-          {!isMonthlyTransactionsLoading && (
-            <div style={{ marginTop: "0.25rem" }}>
-              <AddTransactionModal
-                open={addTransactionModaOpen}
-                onClose={() => setAddTransactionModalOpen(false)}
-              />
-            </div>
-          )}
+              View All Transactions
+            </Button>
+          </div>
         </div>
       </div>
       <Fab
@@ -204,7 +167,7 @@ const DashboardPage: FC = () => {
         color="primary"
         onClick={() => setAddTransactionModalOpen(true)}
       >
-        <NavigationIcon className={classes.extendedIcon} />
+        <AddIcon className={classes.extendedIcon} />
         Add Transaction
       </Fab>
     </div>
