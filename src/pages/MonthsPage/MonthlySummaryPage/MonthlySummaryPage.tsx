@@ -1,7 +1,8 @@
-import React, { FC, useState, useContext } from "react";
+import React, { FC, useState, useContext, useEffect } from "react";
 import firebase from "firebase";
 import { useHistory, useParams } from "react-router-dom";
 import moment, { Moment } from "moment";
+import MomentUtils from "@date-io/moment";
 
 import { useDocumentData } from "react-firebase-hooks/firestore";
 
@@ -12,6 +13,8 @@ import Fab from "@material-ui/core/Fab";
 
 import AddIcon from "@material-ui/icons/AddBox";
 import EditIcon from "@material-ui/icons/Edit";
+
+import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 
 import MonthlySummaryCard from "../../../components/cards/MonthlySummaryCard";
 import UpdateMonthlyGoalDialog from "../../../components/dialogs/UpdateMonthlyGoalDialog";
@@ -31,8 +34,6 @@ const MonthlySummaryPage: FC = () => {
   // React Router Hooks
   const history = useHistory();
   let { monthId } = useParams();
-  const date: Moment = moment(monthId, "YYYY-MM");
-
   // Contexts
   const { user } = useContext(AuthenticationContext);
 
@@ -45,22 +46,30 @@ const MonthlySummaryPage: FC = () => {
     setIsUpdateMonthlyGoalModalOpen
   ] = useState(false);
 
+  const [month, setMonth] = useState<Moment | null>(moment());
+
+  useEffect(() => {
+    if (monthId) {
+      setMonth(moment(monthId, "YYYY-MM"));
+    }
+  }, [monthId, setMonth]);
+
   const [summary, isSummaryLoading, hasSummaryErrored] = useDocumentData<
     Summary
   >(
-    user
+    user && month
       ? firebase
           .firestore()
           .collection("users")
           .doc(user.uid)
           .collection("budget")
-          .doc(`${date.year()}-${date.month() + 1}`)
+          .doc(`${month.year()}-${month.month() + 1}`)
       : null
   );
 
   const classes = useStyles();
 
-  if (!monthId) {
+  if (!monthId || !month) {
     return <div className={classes.root}>Not Found</div>;
   }
 
@@ -71,95 +80,115 @@ const MonthlySummaryPage: FC = () => {
   }
 
   return (
-    <div className={classes.root}>
-      <div className={classes.header}>
-        <div>
-          <Button onClick={() => history.goBack()}>&larr; Go Back</Button>
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+      <div className={classes.root}>
+        <div className={classes.header}>
+          <div style={{ display: "flex", flex: 1, flexWrap: "wrap" }}>
+            <div style={{ flex: 1, minWidth: 280 }}>
+              <Button onClick={() => history.goBack()}>&larr; Go Back</Button>
+            </div>
+
+            <DatePicker
+              disableFuture
+              openTo="year"
+              format="MMM YYYY"
+              label="Month to Preview"
+              views={["year", "month"]}
+              value={month}
+              onChange={value => {
+                if (value) {
+                  history.push(`/months/${value.year()}-${value.month() + 1}`);
+                }
+              }}
+            />
+          </div>
+          <div>
+            <Typography variant="h6">{`Summary for ${month.format(
+              "MMMM YYYY"
+            )}`}</Typography>
+          </div>
+          <div className={classes.monthlySummaryContainer}>
+            <MonthlySummaryCard
+              title="Income this month"
+              value={`$${
+                summary && summary.income ? summary.income.toFixed(2) : "0.00"
+              }`}
+              isLoading={isSummaryLoading}
+              hasErrored={Boolean(hasSummaryErrored)}
+            />
+            <MonthlySummaryCard
+              title="Expenses this month"
+              value={`$${
+                summary && summary.expenses
+                  ? summary.expenses.toFixed(2)
+                  : "0.00"
+              }`}
+              isLoading={isSummaryLoading}
+              hasErrored={Boolean(hasSummaryErrored)}
+            />
+            <MonthlySummaryCard
+              title="Total Savings"
+              value={`$${savings ? savings.toFixed(2) : "0.00"}`}
+              isLoading={isSummaryLoading}
+              hasErrored={Boolean(hasSummaryErrored)}
+            />
+            <MonthlySummaryCard
+              title="Monthly Goal"
+              value={`$${
+                summary && summary.savingsGoal
+                  ? summary.savingsGoal.toFixed(2)
+                  : "0.00"
+              }`}
+              isLoading={isSummaryLoading}
+              hasErrored={Boolean(hasSummaryErrored)}
+              secondaryAction={
+                <IconButton
+                  style={{ padding: "0.1rem" }}
+                  onClick={() => setIsUpdateMonthlyGoalModalOpen(true)}
+                >
+                  <EditIcon style={{ width: "0.75rem", height: "0.75rem" }} />
+                </IconButton>
+              }
+            />
+          </div>
         </div>
-        <div>
-          <Typography variant="h6">{`Summary for ${date.format(
-            "MMMM YYYY"
-          )}`}</Typography>
+        <div className={classes.main}>
+          <div className={classes.leftContainer}>
+            <Typography variant="h6" color="textSecondary">
+              Transactions this month
+            </Typography>
+            <MonthTransactionsContainer
+              month={month}
+              shouldDisplayAddTransactionModal={true}
+              isAddTransactionModalOpen={isAddTransactionModalOpen}
+              onAddTransactionModalClose={() =>
+                setIsAddTransactionModalOpen(false)
+              }
+            />
+          </div>
+          <div className={classes.rightContainer}>
+            <Typography variant="h6" color="textSecondary">
+              Spending by Category
+            </Typography>
+            <MonthlySpendingByCategoryContainer date={month} />
+          </div>
         </div>
-        <div className={classes.monthlySummaryContainer}>
-          <MonthlySummaryCard
-            title="Income this month"
-            value={`$${
-              summary && summary.income ? summary.income.toFixed(2) : "0.00"
-            }`}
-            isLoading={isSummaryLoading}
-            hasErrored={Boolean(hasSummaryErrored)}
-          />
-          <MonthlySummaryCard
-            title="Expenses this month"
-            value={`$${
-              summary && summary.expenses ? summary.expenses.toFixed(2) : "0.00"
-            }`}
-            isLoading={isSummaryLoading}
-            hasErrored={Boolean(hasSummaryErrored)}
-          />
-          <MonthlySummaryCard
-            title="Total Savings"
-            value={`$${savings ? savings.toFixed(2) : "0.00"}`}
-            isLoading={isSummaryLoading}
-            hasErrored={Boolean(hasSummaryErrored)}
-          />
-          <MonthlySummaryCard
-            title="Monthly Goal"
-            value={`$${
-              summary && summary.savingsGoal
-                ? summary.savingsGoal.toFixed(2)
-                : "0.00"
-            }`}
-            isLoading={isSummaryLoading}
-            hasErrored={Boolean(hasSummaryErrored)}
-            secondaryAction={
-              <IconButton
-                style={{ padding: "0.1rem" }}
-                onClick={() => setIsUpdateMonthlyGoalModalOpen(true)}
-              >
-                <EditIcon style={{ width: "0.75rem", height: "0.75rem" }} />
-              </IconButton>
-            }
-          />
-        </div>
+        <Fab
+          variant="extended"
+          className={classes.fab}
+          color="primary"
+          onClick={() => setIsAddTransactionModalOpen(true)}
+        >
+          <AddIcon className={classes.extendedIcon} />
+          Add Transaction
+        </Fab>
+        <UpdateMonthlyGoalDialog
+          open={isUpdateMonthlyGoalModalOpen}
+          date={month}
+          onClose={() => setIsUpdateMonthlyGoalModalOpen(false)}
+        />
       </div>
-      <div className={classes.main}>
-        <div className={classes.leftContainer}>
-          <Typography variant="h6" color="textSecondary">
-            Transactions this month
-          </Typography>
-          <MonthTransactionsContainer
-            month={date}
-            shouldDisplayAddTransactionModal={true}
-            isAddTransactionModalOpen={isAddTransactionModalOpen}
-            onAddTransactionModalClose={() =>
-              setIsAddTransactionModalOpen(false)
-            }
-          />
-        </div>
-        <div className={classes.rightContainer}>
-          <Typography variant="h6" color="textSecondary">
-            Spending by Category
-          </Typography>
-          <MonthlySpendingByCategoryContainer date={date} />
-        </div>
-      </div>
-      <Fab
-        variant="extended"
-        className={classes.fab}
-        color="primary"
-        onClick={() => setIsAddTransactionModalOpen(true)}
-      >
-        <AddIcon className={classes.extendedIcon} />
-        Add Transaction
-      </Fab>
-      <UpdateMonthlyGoalDialog
-        open={isUpdateMonthlyGoalModalOpen}
-        date={date}
-        onClose={() => setIsUpdateMonthlyGoalModalOpen(false)}
-      />
-    </div>
+    </MuiPickersUtilsProvider>
   );
 };
 
