@@ -21,6 +21,7 @@ import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import { DropzoneArea } from "material-ui-dropzone";
 
+import useGeolocation from "../../../hooks/useGeolocation";
 import AuthenticationContext from "../../../contexts/AuthenticationContext";
 import CategoriesContext from "../../../contexts/CategoriesContext";
 import { useNotificationDispatch } from "../../../contexts/NotificationProvider";
@@ -37,6 +38,7 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
   const { user } = useContext(AuthenticationContext);
   const { incomeCategories, expenseCategories } = useContext(CategoriesContext);
   const dispatchNotifications = useNotificationDispatch();
+  const { position } = useGeolocation();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
