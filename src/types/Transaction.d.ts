@@ -11,7 +11,7 @@ export interface Transaction {
   /**
    * The amount of the transaction
    */
-  amount?: number;
+  amount: number;
 
   /**
    * The Description of the transaction

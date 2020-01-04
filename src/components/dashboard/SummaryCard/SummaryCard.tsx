@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import moment from "moment";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -57,8 +58,29 @@ const SummaryCard: FC<SummaryCardProps> = props => {
               };
 
               return (
-                <ListItem key={i}>
-                  <ListItemText primary={transaction.description} />
+                <ListItem
+                  key={i}
+                  style={{
+                    display: "flex",
+                    minWidth: 280,
+                    flex: 1,
+                    flexWrap: "wrap"
+                  }}
+                >
+                  <div style={{ flex: 1 }}>
+                    <ListItemText
+                      primary={transaction.description}
+                      secondary={moment(transaction.timestamp.toDate()).format(
+                        "Do MMM"
+                      )}
+                      secondaryTypographyProps={{
+                        style: {
+                          fontSize: "0.75rem"
+                        }
+                      }}
+                    />
+                  </div>
+                  <Typography>{`$${transaction.amount.toFixed(2)}`}</Typography>
                 </ListItem>
               );
             })}
