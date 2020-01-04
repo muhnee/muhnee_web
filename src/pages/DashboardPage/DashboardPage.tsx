@@ -82,7 +82,7 @@ const DashboardPage: FC = () => {
         <div style={{ flex: 1 }}>
           <Typography variant="h5">
             <strong>Overview -</strong>{" "}
-            <span style={{ fontWeight: 300 }}>
+            <span className={classes.monthTitle}>
               {thisMonth.format("MMMM YYYY")}
             </span>
           </Typography>
@@ -122,18 +122,22 @@ const DashboardPage: FC = () => {
               <SummaryCard
                 title="Income"
                 amount={(summary && summary.income) || 0}
-                lastMonth={(lastMonthSummary && lastMonthSummary.income) || 0}
+                lastMonth={lastMonthSummary && lastMonthSummary.income}
               />
               <SummaryCard
                 title="Expenses"
                 amount={(summary && summary.expenses) || 0}
-                lastMonth={(lastMonthSummary && lastMonthSummary.expenses) || 0}
+                lastMonth={lastMonthSummary && lastMonthSummary.expenses}
                 inverted
               />
               <SummaryCard
-                title="Savings"
+                title={
+                  summary && summary.savingsGoal
+                    ? `Savings - ${summary.savingsGoal}`
+                    : "Savings"
+                }
                 amount={(summary && summary.income - summary.expenses) || 0}
-                lastMonth={(summary && summary.savingsGoal) || 0}
+                // lastMonth={(summary && summary.savingsGoal) || 0}
                 inverted
               />
             </div>

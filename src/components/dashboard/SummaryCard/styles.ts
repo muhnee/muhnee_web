@@ -13,6 +13,14 @@ const useStyles = makeStyles<Theme, SummaryCardProps>(theme =>
     },
     directionIcon: {
       height: "1rem"
+    },
+    title: {
+      color: theme.palette.primary.light
+    },
+    value: {
+      display: "flex",
+      minWidth: 120,
+      maxWidth: 350
     }
   })
 );

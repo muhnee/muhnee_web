@@ -19,43 +19,53 @@ const SummaryCard: FC<SummaryCardProps> = props => {
 
   return (
     <div className={classes.root}>
-      <Typography color="inherit" variant="body1">
+      <Typography variant="body2" className={classes.title}>
         {title}
       </Typography>
-      <Typography color="inherit" variant="h4">
-        {`$${amount.toFixed(2)}`}
-      </Typography>
-      <>
-        {diff >= 0 ? (
-          <Typography
-            variant="caption"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              color: green[500]
-            }}
-          >
-            {diff !== 0 && <UpArrowIcon className={classes.directionIcon} />}
+      <div className={classes.value}>
+        <Typography color="inherit" variant="h4" style={{ flex: 1 }}>
+          $
+        </Typography>
 
-            {`${Math.ceil(percentage)}% (+$${diff.toFixed(2)})`}
-          </Typography>
-        ) : (
-          <Typography
-            variant="caption"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              color: inverted ? orange[300] : deepOrange[700]
-            }}
-          >
-            {diff !== 0 && <DownArrowIcon className={classes.directionIcon} />}
+        <Typography color="inherit" variant="h4">
+          {`${amount.toFixed(2)}`}
+        </Typography>
+      </div>
+      {lastMonth && (
+        <>
+          {diff >= 0 ? (
+            <Typography
+              variant="caption"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                color: green[500]
+              }}
+            >
+              {diff !== 0 && <UpArrowIcon className={classes.directionIcon} />}
 
-            {`${Math.abs(Math.ceil(percentage))}% (-$${Math.abs(diff).toFixed(
-              2
-            )})`}
-          </Typography>
-        )}
-      </>
+              {`${Math.ceil(percentage)}% (+$${diff.toFixed(2)})`}
+            </Typography>
+          ) : (
+            <Typography
+              variant="caption"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                color: inverted ? orange[300] : deepOrange[700]
+              }}
+            >
+              {diff !== 0 && (
+                <DownArrowIcon className={classes.directionIcon} />
+              )}
+
+              {`${Math.abs(Math.ceil(percentage))}% (-$${Math.abs(diff).toFixed(
+                2
+              )})`}
+            </Typography>
+          )}
+        </>
+      )}
     </div>
   );
 };
