@@ -1,4 +1,4 @@
-import { JSXElement } from "@babel/types";
+import firebase from "firebase";
 
 export default interface SummaryCardProps {
   /**
@@ -7,14 +7,9 @@ export default interface SummaryCardProps {
   title: string;
 
   /**
-   * The actual amount
+   * The actual amount to be displayed
    */
-  amount: number;
+  amount?: number | string | JSX.Element | JSX.Element[];
 
-  /**
-   * Is the inverted
-   */
-  inverted?: boolean;
-
-  lastMonth?: number;
+  transactions?: firebase.firestore.QuerySnapshot;
 }

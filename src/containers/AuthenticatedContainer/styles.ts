@@ -5,15 +5,15 @@ export const useStyles = makeStyles(theme =>
     root: {
       flex: 1,
       display: "flex",
-      flexDirection: "row"
+      flexDirection: "row",
+      overflow: "hidden"
     },
     sidebar: {
       backgroundColor: theme.palette.primary.main,
       padding: "0.25rem 0 0.25rem 0.25rem",
-      width: "15vw",
+      minWidth: 250,
       borderRight: "1px solid #ccc",
       height: "100vh",
-      position: "fixed",
       zIndex: 3,
       display: "flex",
       color: "white",
@@ -28,7 +28,6 @@ export const useStyles = makeStyles(theme =>
       flex: 1,
       overflow: "scroll",
       height: "100vh",
-      marginLeft: "15vw",
       [theme.breakpoints.down("sm")]: {
         marginLeft: 0
       }

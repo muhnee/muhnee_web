@@ -38,7 +38,7 @@ const DashboardPage: FC = () => {
 
   const targetDate = `${thisMonth.year()}-${thisMonth.month() + 1}`;
 
-  const [monthlyTransactions, isMonthlyTransactionsLoading] = useCollection(
+  const [monthlyExpenses, isMonthlyExpensesLoading] = useCollection(
     user
       ? firebase
           .firestore()
@@ -47,7 +47,8 @@ const DashboardPage: FC = () => {
           .collection("budget")
           .doc(targetDate)
           .collection("transactions")
-          .orderBy("timestamp", "desc")
+          .where("type", "==", "expense")
+          .limit(3)
       : null
   );
 
@@ -76,6 +77,7 @@ const DashboardPage: FC = () => {
   if (!user || !user.displayName) {
     return <p>An Error Occurred.</p>;
   }
+
   return (
     <div className={classes.root}>
       <div className={classes.row}>
@@ -120,25 +122,13 @@ const DashboardPage: FC = () => {
           <div className={classes.leftContainer}>
             <div className={classes.summaryContainer}>
               <SummaryCard
-                title="Income"
-                amount={(summary && summary.income) || 0}
-                lastMonth={lastMonthSummary && lastMonthSummary.income}
-              />
-              <SummaryCard
                 title="Expenses"
-                amount={(summary && summary.expenses) || 0}
-                lastMonth={lastMonthSummary && lastMonthSummary.expenses}
-                inverted
-              />
-              <SummaryCard
-                title={
-                  summary && summary.savingsGoal
-                    ? `Savings - ${summary.savingsGoal}`
-                    : "Savings"
+                amount={
+                  summary &&
+                  summary.expenses &&
+                  `$${summary.expenses.toFixed(2)}`
                 }
-                amount={(summary && summary.income - summary.expenses) || 0}
-                // lastMonth={(summary && summary.savingsGoal) || 0}
-                inverted
+                transactions={monthlyExpenses}
               />
             </div>
             <Divider style={{ margin: "0.25rem 0" }} />
@@ -146,16 +136,6 @@ const DashboardPage: FC = () => {
               <Typography variant="h6">Spend by Category</Typography>
               <MonthlySpendingByCategoryContainer date={thisMonth} />
             </div>
-          </div>
-          <div
-            className={classes.rightContainer}
-            style={{ marginTop: "0.75rem", minWidth: 280 }}
-          >
-            <MonthSummaryContainer
-              currentMonth={thisMonth}
-              transactions={monthlyTransactions}
-              isLoading={isMonthlyTransactionsLoading}
-            />
           </div>
         </div>
         <div className={classes.rightContainer}>
