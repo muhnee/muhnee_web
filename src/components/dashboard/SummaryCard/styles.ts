@@ -9,17 +9,17 @@ const useStyles = makeStyles<Theme, SummaryCardProps>(theme =>
       flexDirection: "column",
       justifyContent: "flex-end",
       flexWrap: "wrap",
-      margin: "0 1.5rem"
+      margin: "0.5rem 1.5rem"
     },
     directionIcon: {
       height: "1rem"
     },
     title: {
-      color: theme.palette.primary.light
+      color: theme.palette.primary.main
     },
     value: {
       display: "flex",
-      minWidth: 120,
+      minWidth: 200,
       maxWidth: 350
     }
   })
