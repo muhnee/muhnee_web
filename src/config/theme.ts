@@ -8,6 +8,12 @@ const theme: ThemeOptions = {
       main: "#8E91F3"
     },
     secondary: deepOrange
+  },
+  typography: {
+    fontFamily: "Quicksand",
+    body2: {
+      fontFamily: "Merriweather"
+    }
   }
 };
 
