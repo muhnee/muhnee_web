@@ -4,15 +4,16 @@ import SummaryCardProps from "./types";
 const useStyles = makeStyles<Theme, SummaryCardProps>(theme =>
   createStyles({
     root: {
-      color: theme.palette.primary.main,
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "flex-end",
-      flexWrap: "wrap",
-      margin: "0 1.5rem"
+      marginBottom: "1rem",
+      minWidth: 280,
+      flex: 1,
+      margin: "0 0.5rem"
     },
-    directionIcon: {
-      height: "1rem"
+    listItem: {
+      display: "flex",
+      minWidth: 280,
+      flex: 1,
+      flexWrap: "wrap"
     }
   })
 );

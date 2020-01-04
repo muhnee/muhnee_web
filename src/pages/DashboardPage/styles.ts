@@ -46,6 +46,9 @@ const useStyles = makeStyles<Theme>(theme => ({
   actionButtonContainer: {
     display: "flex",
     justifyContent: "flex-end"
+  },
+  monthTitle: {
+    fontWeight: 300
   }
 }));
 

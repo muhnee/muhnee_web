@@ -1,62 +1,108 @@
 import React, { FC } from "react";
+import { useHistory } from "react-router-dom";
+import moment from "moment";
 
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Divider from "@material-ui/core/Divider";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 
-import DownArrowIcon from "@material-ui/icons/ArrowDownward";
-import UpArrowIcon from "@material-ui/icons/ArrowUpward";
-
-import { green, deepOrange, orange } from "@material-ui/core/colors";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 import SummaryCardProps from "./types";
+import { Transaction } from "../../../types/Transaction";
+
 import useStyles from "./styles";
 
 const SummaryCard: FC<SummaryCardProps> = props => {
-  const { title, amount, lastMonth, inverted } = props;
+  const history = useHistory();
+  const { title, amount, transactions, isLoading = false } = props;
   const classes = useStyles(props);
 
-  const diff = amount - (lastMonth || 0);
-  const percentage = (diff / (lastMonth || 1)) * 100;
-
   return (
-    <div className={classes.root}>
-      <Typography color="inherit" variant="body1">
-        {title}
-      </Typography>
-      <Typography color="inherit" variant="h4">
-        {`$${amount.toFixed(2)}`}
-      </Typography>
-      <>
-        {diff >= 0 ? (
-          <Typography
-            variant="caption"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              color: green[500]
-            }}
-          >
-            {diff !== 0 && <UpArrowIcon className={classes.directionIcon} />}
-
-            {`${Math.ceil(percentage)}% (+$${diff.toFixed(2)})`}
-          </Typography>
+    <Card className={classes.root} variant="outlined">
+      <CardContent>
+        {isLoading ? (
+          <>
+            <Skeleton variant="rect" width={100} height={"1rem"} />
+            <Skeleton
+              variant="rect"
+              width={100}
+              height={"1.5rem"}
+              style={{ marginTop: "0.5rem" }}
+            />
+          </>
         ) : (
-          <Typography
-            variant="caption"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              color: inverted ? orange[300] : deepOrange[700]
-            }}
-          >
-            {diff !== 0 && <DownArrowIcon className={classes.directionIcon} />}
-
-            {`${Math.abs(Math.ceil(percentage))}% (-$${Math.abs(diff).toFixed(
-              2
-            )})`}
-          </Typography>
+          <>
+            <Typography color="textSecondary" gutterBottom>
+              {title}
+            </Typography>
+            <Typography variant="h5" component="h2">
+              {amount}
+            </Typography>
+          </>
         )}
-      </>
-    </div>
+      </CardContent>
+      <Divider />
+      <CardContent>
+        <Typography>Latest Transactions</Typography>
+        {isLoading ? (
+          <Skeleton variant="rect" width="100%" height={"5rem"} />
+        ) : (
+          <List>
+            {transactions &&
+              transactions.docs.map((doc, i) => {
+                const docData = doc.data();
+
+                const transaction: Transaction = {
+                  type: docData.type,
+                  amount: docData.amount,
+                  description: docData.description,
+                  category: docData.category,
+                  taxDeductible: docData.taxDeductible,
+                  timestamp: docData.timestamp
+                };
+
+                const transcationTimestmap = moment(
+                  transaction.timestamp.toDate()
+                );
+
+                return (
+                  <ListItem
+                    key={i}
+                    className={classes.ListItem}
+                    onClick={() =>
+                      history.push(
+                        `/months/${transcationTimestmap.year()}-${transcationTimestmap.month() +
+                          1}/transactions/${doc.id}`
+                      )
+                    }
+                    button
+                  >
+                    <div style={{ flex: 1 }}>
+                      <ListItemText
+                        primary={transaction.description}
+                        secondary={transcationTimestmap.format("Do MMM")}
+                        secondaryTypographyProps={{
+                          style: {
+                            fontSize: "0.75rem"
+                          }
+                        }}
+                      />
+                    </div>
+                    <Typography>{`$${transaction.amount.toFixed(
+                      2
+                    )}`}</Typography>
+                  </ListItem>
+                );
+              })}
+          </List>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
