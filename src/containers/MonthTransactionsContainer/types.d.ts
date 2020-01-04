@@ -11,19 +11,4 @@ export interface MonthTransactionsContainerProps {
    * the maximum amount of transactions to display (defaults to size of array)
    */
   maxTransactions?: number;
-
-  /**
-   * should display the `AddTransactionModal`
-   */
-  shouldDisplayAddTransactionModal?: boolean;
-
-  /**
-   * the open or close state of the `AddTransactionModal`
-   */
-  isAddTransactionModalOpen?: boolean;
-
-  /**
-   * The Call Back for the `AddTransactionModal` when onClose() is called
-   */
-  onAddTransactionModalClose?: () => void;
 }

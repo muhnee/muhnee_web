@@ -14,7 +14,6 @@ import Typography from "@material-ui/core/Typography";
 
 import SummaryCard from "../../components/dashboard/SummaryCard";
 
-import MonthTransactionsContainer from "../../containers/MonthTransactionsContainer";
 import MonthlySpendingByCategoryContainer from "../../containers/MonthlySpendingByCategoryContainer";
 
 import AddIcon from "@material-ui/icons/AddBox";
@@ -33,7 +32,6 @@ const DashboardPage: FC = () => {
 
   // TODO: add support for changing months on dashboard
   const [thisMonth, setThisMonth] = useState<Moment>(moment());
-  const [addTransactionModaOpen, setAddTransactionModalOpen] = useState(false);
   const classes = useStyles();
 
   const targetDate = `${thisMonth.year()}-${thisMonth.month() + 1}`;

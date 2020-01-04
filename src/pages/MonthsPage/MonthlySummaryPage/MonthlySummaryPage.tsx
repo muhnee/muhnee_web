@@ -155,10 +155,7 @@ const MonthlySummaryPage: FC = () => {
             <Typography variant="h6" color="textSecondary">
               Transactions this month
             </Typography>
-            <MonthTransactionsContainer
-              month={month}
-              shouldDisplayAddTransactionModal={true}
-            />
+            <MonthTransactionsContainer month={month} />
           </div>
           <div className={classes.rightContainer}>
             <Typography variant="h6" color="textSecondary">
