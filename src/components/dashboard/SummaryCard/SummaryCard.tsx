@@ -9,82 +9,83 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 
+import Skeleton from "@material-ui/lab/Skeleton";
+
 import SummaryCardProps from "./types";
 import { Transaction } from "../../../types/Transaction";
 
 import useStyles from "./styles";
 
 const SummaryCard: FC<SummaryCardProps> = props => {
-  const { title, amount, transactions } = props;
+  const { title, amount, transactions, isLoading = false } = props;
   const classes = useStyles(props);
 
   return (
-    <Card
-      style={{
-        boxShadow: `
-      0 1.4px 2.8px rgba(0, 0, 0, 0.143),
-      0 3.3px 6.7px rgba(0, 0, 0, 0.199),
-      0 6.1px 12.5px rgba(0, 0, 0, 0.231),
-      0 10.9px 22.3px rgba(0, 0, 0, 0.256),
-      0 20.5px 41.8px rgba(0, 0, 0, 0.285),
-      0 49px 100px rgba(0, 0, 0, 0.34)
-    `,
-        marginBottom: "1rem",
-        minWidth: 280
-      }}
-    >
+    <Card className={classes.root}>
       <CardContent>
-        <Typography color="textSecondary" gutterBottom>
-          {title}
-        </Typography>
-        <Typography variant="h5" component="h2">
-          {amount}
-        </Typography>
+        {isLoading ? (
+          <>
+            <Skeleton variant="rect" width={100} height={"1rem"} />
+            <Skeleton
+              variant="rect"
+              width={100}
+              height={"1.5rem"}
+              style={{ marginTop: "0.5rem" }}
+            />
+          </>
+        ) : (
+          <>
+            <Typography color="textSecondary" gutterBottom>
+              {title}
+            </Typography>
+            <Typography variant="h5" component="h2">
+              {amount}
+            </Typography>
+          </>
+        )}
       </CardContent>
       <Divider />
       <CardContent>
-        <List>
-          {transactions &&
-            transactions.docs.map((doc, i) => {
-              const docData = doc.data();
+        {isLoading ? (
+          <Skeleton variant="rect" width="100%" height={"5rem"} />
+        ) : (
+          <List>
+            {transactions &&
+              transactions.docs.map((doc, i) => {
+                const docData = doc.data();
 
-              const transaction: Transaction = {
-                type: docData.type,
-                amount: docData.amount,
-                description: docData.description,
-                category: docData.category,
-                taxDeductible: docData.taxDeductible,
-                timestamp: docData.timestamp
-              };
+                const transaction: Transaction = {
+                  type: docData.type,
+                  amount: docData.amount,
+                  description: docData.description,
+                  category: docData.category,
+                  taxDeductible: docData.taxDeductible,
+                  timestamp: docData.timestamp
+                };
 
-              return (
-                <ListItem
-                  key={i}
-                  style={{
-                    display: "flex",
-                    minWidth: 280,
-                    flex: 1,
-                    flexWrap: "wrap"
-                  }}
-                >
-                  <div style={{ flex: 1 }}>
-                    <ListItemText
-                      primary={transaction.description}
-                      secondary={moment(transaction.timestamp.toDate()).format(
-                        "Do MMM"
-                      )}
-                      secondaryTypographyProps={{
-                        style: {
-                          fontSize: "0.75rem"
-                        }
-                      }}
-                    />
-                  </div>
-                  <Typography>{`$${transaction.amount.toFixed(2)}`}</Typography>
-                </ListItem>
-              );
-            })}
-        </List>
+                return (
+                  <ListItem key={i} className={classes.ListItem}>
+                    <div style={{ flex: 1 }}>
+                      <ListItemText
+                        primary={transaction.description}
+                        secondary={moment(
+                          transaction.timestamp.toDate()
+                        ).format("Do MMM")}
+                        secondaryTypographyProps={{
+                          style: {
+                            fontSize: "0.75rem"
+                          }
+                        }}
+                      />
+                    </div>
+                    <Typography>{`$${transaction.amount.toFixed(
+                      2
+                    )}`}</Typography>
+                  </ListItem>
+                );
+              })}
+          </List>
+        )}
       </CardContent>
     </Card>
   );

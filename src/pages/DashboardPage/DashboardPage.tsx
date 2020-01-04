@@ -14,7 +14,6 @@ import Typography from "@material-ui/core/Typography";
 
 import SummaryCard from "../../components/dashboard/SummaryCard";
 
-import MonthSummaryContainer from "../../containers/MonthSummaryContainer";
 import MonthTransactionsContainer from "../../containers/MonthTransactionsContainer";
 import MonthlySpendingByCategoryContainer from "../../containers/MonthlySpendingByCategoryContainer";
 
@@ -60,17 +59,6 @@ const DashboardPage: FC = () => {
           .doc(user.uid)
           .collection("budget")
           .doc(targetDate)
-      : null
-  );
-
-  const [lastMonthSummary] = useDocumentData<Summary>(
-    user
-      ? firebase
-          .firestore()
-          .collection("users")
-          .doc(user.uid)
-          .collection("budget")
-          .doc(`${lastMonth.year()}-${lastMonth.month() + 1}`)
       : null
   );
 
@@ -129,6 +117,7 @@ const DashboardPage: FC = () => {
                   `$${summary.expenses.toFixed(2)}`
                 }
                 transactions={monthlyExpenses}
+                isLoading={isMonthlyExpensesLoading}
               />
             </div>
             <Divider style={{ margin: "0.25rem 0" }} />

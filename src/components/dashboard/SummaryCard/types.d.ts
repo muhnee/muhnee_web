@@ -12,4 +12,6 @@ export default interface SummaryCardProps {
   amount?: number | string | JSX.Element | JSX.Element[];
 
   transactions?: firebase.firestore.QuerySnapshot;
+
+  isLoading?: boolean;
 }
