@@ -25,7 +25,6 @@ import { Summary } from "../../types/Summary";
 import useStyles from "./styles";
 
 const DashboardPage: FC = () => {
-  const lastMonth = moment().subtract(1, "month");
   const history = useHistory();
 
   const { user } = useContext(AuthenticationContext);
@@ -47,6 +46,20 @@ const DashboardPage: FC = () => {
           .doc(targetDate)
           .collection("transactions")
           .where("type", "==", "expense")
+          .limit(3)
+      : null
+  );
+
+  const [monthlyIncome, isMonthlyIncomeLoading] = useCollection(
+    user
+      ? firebase
+          .firestore()
+          .collection("users")
+          .doc(user.uid)
+          .collection("budget")
+          .doc(targetDate)
+          .collection("transactions")
+          .where("type", "==", "income")
           .limit(3)
       : null
   );
@@ -111,14 +124,27 @@ const DashboardPage: FC = () => {
             <div className={classes.summaryContainer}>
               <SummaryCard
                 title="Expenses"
-                amount={
-                  summary &&
-                  summary.expenses &&
-                  `$${summary.expenses.toFixed(2)}`
-                }
+                amount={summary && `$${summary.expenses.toFixed(2)}`}
                 transactions={monthlyExpenses}
                 isLoading={isMonthlyExpensesLoading}
               />
+              <SummaryCard
+                title="Income"
+                amount={summary && `$${summary.income.toFixed(2)}`}
+                transactions={monthlyIncome}
+                isLoading={isMonthlyIncomeLoading}
+              />
+            </div>
+            <div style={{ display: "flex", flexDirection: "row-reverse" }}>
+              <Button
+                onClick={() => {
+                  history.push(
+                    `/months/${thisMonth.year()}-${thisMonth.month() + 1}`
+                  );
+                }}
+              >
+                View All Transactions
+              </Button>
             </div>
             <Divider style={{ margin: "0.25rem 0" }} />
             <div style={{ marginTop: "1.25rem" }}>
@@ -127,29 +153,11 @@ const DashboardPage: FC = () => {
             </div>
           </div>
         </div>
-        <div className={classes.rightContainer}>
-          <Typography variant="body1">
-            Recent Transactions - This Month
-          </Typography>
-          <MonthTransactionsContainer
-            month={thisMonth}
-            shouldDisplayAddTransactionModal={true}
-            onAddTransactionModalClose={() => setAddTransactionModalOpen(false)}
-            isAddTransactionModalOpen={addTransactionModaOpen}
-            maxTransactions={5}
-          />
+        {/* <div className={classes.rightContainer}>
           <div className={classes.actionButtonContainer}>
-            <Button
-              onClick={() => {
-                history.push(
-                  `/months/${thisMonth.year()}-${thisMonth.month() + 1}`
-                );
-              }}
-            >
-              View All Transactions
-            </Button>
+            
           </div>
-        </div>
+        </div> */}
       </div>
       <Fab
         variant="extended"

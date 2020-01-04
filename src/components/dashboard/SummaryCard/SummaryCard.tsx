@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { useHistory } from "react-router-dom";
 import moment from "moment";
 
 import Card from "@material-ui/core/Card";
@@ -17,11 +18,12 @@ import { Transaction } from "../../../types/Transaction";
 import useStyles from "./styles";
 
 const SummaryCard: FC<SummaryCardProps> = props => {
+  const history = useHistory();
   const { title, amount, transactions, isLoading = false } = props;
   const classes = useStyles(props);
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} variant="outlined">
       <CardContent>
         {isLoading ? (
           <>
@@ -46,6 +48,7 @@ const SummaryCard: FC<SummaryCardProps> = props => {
       </CardContent>
       <Divider />
       <CardContent>
+        <Typography>Latest Transactions</Typography>
         {isLoading ? (
           <Skeleton variant="rect" width="100%" height={"5rem"} />
         ) : (
@@ -63,14 +66,26 @@ const SummaryCard: FC<SummaryCardProps> = props => {
                   timestamp: docData.timestamp
                 };
 
+                const transcationTimestmap = moment(
+                  transaction.timestamp.toDate()
+                );
+
                 return (
-                  <ListItem key={i} className={classes.ListItem}>
+                  <ListItem
+                    key={i}
+                    className={classes.ListItem}
+                    onClick={() =>
+                      history.push(
+                        `/months/${transcationTimestmap.year()}-${transcationTimestmap.month() +
+                          1}/transactions/${doc.id}`
+                      )
+                    }
+                    button
+                  >
                     <div style={{ flex: 1 }}>
                       <ListItemText
                         primary={transaction.description}
-                        secondary={moment(
-                          transaction.timestamp.toDate()
-                        ).format("Do MMM")}
+                        secondary={transcationTimestmap.format("Do MMM")}
                         secondaryTypographyProps={{
                           style: {
                             fontSize: "0.75rem"
