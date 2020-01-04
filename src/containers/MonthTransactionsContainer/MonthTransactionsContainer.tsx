@@ -88,16 +88,6 @@ const MonthTransactionsContainer: FC<MonthTransactionsContainerProps> = props =>
             })}
         </List>
       )}
-      {shouldDisplayAddTransactionModal && (
-        <div style={{ marginTop: "0.25rem" }}>
-          <AddTransactionModal
-            open={isAddTransactionModalOpen}
-            onClose={() => {
-              onAddTransactionModalClose();
-            }}
-          />
-        </div>
-      )}
     </div>
   );
 };

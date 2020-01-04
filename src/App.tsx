@@ -4,31 +4,34 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { MuiThemeProvider, useMediaQuery, Snackbar } from "@material-ui/core";
 
 import MobileWarningBanner from "./components/MobileWarningBanner";
+import SnackbarWrapper from "./components/Snackbar/Snackbar";
+import AddTransactionModal from "./components/dialogs/AddTransactionModal";
 
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import DashboardPage from "./pages/DashboardPage";
 import MonthsPage from "./pages/MonthsPage";
 import OnboardingPage from "./pages/OnboardingPage";
+import CategoriesPage from "./pages/CategoriesPage";
+import AccountPage from "./pages/AccountPage";
 
+import AuthenticatedContainer from "./containers/AuthenticatedContainer";
+import CategoriesProvider from "./providers/CategoriesProvider";
+import UserProvider from "./providers/UserProvider";
 import { AuthenticationProvider } from "./providers/AuthenticationProvider";
 
-import muiTheme from "./config/theme";
-
-import useStyles from "./styles";
-import AuthenticatedContainer from "./containers/AuthenticatedContainer";
-import CategoriesPage from "./pages/CategoriesPage";
-import CategoriesProvider from "./providers/CategoriesProvider";
 import NotificationProvider, {
   useNotificationState,
   useNotificationDispatch
 } from "./contexts/NotificationProvider";
-import SnackbarWrapper from "./components/Snackbar/Snackbar";
-import UserProvider from "./providers/UserProvider";
-import AccountPage from "./pages/AccountPage";
+import UIProvider, { useState, useUIDispatch } from "./contexts/UIProvider";
+
+import muiTheme from "./config/theme";
+
+import useStyles from "./styles";
 
 // CoreComponent handles the router, the state in addition to Providers for hooks
-const Core: React.FC = ({ children }) => {
+const Core: React.FC = () => {
   const classes = useStyles();
   const matches = useMediaQuery("(max-width:400px)");
 
@@ -39,11 +42,13 @@ const Core: React.FC = ({ children }) => {
         <Router>
           <AuthenticationProvider>
             <NotificationProvider>
-              <CategoriesProvider>
-                <UserProvider>
-                  <App />
-                </UserProvider>
-              </CategoriesProvider>
+              <UIProvider>
+                <CategoriesProvider>
+                  <UserProvider>
+                    <App />
+                  </UserProvider>
+                </CategoriesProvider>
+              </UIProvider>
             </NotificationProvider>
           </AuthenticationProvider>
         </Router>
@@ -55,9 +60,17 @@ const Core: React.FC = ({ children }) => {
 const App: React.FC = () => {
   const dispatch = useNotificationDispatch();
   const { notification } = useNotificationState();
+  const { addTransactionModalOpen, date } = useState();
+  const dispatchModalClose = useUIDispatch();
 
   const handleClose = () => {
     dispatch({ type: "@@NOTIFICATION/POP" });
+  };
+
+  const handleModalClose = () => {
+    dispatchModalClose({
+      type: "@@UI/ADD_TRANSACTION_MODAL_CLOSE"
+    });
   };
 
   return (
@@ -86,6 +99,12 @@ const App: React.FC = () => {
           />
         )}
       </Snackbar>
+      <AddTransactionModal
+        open={addTransactionModalOpen}
+        onClose={() => {
+          handleModalClose();
+        }}
+      />
     </>
   );
 };

@@ -148,7 +148,7 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
 
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
-      <Dialog open={open} maxWidth="md" fullWidth>
+      <Dialog open={open} maxWidth="md" fullWidth onClose={onClose}>
         <DialogTitle>Add new Transaction</DialogTitle>
         <DialogContent className={classes.dialogContent}>
           <FormControl>

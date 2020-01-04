@@ -20,12 +20,14 @@ import MonthlySpendingByCategoryContainer from "../../containers/MonthlySpending
 import AddIcon from "@material-ui/icons/AddBox";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
+import { useUIDispatch } from "../../contexts/UIProvider";
 import { Summary } from "../../types/Summary";
 
 import useStyles from "./styles";
 
 const DashboardPage: FC = () => {
   const history = useHistory();
+  const uiDispatch = useUIDispatch();
 
   const { user } = useContext(AuthenticationContext);
 
@@ -163,7 +165,12 @@ const DashboardPage: FC = () => {
         variant="extended"
         className={classes.fab}
         color="primary"
-        onClick={() => setAddTransactionModalOpen(true)}
+        onClick={() =>
+          uiDispatch({
+            type: "@@UI/ADD_TRANSACTION_MODAL_OPEN",
+            date: thisMonth
+          })
+        }
       >
         <AddIcon className={classes.extendedIcon} />
         Add Transaction
