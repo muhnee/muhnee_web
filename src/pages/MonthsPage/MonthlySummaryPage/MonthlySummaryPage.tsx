@@ -24,6 +24,7 @@ import MonthlySpendingByCategoryContainer from "../../../containers/MonthlySpend
 import { Summary } from "../../../containers/MonthSummaryContainer/types";
 
 import AuthenticationContext from "../../../contexts/AuthenticationContext";
+import { useUIDispatch } from "../../../contexts/UIProvider";
 
 import useStyles from "./styles";
 
@@ -36,11 +37,8 @@ const MonthlySummaryPage: FC = () => {
   let { monthId } = useParams();
   // Contexts
   const { user } = useContext(AuthenticationContext);
+  const uiDispatch = useUIDispatch();
 
-  // State
-  const [isAddTransactionModalOpen, setIsAddTransactionModalOpen] = useState(
-    false
-  );
   const [
     isUpdateMonthlyGoalModalOpen,
     setIsUpdateMonthlyGoalModalOpen
@@ -160,10 +158,6 @@ const MonthlySummaryPage: FC = () => {
             <MonthTransactionsContainer
               month={month}
               shouldDisplayAddTransactionModal={true}
-              isAddTransactionModalOpen={isAddTransactionModalOpen}
-              onAddTransactionModalClose={() =>
-                setIsAddTransactionModalOpen(false)
-              }
             />
           </div>
           <div className={classes.rightContainer}>
@@ -177,7 +171,9 @@ const MonthlySummaryPage: FC = () => {
           variant="extended"
           className={classes.fab}
           color="primary"
-          onClick={() => setIsAddTransactionModalOpen(true)}
+          onClick={() =>
+            uiDispatch({ type: "@@UI/ADD_TRANSACTION_MODAL_OPEN", date: month })
+          }
         >
           <AddIcon className={classes.extendedIcon} />
           Add Transaction

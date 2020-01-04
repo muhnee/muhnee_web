@@ -66,7 +66,7 @@ const UpdateMonthlyGoalDialog: FC<UpdateMonthlyGoalDialogProps> = ({
   };
 
   return (
-    <Dialog open={open} onClose={() => onClose()} maxWidth="md" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>{`Update Monthly Goal - ${date.format(
         "MMM YYYY"
       )}`}</DialogTitle>
