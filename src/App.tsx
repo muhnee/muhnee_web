@@ -60,7 +60,7 @@ const Core: React.FC = () => {
 const App: React.FC = () => {
   const dispatch = useNotificationDispatch();
   const { notification } = useNotificationState();
-  const { addTransactionModalOpen, date } = useState();
+  const { addTransactionModalOpen } = useState();
   const dispatchModalClose = useUIDispatch();
 
   const handleClose = () => {

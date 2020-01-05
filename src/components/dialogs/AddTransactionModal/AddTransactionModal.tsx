@@ -31,6 +31,11 @@ import { FILE_UPLOAD } from "../../../config/settings";
 import AddTransactionModalProps from "./types";
 import { TransactionTypes } from "../../../types/Transaction";
 
+type LocationSuggestion = {
+  name: string;
+  placeId: string;
+};
+
 const AddTransactionModal: FC<AddTransactionModalProps> = ({
   open = false,
   onClose = () => {}
@@ -51,6 +56,9 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
     moment()
   );
   const [files, setFiles] = useState<File[]>([]);
+  const [suggestions, setSuggestions] = useState<LocationSuggestion[] | null>(
+    []
+  );
 
   const resetData = () => {
     setType("expense");
@@ -64,7 +72,34 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
 
   useEffect(() => {
     resetData();
-  }, [setType, setAmount, setDescription, setTaxDeductible, handleDateChange]);
+    if (position) {
+      console.info(`Position: ${JSON.stringify(position, null, 2)}`);
+      const getGeo = firebase.functions().httpsCallable("getGeosuggestions");
+      getGeo({
+        latitude: position.latitude,
+        longitude: position.longitude
+      }).then(pos => {
+        const suggestionData: LocationSuggestion[] = pos.data
+          .slice(0, 5)
+          .map((data: any) => {
+            return {
+              name: data.name,
+              placeId: data.place_id
+            };
+          });
+        setSuggestions(suggestionData);
+      });
+    } else {
+      console.warn("GEOLOCATION NOT AVAILABLE: No suggestions can be given");
+    }
+  }, [
+    setType,
+    setAmount,
+    setDescription,
+    setTaxDeductible,
+    handleDateChange,
+    position
+  ]);
 
   const addData = async () => {
     if (user && selectedDate) {
@@ -227,6 +262,28 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
             }}
             disabled={isSubmitting}
           />
+          {suggestions && (
+            <div style={{ margin: "0.5rem 0" }}>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                style={{ marginBottom: "0.05rem" }}
+              >
+                Suggestions
+              </Typography>
+              {suggestions.map((suggestion, i) => {
+                return (
+                  <span
+                    onClick={() => setDescription(suggestion.name)}
+                    className={classes.suggestion}
+                    key={i}
+                  >
+                    {suggestion.name}
+                  </span>
+                );
+              })}
+            </div>
+          )}
           {type === "expense" && (
             <FormControlLabel
               control={

@@ -12,6 +12,11 @@ const useStyles = makeStyles({
   actionButton: {
     backgroundColor: green[500],
     color: "white"
+  },
+  suggestion: {
+    marginRight: "1rem",
+    textDecoration: "underline",
+    cursor: "pointer"
   }
 });
 

@@ -9,17 +9,10 @@ import AuthenticationContext from "../../contexts/AuthenticationContext";
 import { MonthTransactionsContainerProps } from "./types";
 import LoadingContainer from "../LoadingContainer";
 import TransactionCard from "../../components/cards/TransactionCard";
-import AddTransactionModal from "../../components/dialogs/AddTransactionModal";
 import EmptyStateContainer from "../EmptyStateContainer";
 
 const MonthTransactionsContainer: FC<MonthTransactionsContainerProps> = props => {
-  const {
-    month,
-    maxTransactions = null,
-    shouldDisplayAddTransactionModal = false,
-    isAddTransactionModalOpen = false,
-    onAddTransactionModalClose = () => {}
-  } = props;
+  const { month, maxTransactions = null } = props;
   const { user } = useContext(AuthenticationContext);
   const targetDate = `${month.year()}-${month.month() + 1}`;
 
