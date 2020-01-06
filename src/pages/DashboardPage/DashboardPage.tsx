@@ -145,8 +145,9 @@ const DashboardPage: FC = () => {
           </Button>
         </ButtonGroup>
       </div>
-      <div className={classes.row}>
-        <div className={clsx(classes.row)} style={{ flex: 2 }}>
+      <div className={classes.row} style={{ flexDirection: "column" }}>
+        <Typography variant="h5">Budget</Typography>
+        <div className={clsx(classes.row)} style={{ width: "100%" }}>
           <div className={classes.leftContainer}>
             <div className={classes.summaryContainer}>
               <SummaryCard
@@ -207,13 +208,13 @@ const DashboardPage: FC = () => {
                 View All Transactions
               </Button>
             </div>
-            <Divider style={{ margin: "0.25rem 0" }} />
-            <div style={{ marginTop: "1.25rem" }}>
-              <Typography variant="h6">Spend by Category</Typography>
-              <MonthlySpendingByCategoryContainer date={thisMonth} />
-            </div>
+          </div>
+          <div className={classes.rightContainer}>
+            <Typography variant="h6">Spend by Category</Typography>
+            <MonthlySpendingByCategoryContainer date={thisMonth} />
           </div>
         </div>
+        <Divider style={{ margin: "0.25rem 0" }} />
       </div>
       <Fab
         variant="extended"
