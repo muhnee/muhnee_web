@@ -1,9 +1,8 @@
 import React, { FC } from "react";
 
-import Skeleton from "@material-ui/lab/Skeleton";
-
-import LinearProgress from "@material-ui/core/LinearProgress";
 import Typography from "@material-ui/core/Typography";
+
+import Skeleton from "@material-ui/lab/Skeleton";
 
 import { MonthlySummaryCardProps } from "./types";
 import useStyles from "./styles";
