@@ -40,21 +40,25 @@ const SummaryCard: FC<SummaryCardProps> = props => {
             <Typography color="textSecondary" gutterBottom>
               {title}
             </Typography>
-            <Typography variant="h5" component="h2">
-              {amount}
-            </Typography>
+            {typeof amount === "string" ? (
+              <Typography variant="h5" component="h2">
+                {amount}
+              </Typography>
+            ) : (
+              amount
+            )}
           </>
         )}
       </CardContent>
       <Divider />
-      <CardContent>
-        <Typography>Latest Transactions</Typography>
-        {isLoading ? (
-          <Skeleton variant="rect" width="100%" height={"5rem"} />
-        ) : (
-          <List>
-            {transactions &&
-              transactions.docs.map((doc, i) => {
+      {transactions && (
+        <CardContent>
+          <Typography>Latest Transactions</Typography>
+          {isLoading ? (
+            <Skeleton variant="rect" width="100%" height={"5rem"} />
+          ) : (
+            <List>
+              {transactions.docs.map((doc, i) => {
                 const docData = doc.data();
 
                 const transaction: Transaction = {
@@ -99,9 +103,10 @@ const SummaryCard: FC<SummaryCardProps> = props => {
                   </ListItem>
                 );
               })}
-          </List>
-        )}
-      </CardContent>
+            </List>
+          )}
+        </CardContent>
+      )}
     </Card>
   );
 };
