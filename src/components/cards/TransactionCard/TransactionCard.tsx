@@ -46,6 +46,7 @@ const TransactionCard: FC<TransactionCardProps> = props => {
         {transactionCategory && transactionCategory.icon ? (
           <CategoryIconAvatar
             category={{ id: transaction.category, ...transactionCategory }}
+            type={transaction.type}
           />
         ) : (
           <Avatar className={classes.avatar}>

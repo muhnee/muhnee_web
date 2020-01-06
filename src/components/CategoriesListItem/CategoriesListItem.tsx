@@ -25,6 +25,7 @@ const CategoriesListItem: FC<CategoriesListItemProps> = ({
             onAvatarClick(type, category.id, category.name);
           }}
           category={category}
+          type={type}
         />
       </ListItemAvatar>
       <ListItemText primary={category.name} secondary={secondaryTitle} />
