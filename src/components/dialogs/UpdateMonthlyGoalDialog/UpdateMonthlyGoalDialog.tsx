@@ -8,6 +8,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 
 import AuthenticationContext from "../../../contexts/AuthenticationContext";
 import { useNotificationDispatch } from "../../../contexts/NotificationProvider";
@@ -71,6 +72,11 @@ const UpdateMonthlyGoalDialog: FC<UpdateMonthlyGoalDialogProps> = ({
         "MMM YYYY"
       )}`}</DialogTitle>
       <DialogContent>
+        <Typography variant="body1" style={{ marginBottom: "0.25rem" }}>
+          {`Note: this updates the goal for the month for ${date.format(
+            "MMMM YYYY"
+          )} and does not update the default goal for your account.`}
+        </Typography>
         <TextField
           label="Savings Target"
           value={monthlyGoal}
