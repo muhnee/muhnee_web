@@ -1,13 +1,9 @@
 import React, { FC } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 
-import Avatar from "@material-ui/core/Avatar";
 import Link from "@material-ui/core/Link";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
-import { SvgIconProps } from "@material-ui/core/SvgIcon";
 
 import useStyles from "./styles";
 

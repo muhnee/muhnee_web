@@ -1,13 +1,10 @@
 import React, { FC, useContext, useState } from "react";
-import { Redirect, useHistory } from "react-router";
-import moment from "moment";
+import { Redirect } from "react-router";
 
-import ButtonBase from "@material-ui/core/ButtonBase";
+import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import Link from "@material-ui/core/Link";
-import Typography from "@material-ui/core/Typography";
 
 import AppBar from "../../components/layouts/AppBar";
 import SidebarLink from "../../components/sidebar/SidebarLink/SidebarLink";
@@ -22,7 +19,6 @@ import CategoriesIcon from "@material-ui/icons/Category";
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 
 import { useStyles } from "./styles";
-import { Drawer, Avatar } from "@material-ui/core";
 import { UserContext } from "../../contexts/UserContext";
 
 const SidebarInner: FC = () => {
@@ -52,7 +48,6 @@ const AuthenticatedContainer: FC = ({ children }) => {
   const { loaded, onboarded } = useContext(UserContext);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const history = useHistory();
   const classes = useStyles();
   if (!isLoaded) {
     return <LoadingContainer loadingMessage="Authenticating..." />;
