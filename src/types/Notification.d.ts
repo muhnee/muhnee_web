@@ -1,4 +1,4 @@
-import { variantIcon } from "../components/Snackbar/Snackbar";
+import { variantIcon } from "../components/core/Snackbar/Snackbar";
 
 export type Notification = {
   title?: string;

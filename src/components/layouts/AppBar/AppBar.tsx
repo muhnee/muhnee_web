@@ -6,9 +6,9 @@ import Typography from "@material-ui/core/Typography";
 
 import MenuIcon from "@material-ui/icons/Menu";
 
-import UserAvatarMenu from "../UserAvatarMenu";
+import UserAvatarMenu from "../../UserAvatarMenu";
 
-import AuthenticationContext from "../../contexts/AuthenticationContext";
+import AuthenticationContext from "../../../contexts/AuthenticationContext";
 
 import { useStyles } from "./styles";
 import AppBarProps from "./types";

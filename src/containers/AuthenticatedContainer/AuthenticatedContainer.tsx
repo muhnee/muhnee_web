@@ -9,10 +9,10 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 
-import AppBar from "../../components/AppBar";
+import AppBar from "../../components/layouts/AppBar";
 import SidebarLink from "../../components/sidebar/SidebarLink/SidebarLink";
 import UserAvatarMenu from "../../components/UserAvatarMenu";
-import Footer from "../../components/Footer";
+import Footer from "../../components/layouts/Footer";
 
 import LoadingContainer from "../LoadingContainer";
 
