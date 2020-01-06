@@ -17,7 +17,6 @@ import EditIcon from "@material-ui/icons/Edit";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 
 import MonthlySummaryCard from "../../../components/cards/MonthlySummaryCard";
-import UpdateMonthlyGoalDialog from "../../../components/dialogs/UpdateMonthlyGoalDialog";
 
 import MonthTransactionsContainer from "../../../containers/MonthTransactionsContainer";
 import MonthlySpendingByCategoryContainer from "../../../containers/MonthlySpendingByCategoryContainer";
@@ -38,11 +37,6 @@ const MonthlySummaryPage: FC = () => {
   // Contexts
   const { user } = useContext(AuthenticationContext);
   const uiDispatch = useUIDispatch();
-
-  const [
-    isUpdateMonthlyGoalModalOpen,
-    setIsUpdateMonthlyGoalModalOpen
-  ] = useState(false);
 
   const [month, setMonth] = useState<Moment | null>(moment());
 
