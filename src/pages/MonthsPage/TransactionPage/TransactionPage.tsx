@@ -5,10 +5,13 @@ import { useParams, Redirect, useHistory } from "react-router-dom";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 
 import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 import Divider from "@material-ui/core/Divider";
 import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputLabel from "@material-ui/core/InputLabel";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Switch from "@material-ui/core/Switch";
@@ -262,109 +265,152 @@ const TransactionPage: FC = () => {
             </Button>
           </div>
           <>
-            <div className={classes.body}>
-              <FormControl>
-                <InputLabel id="transaction-type-label">Type</InputLabel>
-                <Select
-                  labelId="transaction-type-label"
-                  id="transaction-type"
-                  value={type}
-                  onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-                    setType(event.target.value as string);
-                  }}
-                >
-                  <MenuItem value={"expense"}>Expense</MenuItem>
-                  <MenuItem value={"income"}>Income</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl>
-                <InputLabel id="category-label">Category</InputLabel>
-                <Select
-                  labelId="category-label"
-                  id="category"
-                  value={category}
-                  onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-                    setCategory(event.target.value as string);
-                  }}
-                >
-                  {type === "expense"
-                    ? expenseCategories &&
-                      expenseCategories.size > 0 &&
-                      expenseCategories.docs.map(category => {
-                        let categoryData: any = category.data();
-                        return (
-                          <MenuItem value={category.id} key={category.id}>
-                            {categoryData.name}
-                          </MenuItem>
-                        );
-                      })
-                    : incomeCategories &&
-                      incomeCategories.size > 0 &&
-                      incomeCategories.docs.map(category => {
-                        let categoryData: any = category.data();
-                        return (
-                          <MenuItem value={category.id} key={category.id}>
-                            {categoryData.name}
-                          </MenuItem>
-                        );
-                      })}
-                </Select>
-              </FormControl>
-              <TextField
-                required
-                id="amount"
-                label="Amount"
-                value={amount}
-                margin="normal"
-                type="number"
-                onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-                  setAmount(event.target.value as number);
-                }}
-              />
-              <TextField
-                required
-                id="description"
-                label="Description"
-                value={description}
-                margin="normal"
-                onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-                  setDescription(event.target.value as string);
-                }}
-              />
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={taxDeductible}
-                    onChange={handleToggle}
-                    value="taxDeductible"
-                    inputProps={{ "aria-label": "secondary checkbox" }}
-                    color="primary"
-                  />
-                }
-                label="Tax Deductible?"
-                className={classes.switch}
-              />
-              <DateTimePicker
-                label="Transaction Date Time"
-                inputVariant="outlined"
-                value={selectedDate}
-                onChange={handleDateChange}
-              />
-              <Divider />
-              <Typography variant="body1">Receipt</Typography>
-              <div className={classes.receipt}>
-                {recieptFilePath && (
-                  <Link href={recieptFilePath} target="_blank">
-                    Download receipt
-                  </Link>
-                )}
-                <Button onClick={() => setFileUpdateDialogOpen(true)}>
-                  Update File
-                </Button>
+            <div style={{ flex: 1 }}>
+              <div className={classes.body}>
+                <Card variant="outlined" className={classes.card}>
+                  <CardContent className={classes.cardContent}>
+                    <Typography variant="h6" component="h3" gutterBottom>
+                      Transaction Type
+                    </Typography>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel id="transaction-type-label">Type</InputLabel>
+                      <Select
+                        labelId="transaction-type-label"
+                        id="transaction-type"
+                        value={type}
+                        onChange={(
+                          event: React.ChangeEvent<{ value: unknown }>
+                        ) => {
+                          setType(event.target.value as string);
+                        }}
+                      >
+                        <MenuItem value={"expense"}>Expense</MenuItem>
+                        <MenuItem value={"income"}>Income</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel id="category-label">Category</InputLabel>
+                      <Select
+                        labelId="category-label"
+                        id="category"
+                        value={category}
+                        onChange={(
+                          event: React.ChangeEvent<{ value: unknown }>
+                        ) => {
+                          setCategory(event.target.value as string);
+                        }}
+                      >
+                        {type === "expense"
+                          ? expenseCategories &&
+                            expenseCategories.size > 0 &&
+                            expenseCategories.docs.map(category => {
+                              let categoryData: any = category.data();
+                              return (
+                                <MenuItem value={category.id} key={category.id}>
+                                  {categoryData.name}
+                                </MenuItem>
+                              );
+                            })
+                          : incomeCategories &&
+                            incomeCategories.size > 0 &&
+                            incomeCategories.docs.map(category => {
+                              let categoryData: any = category.data();
+                              return (
+                                <MenuItem value={category.id} key={category.id}>
+                                  {categoryData.name}
+                                </MenuItem>
+                              );
+                            })}
+                      </Select>
+                    </FormControl>
+                  </CardContent>
+                </Card>
+                <Card variant="outlined" className={classes.card}>
+                  <CardContent className={classes.cardContent}>
+                    <Typography variant="h6" component="h3" gutterBottom>
+                      Transaction Summary
+                    </Typography>
+                    <TextField
+                      required
+                      id="description"
+                      label="Description"
+                      value={description}
+                      margin="normal"
+                      onChange={(
+                        event: React.ChangeEvent<{ value: unknown }>
+                      ) => {
+                        setDescription(event.target.value as string);
+                      }}
+                    />
+                    <div className={classes.transactionAmount}>
+                      <TextField
+                        required
+                        id="amount"
+                        label="Amount"
+                        value={amount}
+                        margin="normal"
+                        type="number"
+                        onChange={(
+                          event: React.ChangeEvent<{ value: unknown }>
+                        ) => {
+                          setAmount(event.target.value as number);
+                        }}
+                        style={{ flex: 1 }}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">$</InputAdornment>
+                          )
+                        }}
+                      />
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={taxDeductible}
+                            onChange={handleToggle}
+                            value="taxDeductible"
+                            inputProps={{ "aria-label": "secondary checkbox" }}
+                            color="primary"
+                          />
+                        }
+                        label="Tax Deductible?"
+                        className={classes.switch}
+                      />
+                    </div>
+                    <DateTimePicker
+                      label="Transaction Date Time"
+                      inputVariant="outlined"
+                      value={selectedDate}
+                      onChange={handleDateChange}
+                    />
+                  </CardContent>
+                </Card>
+              </div>
+              <div>
+                <Card variant="outlined" style={{ minWidth: 500 }}>
+                  <CardContent>
+                    <Typography variant="body1">Receipt</Typography>
+                    <div className={classes.receipt}>
+                      {recieptFilePath && (
+                        <Link href={recieptFilePath} target="_blank">
+                          Download receipt
+                        </Link>
+                      )}
+                      <Button onClick={() => setFileUpdateDialogOpen(true)}>
+                        Update File
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
             <Divider />
-            <div style={{ display: "flex", flexWrap: "wrap" }}>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                padding: "0.25rem"
+              }}
+            >
               <div style={{ flex: 1 }}>
                 <Button
                   variant="contained"

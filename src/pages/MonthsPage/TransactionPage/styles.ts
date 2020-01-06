@@ -8,9 +8,8 @@ const useStyles = makeStyles({
     flex: 1
   },
   body: {
-    flex: 1,
     display: "flex",
-    flexDirection: "column"
+    flexWrap: "wrap"
   },
   switch: {
     margin: "1.25rem 0"
@@ -19,6 +18,22 @@ const useStyles = makeStyles({
     marginTop: "0.25rem",
     display: "flex",
     alignItems: "center",
+    flexWrap: "wrap"
+  },
+  card: {
+    minWidth: 280,
+    flex: 1,
+    margin: "0.5rem"
+  },
+  cardContent: {
+    display: "flex",
+    flexDirection: "column"
+  },
+  formControl: {
+    marginBottom: "0.25rem"
+  },
+  transactionAmount: {
+    display: "flex",
     flexWrap: "wrap"
   }
 });
