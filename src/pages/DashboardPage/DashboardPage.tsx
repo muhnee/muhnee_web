@@ -48,6 +48,7 @@ const DashboardPage: FC = () => {
           .doc(targetDate)
           .collection("transactions")
           .where("type", "==", "expense")
+          .orderBy("timestamp", "desc")
           .limit(3)
       : null
   );
@@ -62,6 +63,7 @@ const DashboardPage: FC = () => {
           .doc(targetDate)
           .collection("transactions")
           .where("type", "==", "income")
+          .orderBy("timestamp", "desc")
           .limit(3)
       : null
   );
