@@ -6,6 +6,8 @@ import Link from "@material-ui/core/Link";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemText from "@material-ui/core/ListItemText";
+import Typography from "@material-ui/core/Typography";
+import { SvgIconProps } from "@material-ui/core/SvgIcon";
 
 import useStyles from "./styles";
 
@@ -27,18 +29,16 @@ const SidebarLink: FC<SidebarLinkProps> = props => {
       className={classes.root}
       button
     >
-      <ListItemAvatar>
-        <Avatar className={classes.avatar}>{icon}</Avatar>
-      </ListItemAvatar>
-      <ListItemText
-        primaryTypographyProps={{
-          style: {
+      <div>{icon}</div>
+      {isPageOpen && (
+        <Typography
+          style={{
             fontWeight: isPageOpen ? 600 : 500
-          }
-        }}
-      >
-        {label}
-      </ListItemText>
+          }}
+        >
+          {label}
+        </Typography>
+      )}
     </ListItem>
   );
 };

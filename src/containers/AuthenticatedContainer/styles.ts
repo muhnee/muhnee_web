@@ -11,7 +11,7 @@ export const useStyles = makeStyles(theme =>
     sidebar: {
       backgroundColor: theme.palette.primary.main,
       padding: "0.25rem 0 0.25rem 0.25rem",
-      minWidth: 250,
+      minWidth: 125,
       borderRight: "1px solid #ccc",
       height: "100vh",
       zIndex: 3,

@@ -11,6 +11,7 @@ import Typography from "@material-ui/core/Typography";
 
 import AppBar from "../../components/AppBar";
 import SidebarLink from "../../components/sidebar/SidebarLink/SidebarLink";
+import UserAvatarMenu from "../../components/UserAvatarMenu";
 
 import LoadingContainer from "../LoadingContainer";
 
@@ -41,46 +42,6 @@ const SidebarInner: FC = () => {
           label="Categories"
         />
       </List>
-      <div
-        style={{
-          marginBottom: "2rem",
-          padding: "0.25rem 0.75rem",
-          color: "white"
-        }}
-      >
-        <Typography variant="body1" color="inherit">
-          <Link
-            href="https://muhneeapp.com"
-            target="_blank"
-            rel="noreferrer noopener"
-            color="inherit"
-            style={{
-              textDecoration: "underline"
-            }}
-          >
-            Muhnee
-          </Link>{" "}
-          v{process.env.REACT_APP_VERSION}
-        </Typography>
-        <Typography variant="body1" color="inherit">
-          Copyright &copy; Muhnee 2019{" "}
-          {moment().year() !== 2019 ? `- ${moment().year()}` : ``}
-        </Typography>
-        <Typography variant="body1">
-          Facing issues? Click{" "}
-          <Link
-            href="https://muhnee.atlassian.net/servicedesk/customer/portal/2"
-            target="_blank"
-            rel="noreferrer noopener"
-            color="inherit"
-            style={{
-              textDecoration: "underline"
-            }}
-          >
-            here
-          </Link>
-        </Typography>
-      </div>
     </>
   );
 };
@@ -116,22 +77,18 @@ const AuthenticatedContainer: FC = ({ children }) => {
             Muhnee
           </ListItemText>
         </ListItem>
-        {user && (
-          <ButtonBase onClick={() => history.push("/account")}>
-            <div className={classes.userCardRoot}>
-              {user.photoURL && (
-                <div style={{ marginRight: "0.5rem" }}>
-                  <Avatar src={user.photoURL} />
-                </div>
-              )}
-              <div>
-                <Typography variant="body2">{user.displayName}</Typography>
-                <Typography variant="body2">{user.email}</Typography>
-              </div>
-            </div>
-          </ButtonBase>
-        )}
+
         <SidebarInner />
+        <div
+          style={{
+            minHeight: 100,
+            width: "100%",
+            display: "flex",
+            justifyContent: "center"
+          }}
+        >
+          {user && <UserAvatarMenu user={user} displayName={false} />}
+        </div>
       </div>
       <Drawer open={sidebarOpen} onClose={() => setSidebarOpen(false)}>
         <SidebarInner />
@@ -142,6 +99,45 @@ const AuthenticatedContainer: FC = ({ children }) => {
         </div>
         <div style={{ padding: "0.25rem 0.5rem", flex: 1, display: "flex" }}>
           {children}
+        </div>
+        <div
+          style={{
+            marginBottom: "2rem",
+            padding: "0.25rem 0.75rem"
+          }}
+        >
+          <Typography variant="body1" color="inherit">
+            <Link
+              href="https://muhneeapp.com"
+              target="_blank"
+              rel="noreferrer noopener"
+              color="inherit"
+              style={{
+                textDecoration: "underline"
+              }}
+            >
+              Muhnee
+            </Link>{" "}
+            v{process.env.REACT_APP_VERSION}
+          </Typography>
+          <Typography variant="body1" color="inherit">
+            Copyright &copy; Muhnee 2019{" "}
+            {moment().year() !== 2019 ? `- ${moment().year()}` : ``}
+          </Typography>
+          <Typography variant="body1">
+            Facing issues? Click{" "}
+            <Link
+              href="https://muhnee.atlassian.net/servicedesk/customer/portal/2"
+              target="_blank"
+              rel="noreferrer noopener"
+              color="inherit"
+              style={{
+                textDecoration: "underline"
+              }}
+            >
+              here
+            </Link>
+          </Typography>
         </div>
       </div>
     </div>
