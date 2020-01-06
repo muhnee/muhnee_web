@@ -173,11 +173,11 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
   };
 
   if (!user || !user.uid) {
-    return <span>An Error Occured</span>;
+    return null;
   }
 
   /**
-   * Determins whether or not is the form filled so that we can submit
+   * Determines whether or not is the form filled so that we can submit
    */
   const isFormFilled = type && amount && description && selectedDate;
 
