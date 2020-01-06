@@ -5,6 +5,7 @@ import moment from "moment";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Divider from "@material-ui/core/Divider";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -19,11 +20,21 @@ import useStyles from "./styles";
 
 const SummaryCard: FC<SummaryCardProps> = props => {
   const history = useHistory();
-  const { title, amount, transactions, isLoading = false } = props;
+  const {
+    title,
+    amount,
+    transactions,
+    isLoading = false,
+    displayProgress = false,
+    progress = 0
+  } = props;
   const classes = useStyles(props);
 
   return (
     <Card className={classes.root} variant="outlined">
+      {displayProgress && (
+        <LinearProgress variant="determinate" value={progress} />
+      )}
       <CardContent>
         {isLoading ? (
           <>

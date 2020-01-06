@@ -1,4 +1,5 @@
 import { Category } from "../../types/Category";
+import { TransactionTypes } from "../../types/Transaction";
 
 export interface CategoryIconAvatarProps {
   /**
@@ -11,4 +12,8 @@ export interface CategoryIconAvatarProps {
    * category id
    */
   category?: Category;
+  /**
+   * The type of transcation
+   */
+  type: TransactionTypes;
 }

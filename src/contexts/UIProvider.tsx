@@ -2,12 +2,17 @@ import React, { FC, useReducer } from "react";
 import moment, { Moment } from "moment";
 
 type State = {
-  addTransactionModalOpen: true | false;
+  addTransactionModalOpen: boolean;
+  editMonthlyGoalOpen: boolean;
   date: Moment;
 };
 
 type Action = {
-  type: "@@UI/ADD_TRANSACTION_MODAL_OPEN" | "@@UI/ADD_TRANSACTION_MODAL_CLOSE";
+  type:
+    | "@@UI/ADD_TRANSACTION_MODAL_OPEN"
+    | "@@UI/ADD_TRANSACTION_MODAL_CLOSE"
+    | "@@UI/EDIT_MONTHLY_GOAL_MODAL_OPEN"
+    | "@@UI/EDIT_MONTHLY_GOAL_MODAL_CLOSE";
   date?: Moment;
 };
 
@@ -25,6 +30,14 @@ export const reducer = (state: State, action: Action) => {
       return { ...state };
     case "@@UI/ADD_TRANSACTION_MODAL_CLOSE":
       return { ...state, addTransactionModalOpen: false };
+    case "@@UI/EDIT_MONTHLY_GOAL_MODAL_OPEN":
+      if (action.date) {
+        return { ...state, editMonthlyGoalOpen: true, date: action.date };
+      }
+      return { ...state };
+    case "@@UI/EDIT_MONTHLY_GOAL_MODAL_CLOSE":
+      return { ...state, editMonthlyGoalOpen: false };
+
     default:
       return state;
   }
@@ -32,6 +45,7 @@ export const reducer = (state: State, action: Action) => {
 
 const initialState = {
   addTransactionModalOpen: false,
+  editMonthlyGoalOpen: false,
   date: moment()
 };
 

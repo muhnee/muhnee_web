@@ -1,19 +1,15 @@
 import React, { FC } from "react";
 
-import Skeleton from "@material-ui/lab/Skeleton";
 import Typography from "@material-ui/core/Typography";
+
+import Skeleton from "@material-ui/lab/Skeleton";
 
 import { MonthlySummaryCardProps } from "./types";
 import useStyles from "./styles";
 
-const MonthlySummaryCard: FC<MonthlySummaryCardProps> = ({
-  isLoading,
-  hasErrored,
-  title,
-  value,
-  secondaryAction
-}) => {
-  const classes = useStyles();
+const MonthlySummaryCard: FC<MonthlySummaryCardProps> = props => {
+  const { isLoading, hasErrored, title, value, secondaryAction } = props;
+  const classes = useStyles(props);
 
   if (isLoading) {
     return (

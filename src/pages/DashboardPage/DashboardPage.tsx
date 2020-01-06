@@ -17,12 +17,14 @@ import SummaryCard from "../../components/dashboard/SummaryCard";
 import MonthlySpendingByCategoryContainer from "../../containers/MonthlySpendingByCategoryContainer";
 
 import AddIcon from "@material-ui/icons/AddBox";
+import EditIcon from "@material-ui/icons/Edit";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 import { useUIDispatch } from "../../contexts/UIProvider";
 import { Summary } from "../../types/Summary";
 
 import useStyles from "./styles";
+import { IconButton } from "@material-ui/core";
 
 const DashboardPage: FC = () => {
   const history = useHistory();
@@ -79,6 +81,11 @@ const DashboardPage: FC = () => {
     return <p>An Error Occurred.</p>;
   }
 
+  let currentSavings = 0;
+  if (summary) {
+    currentSavings = summary.income - summary.expenses;
+  }
+
   return (
     <div className={classes.root}>
       <div className={classes.row}>
@@ -124,6 +131,10 @@ const DashboardPage: FC = () => {
             <div className={classes.summaryContainer}>
               <SummaryCard
                 title="Savings"
+                displayProgress={true}
+                progress={
+                  summary && ((currentSavings / summary.savingsGoal) * 100 || 0)
+                }
                 amount={
                   <span style={{ display: "flex" }}>
                     <Typography>
@@ -133,6 +144,19 @@ const DashboardPage: FC = () => {
                     <Typography color="textSecondary">
                       {summary && `$${summary.savingsGoal.toFixed(2)}`}
                     </Typography>
+                    <IconButton
+                      style={{ padding: "0.1rem" }}
+                      onClick={() =>
+                        uiDispatch({
+                          type: "@@UI/EDIT_MONTHLY_GOAL_MODAL_OPEN",
+                          date: thisMonth
+                        })
+                      }
+                    >
+                      <EditIcon
+                        style={{ width: "0.75rem", height: "0.75rem" }}
+                      />
+                    </IconButton>
                   </span>
                 }
                 isLoading={isMonthlyIncomeLoading}

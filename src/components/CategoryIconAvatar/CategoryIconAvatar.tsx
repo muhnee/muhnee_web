@@ -4,13 +4,17 @@ import firebase from "firebase";
 import Avatar from "@material-ui/core/Avatar";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
+import ExpenseIcon from "@material-ui/icons/Payment";
+import IncomeIcon from "@material-ui/icons/TrendingUp";
+
 import { CategoryIconAvatarProps } from "./types";
+import useStyles from "./styles";
 import { useNotificationDispatch } from "../../contexts/NotificationProvider";
 
-const CategoryIconAvatar: FC<CategoryIconAvatarProps> = ({
-  onClick = () => {},
-  category
-}) => {
+const CategoryIconAvatar: FC<CategoryIconAvatarProps> = props => {
+  const { onClick = () => {}, category, type = "expense" } = props;
+  const classes = useStyles(props);
+
   const [isLoading, setIsLoading] = useState(false);
   const [avatarIcon, setAvatarIcon] = useState("");
   const dispatchNotifications = useNotificationDispatch();
@@ -51,7 +55,22 @@ const CategoryIconAvatar: FC<CategoryIconAvatarProps> = ({
     );
   }
 
-  return <Avatar onClick={onClick} src={avatarIcon} />;
+  let fallbackIcon;
+
+  if (type === "expense") {
+    fallbackIcon = <ExpenseIcon />;
+  } else {
+    fallbackIcon = <IncomeIcon />;
+  }
+
+  if (avatarIcon) {
+    return <Avatar onClick={onClick} src={avatarIcon} />;
+  }
+  return (
+    <Avatar onClick={onClick} className={classes.avatar}>
+      {fallbackIcon}
+    </Avatar>
+  );
 };
 
 export default CategoryIconAvatar;

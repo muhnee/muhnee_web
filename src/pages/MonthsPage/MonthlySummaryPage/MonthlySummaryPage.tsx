@@ -17,7 +17,6 @@ import EditIcon from "@material-ui/icons/Edit";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 
 import MonthlySummaryCard from "../../../components/cards/MonthlySummaryCard";
-import UpdateMonthlyGoalDialog from "../../../components/dialogs/UpdateMonthlyGoalDialog";
 
 import MonthTransactionsContainer from "../../../containers/MonthTransactionsContainer";
 import MonthlySpendingByCategoryContainer from "../../../containers/MonthlySpendingByCategoryContainer";
@@ -38,11 +37,6 @@ const MonthlySummaryPage: FC = () => {
   // Contexts
   const { user } = useContext(AuthenticationContext);
   const uiDispatch = useUIDispatch();
-
-  const [
-    isUpdateMonthlyGoalModalOpen,
-    setIsUpdateMonthlyGoalModalOpen
-  ] = useState(false);
 
   const [month, setMonth] = useState<Moment | null>(moment());
 
@@ -142,7 +136,12 @@ const MonthlySummaryPage: FC = () => {
               secondaryAction={
                 <IconButton
                   style={{ padding: "0.1rem" }}
-                  onClick={() => setIsUpdateMonthlyGoalModalOpen(true)}
+                  onClick={() =>
+                    uiDispatch({
+                      type: "@@UI/EDIT_MONTHLY_GOAL_MODAL_OPEN",
+                      date: month
+                    })
+                  }
                 >
                   <EditIcon style={{ width: "0.75rem", height: "0.75rem" }} />
                 </IconButton>
@@ -175,11 +174,6 @@ const MonthlySummaryPage: FC = () => {
           <AddIcon className={classes.extendedIcon} />
           Add Transaction
         </Fab>
-        <UpdateMonthlyGoalDialog
-          open={isUpdateMonthlyGoalModalOpen}
-          date={month}
-          onClose={() => setIsUpdateMonthlyGoalModalOpen(false)}
-        />
       </div>
     </MuiPickersUtilsProvider>
   );
