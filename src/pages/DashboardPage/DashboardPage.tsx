@@ -81,6 +81,11 @@ const DashboardPage: FC = () => {
     return <p>An Error Occurred.</p>;
   }
 
+  let currentSavings = 0;
+  if (summary) {
+    currentSavings = summary.income - summary.expenses;
+  }
+
   return (
     <div className={classes.root}>
       <div className={classes.row}>
@@ -126,6 +131,10 @@ const DashboardPage: FC = () => {
             <div className={classes.summaryContainer}>
               <SummaryCard
                 title="Savings"
+                displayProgress={true}
+                progress={
+                  summary && ((currentSavings / summary.savingsGoal) * 100 || 0)
+                }
                 amount={
                   <span style={{ display: "flex" }}>
                     <Typography>

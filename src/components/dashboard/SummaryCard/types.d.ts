@@ -14,4 +14,11 @@ export default interface SummaryCardProps {
   transactions?: firebase.firestore.QuerySnapshot;
 
   isLoading?: boolean;
+
+  /**
+   * The percentage
+   */
+  progress?: number;
+
+  displayProgress?: boolean;
 }
