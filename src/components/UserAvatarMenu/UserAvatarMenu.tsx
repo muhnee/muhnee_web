@@ -39,7 +39,11 @@ const UserAvatarMenu: FC<UserAvatarMenuProps> = ({
           <strong>{user.displayName}</strong>
         </Typography>
       )}
-      <Avatar src={user.photoURL} onClick={handleClick} />
+      <Avatar
+        src={user.photoURL}
+        onClick={handleClick}
+        className={classes.avatar}
+      />
       <Menu
         id={id}
         open={open}

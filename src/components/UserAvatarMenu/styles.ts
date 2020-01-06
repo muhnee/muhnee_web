@@ -2,6 +2,9 @@ import { Theme, makeStyles, createStyles } from "@material-ui/core";
 
 export const useStyles = makeStyles<Theme>(theme =>
   createStyles({
+    avatar: {
+      borderRadius: "25%"
+    },
     bigAvatar: {
       width: 60,
       height: 60
