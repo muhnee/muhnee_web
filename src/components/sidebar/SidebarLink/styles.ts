@@ -10,7 +10,9 @@ const useStyles = makeStyles<Theme, SidebarLinkProps>(theme => {
       const isPageOpen = window.location.pathname === to;
       return {
         color: isPageOpen ? "#eee" : `#555`,
-        borderRight: isPageOpen ? `3px solid ${highlightColor}` : "none"
+        borderRight: isPageOpen ? `3px solid ${highlightColor}` : "none",
+        display: "flex",
+        flexDirection: "column"
       };
     },
     avatar: ({ to }) => {

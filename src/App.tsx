@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { MuiThemeProvider, useMediaQuery, Snackbar } from "@material-ui/core";
 
-import MobileWarningBanner from "./components/MobileWarningBanner";
-import SnackbarWrapper from "./components/Snackbar/Snackbar";
+import MobileWarningBanner from "./components/layouts/MobileWarningBanner";
+import SnackbarWrapper from "./components/core/Snackbar/Snackbar";
 import AddTransactionModal from "./components/dialogs/AddTransactionModal";
 
 import LandingPage from "./pages/LandingPage";
