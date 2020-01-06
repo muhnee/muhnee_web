@@ -66,6 +66,20 @@ const SidebarInner: FC = () => {
           Copyright &copy; Muhnee 2019{" "}
           {moment().year() !== 2019 ? `- ${moment().year()}` : ``}
         </Typography>
+        <Typography variant="body1">
+          Facing issues? Click{" "}
+          <Link
+            href="https://muhnee.atlassian.net/servicedesk/customer/portal/2"
+            target="_blank"
+            rel="noreferrer noopener"
+            color="inherit"
+            style={{
+              textDecoration: "underline"
+            }}
+          >
+            here
+          </Link>
+        </Typography>
       </div>
     </>
   );
