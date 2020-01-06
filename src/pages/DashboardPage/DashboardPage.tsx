@@ -38,6 +38,15 @@ const DashboardPage: FC = () => {
 
   const targetDate = `${thisMonth.year()}-${thisMonth.month() + 1}`;
 
+  /**
+   *  NOTE: composite index is required on firestore
+   *
+   *  Current Configuration:
+   *  collection id: transactions
+   *
+   *  type ASC
+   *  timestamp DESC
+   */
   const [monthlyExpenses, isMonthlyExpensesLoading] = useCollection(
     user
       ? firebase
@@ -53,6 +62,15 @@ const DashboardPage: FC = () => {
       : null
   );
 
+  /**
+   *  NOTE: composite index is required on firestore
+   *
+   *  Current Configuration:
+   *  collection id: transactions
+   *
+   *  type ASC
+   *  timestamp DESC
+   */
   const [monthlyIncome, isMonthlyIncomeLoading] = useCollection(
     user
       ? firebase
