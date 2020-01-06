@@ -22,7 +22,8 @@ const useStyles = makeStyles<Theme>(theme => ({
   },
   rightContainer: {
     flex: 1,
-    minWidth: 300
+    minWidth: 300,
+    marginLeft: "0.5rem"
   },
   heading: { color: "#0069E9", fontWeight: 700, fontFamily: "Montserrat" },
   summaryContainer: {
