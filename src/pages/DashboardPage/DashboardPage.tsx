@@ -123,6 +123,23 @@ const DashboardPage: FC = () => {
           <div className={classes.leftContainer}>
             <div className={classes.summaryContainer}>
               <SummaryCard
+                title="Savings"
+                amount={
+                  <span style={{ display: "flex" }}>
+                    <Typography>
+                      {summary &&
+                        `$${(summary.income - summary.expenses).toFixed(2)}/`}
+                    </Typography>
+                    <Typography color="textSecondary">
+                      {summary && `$${summary.savingsGoal.toFixed(2)}`}
+                    </Typography>
+                  </span>
+                }
+                isLoading={isMonthlyIncomeLoading}
+              />
+            </div>
+            <div className={classes.summaryContainer}>
+              <SummaryCard
                 title="Expenses"
                 amount={summary && `$${summary.expenses.toFixed(2)}`}
                 transactions={monthlyExpenses}
@@ -153,11 +170,6 @@ const DashboardPage: FC = () => {
             </div>
           </div>
         </div>
-        {/* <div className={classes.rightContainer}>
-          <div className={classes.actionButtonContainer}>
-            
-          </div>
-        </div> */}
       </div>
       <Fab
         variant="extended"

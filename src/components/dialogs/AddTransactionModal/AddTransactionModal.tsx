@@ -269,7 +269,7 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
                 color="textSecondary"
                 style={{ marginBottom: "0.05rem" }}
               >
-                Suggestions
+                Places based on your location
               </Typography>
               {suggestions.map((suggestion, i) => {
                 return (
