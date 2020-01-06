@@ -142,7 +142,12 @@ const MonthlySummaryPage: FC = () => {
               secondaryAction={
                 <IconButton
                   style={{ padding: "0.1rem" }}
-                  onClick={() => setIsUpdateMonthlyGoalModalOpen(true)}
+                  onClick={() =>
+                    uiDispatch({
+                      type: "@@UI/EDIT_MONTHLY_GOAL_MODAL_OPEN",
+                      date: month
+                    })
+                  }
                 >
                   <EditIcon style={{ width: "0.75rem", height: "0.75rem" }} />
                 </IconButton>
@@ -175,11 +180,6 @@ const MonthlySummaryPage: FC = () => {
           <AddIcon className={classes.extendedIcon} />
           Add Transaction
         </Fab>
-        <UpdateMonthlyGoalDialog
-          open={isUpdateMonthlyGoalModalOpen}
-          date={month}
-          onClose={() => setIsUpdateMonthlyGoalModalOpen(false)}
-        />
       </div>
     </MuiPickersUtilsProvider>
   );
