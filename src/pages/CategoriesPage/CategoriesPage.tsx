@@ -21,7 +21,6 @@ import CategoriesContext from "../../contexts/CategoriesContext";
 import { useNotificationDispatch } from "../../contexts/NotificationProvider";
 
 import useStyles from "./styles";
-import { Category } from "../../types/Category";
 
 const CategoriesPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
