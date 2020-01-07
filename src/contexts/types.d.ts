@@ -24,4 +24,5 @@ export interface CategoriesContextState {
     income: _Category;
     expense: _Category;
   };
+  isLoading: boolean;
 }

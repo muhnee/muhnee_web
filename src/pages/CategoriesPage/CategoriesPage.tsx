@@ -2,8 +2,13 @@ import React, { FC, useContext, useState } from "react";
 import { Redirect } from "react-router-dom";
 import firebase from "firebase";
 
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
+
+import Skeleton from "@material-ui/lab/Skeleton";
+
 import { DropzoneDialog } from "material-ui-dropzone";
 
 import CategoriesListItem from "../../components/CategoriesListItem";
@@ -19,7 +24,9 @@ import useStyles from "./styles";
 
 const CategoriesPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
-  const { expenseCategories, incomeCategories } = useContext(CategoriesContext);
+  const { expenseCategories, incomeCategories, isLoading } = useContext(
+    CategoriesContext
+  );
   const dispatchNotifications = useNotificationDispatch();
 
   const [avatarIdFileUpload, setAvatarIdFileUpload] = useState("");
@@ -109,76 +116,91 @@ const CategoriesPage: FC = () => {
 
   return (
     <div className={classes.root}>
-      <div className={classes.container}>
-        <Typography variant="h6">Expenses</Typography>
-        <List className={classes.categoryListContainer}>
-          {expenseCategories && expenseCategories.size > 0
-            ? expenseCategories.docs.map(category => {
-                let expenseCategory: any = category.data();
-                return (
-                  <CategoriesListItem
-                    category={{
-                      id: category.id,
-                      name: expenseCategory.name,
-                      icon: expenseCategory.icon
-                    }}
-                    key={category.id}
-                    type="expense"
-                    onRemove={(type, id, name) => {
-                      onCategoryRemove(type, id, name);
-                    }}
-                    onAvatarClick={(type, id) => {
-                      setAvatarIdType(type);
-                      setAvatarIdFileUpload(id);
-                    }}
-                  />
-                );
-              })
-            : null}
-        </List>
-        <div>
-          <AddCategoryContainer
-            onSubmit={newCategory => {
-              onAddNewCategory("expense", newCategory);
-            }}
-          />
-        </div>
-      </div>
-      <div className={classes.container}>
-        <Typography variant="h6">Income</Typography>
-        <List className={classes.categoryListContainer}>
-          {incomeCategories && incomeCategories && incomeCategories.size > 0
-            ? incomeCategories.docs.map(category => {
-                let income: any = category.data();
-                return (
-                  <CategoriesListItem
-                    key={category.id}
-                    category={{
-                      id: category.id,
-                      name: income.name,
-                      icon: income.icon
-                    }}
-                    type="income"
-                    onRemove={(type, id, name) => {
-                      onCategoryRemove(type, id, name);
-                    }}
-                    onAvatarClick={(type, id) => {
-                      setAvatarIdType(type);
-                      setAvatarIdFileUpload(id);
-                    }}
-                  />
-                );
-              })
-            : null}
-        </List>
-        <div>
-          <AddCategoryContainer
-            onSubmit={newCategory => {
-              onAddNewCategory("income", newCategory);
-            }}
-          />
-        </div>
-      </div>
+      <Typography variant="h5">Budget Categories</Typography>
+      <Typography>
+        This section allows you to modify your budget categories used for
+        analysis and reporting purposes
+      </Typography>
+      <Card className={classes.container} variant="outlined">
+        <CardContent>
+          <Typography variant="h6">Expenses</Typography>
+          {isLoading && (
+            <Skeleton variant="rect" width="100%" height={"3rem"} />
+          )}
+          <List className={classes.categoryListContainer}>
+            {expenseCategories && expenseCategories.size > 0
+              ? expenseCategories.docs.map(category => {
+                  let expenseCategory: any = category.data();
+                  return (
+                    <CategoriesListItem
+                      category={{
+                        id: category.id,
+                        name: expenseCategory.name,
+                        icon: expenseCategory.icon
+                      }}
+                      key={category.id}
+                      type="expense"
+                      onRemove={(type, id, name) => {
+                        onCategoryRemove(type, id, name);
+                      }}
+                      onAvatarClick={(type, id) => {
+                        setAvatarIdType(type);
+                        setAvatarIdFileUpload(id);
+                      }}
+                    />
+                  );
+                })
+              : null}
+          </List>
+          <div>
+            <AddCategoryContainer
+              onSubmit={newCategory => {
+                onAddNewCategory("expense", newCategory);
+              }}
+            />
+          </div>
+        </CardContent>
+      </Card>
+      <Card className={classes.container} variant="outlined">
+        <CardContent>
+          <Typography variant="h6">Income</Typography>
+          {isLoading && (
+            <Skeleton variant="rect" width="100%" height={"3rem"} />
+          )}
+          <List className={classes.categoryListContainer}>
+            {incomeCategories && incomeCategories && incomeCategories.size > 0
+              ? incomeCategories.docs.map(category => {
+                  let income: any = category.data();
+                  return (
+                    <CategoriesListItem
+                      key={category.id}
+                      category={{
+                        id: category.id,
+                        name: income.name,
+                        icon: income.icon
+                      }}
+                      type="income"
+                      onRemove={(type, id, name) => {
+                        onCategoryRemove(type, id, name);
+                      }}
+                      onAvatarClick={(type, id) => {
+                        setAvatarIdType(type);
+                        setAvatarIdFileUpload(id);
+                      }}
+                    />
+                  );
+                })
+              : null}
+          </List>
+          <div>
+            <AddCategoryContainer
+              onSubmit={newCategory => {
+                onAddNewCategory("income", newCategory);
+              }}
+            />
+          </div>
+        </CardContent>
+      </Card>
       <DropzoneDialog
         open={!!avatarIdFileUpload}
         acceptedFiles={["image/*"]}

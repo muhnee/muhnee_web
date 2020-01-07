@@ -11,7 +11,7 @@ import { _Category } from "../contexts/types";
 const CategoriesProvider: FC = ({ children }) => {
   const { user } = useContext(AuthenticationContext);
 
-  const [expenseCategories] = useCollection(
+  const [expenseCategories, isExpenseCategoriesLoading] = useCollection(
     user
       ? firebase
           .firestore()
@@ -23,7 +23,7 @@ const CategoriesProvider: FC = ({ children }) => {
       : null
   );
 
-  const [incomeCategories] = useCollection(
+  const [incomeCategories, isIncomeCategoriesLoading] = useCollection(
     user
       ? firebase
           .firestore()
@@ -64,7 +64,8 @@ const CategoriesProvider: FC = ({ children }) => {
       value={{
         expenseCategories,
         incomeCategories,
-        categoryMap: { income, expense }
+        categoryMap: { income, expense },
+        isLoading: isIncomeCategoriesLoading && isExpenseCategoriesLoading
       }}
     >
       {children}

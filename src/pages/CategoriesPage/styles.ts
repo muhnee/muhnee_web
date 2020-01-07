@@ -5,15 +5,16 @@ const useStyles = makeStyles({
     padding: "0.25rem 0.75rem",
     display: "flex",
     flexWrap: "wrap",
+    flexDirection: "column",
     marginTop: "0.5rem",
     flex: 1
   },
   container: {
-    flex: 1,
-    padding: "0.5rem 0.5rem",
+    width: "100%",
     display: "flex",
     minWidth: 280,
-    flexDirection: "column"
+    flexDirection: "column",
+    margin: "0.5rem"
   },
   categoryListContainer: {
     flex: 1

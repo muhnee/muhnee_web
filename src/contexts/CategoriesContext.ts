@@ -8,7 +8,8 @@ const CategoriesContext = React.createContext<CategoriesContextState>({
   categoryMap: {
     income: {},
     expense: {}
-  }
+  },
+  isLoading: false
 });
 
 export default CategoriesContext;
