@@ -1,4 +1,8 @@
 export const colors = {
-  expense: "#EB5757",
-  income: "#219653"
+  expense: "#D01908",
+  income: "#90CB46",
+  button: {
+    income: "#A5D15B",
+    expense: "#E43524"
+  }
 };

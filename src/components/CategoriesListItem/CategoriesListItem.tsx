@@ -19,7 +19,8 @@ const CategoriesListItem: FC<CategoriesListItemProps> = ({
   onAvatarClick = () => {},
   type,
   secondaryTitle = null,
-  onUpdate = () => {}
+  onUpdate = () => {},
+  editable = true
 }) => {
   const [name, setName] = useState(category.name);
   const [readMode, setReadMode] = useState<Boolean>(true);
@@ -40,12 +41,14 @@ const CategoriesListItem: FC<CategoriesListItemProps> = ({
           readMode ? (
             <>
               {name}
-              <IconButton
-                style={{ padding: "0.1rem" }}
-                onClick={() => setReadMode(!readMode)}
-              >
-                <EditIcon style={{ width: "0.75rem", height: "0.75rem" }} />
-              </IconButton>
+              {editable && (
+                <IconButton
+                  style={{ padding: "0.1rem" }}
+                  onClick={() => setReadMode(!readMode)}
+                >
+                  <EditIcon style={{ width: "0.75rem", height: "0.75rem" }} />
+                </IconButton>
+              )}
             </>
           ) : (
             <TextField

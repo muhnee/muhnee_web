@@ -13,10 +13,24 @@ const useStyles = makeStyles({
     backgroundColor: green[500],
     color: "white"
   },
+  suggestions: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
   suggestion: {
     marginRight: "1rem",
     textDecoration: "underline",
     cursor: "pointer"
+  },
+  rowCenter: {
+    display: "flex",
+    flexWrap: "wrap",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  rowSelect: {
+    maxWidth: "100%",
+    overflowY: "scroll"
   }
 });
 

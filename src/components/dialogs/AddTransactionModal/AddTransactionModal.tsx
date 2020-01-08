@@ -1,19 +1,19 @@
 import React, { FC, useState, useContext, useEffect } from "react";
+import clsx from "clsx";
 import moment from "moment";
 import MomentUtils from "@date-io/moment";
 import firebase from "firebase";
 
 import Button from "@material-ui/core/Button";
+import Checkbox from "@material-ui/core/Checkbox";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import InputBase from "@material-ui/core/InputBase";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import Switch from "@material-ui/core/Switch";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
@@ -28,6 +28,7 @@ import { useNotificationDispatch } from "../../../contexts/NotificationProvider"
 
 import useStyles from "./styles";
 import { FILE_UPLOAD } from "../../../config/settings";
+import { colors } from "../../../config/colors";
 import AddTransactionModalProps from "./types";
 import { TransactionTypes } from "../../../types/Transaction";
 
@@ -181,76 +182,104 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
    */
   const isFormFilled = type && amount && description && selectedDate;
 
+  const categoryData =
+    type === "expense" ? expenseCategories : incomeCategories;
+
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <Dialog open={open} maxWidth="md" fullWidth onClose={onClose}>
-        <DialogTitle>Add new Transaction</DialogTitle>
+        <DialogTitle>Add a new transaction</DialogTitle>
         <DialogContent className={classes.dialogContent}>
-          <FormControl>
-            <InputLabel id="transaction-type-label">Type</InputLabel>
-            <Select
-              labelId="transaction-type-label"
-              id="transaction-type"
-              value={type}
+          <div className={classes.rowCenter}>
+            <InputBase
+              id="amount"
+              value={amount}
+              type="number"
               onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-                if (event.target.value === "expense") {
-                  setType("expense");
-                } else {
-                  setType("income");
+                setAmount(event.target.value as number);
+              }}
+              disabled={isSubmitting}
+              required
+              startAdornment={
+                <InputAdornment position="start" style={{ fontSize: "2rem" }}>
+                  $
+                </InputAdornment>
+              }
+              style={{
+                fontSize: "3rem",
+                textAlign: "center"
+              }}
+            />
+            {type === "expense" && (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={taxDeductible}
+                    onChange={handleToggle}
+                    value="taxDeductible"
+                    inputProps={{ "aria-label": "secondary checkbox" }}
+                    color="primary"
+                    disabled={isSubmitting}
+                  />
                 }
+                label={taxDeductible ? "Tax Deductible" : "Not Tax Deductible"}
+                className={classes.switch}
+              />
+            )}
+          </div>
+          <div className={classes.rowCenter}>
+            <Button
+              style={{
+                backgroundColor: colors.button.expense,
+                color: "white",
+                margin: "0 0.25rem"
               }}
-              disabled={isSubmitting}
-            >
-              <MenuItem value={"expense"}>Expense</MenuItem>
-              <MenuItem value={"income"}>Income</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl>
-            <InputLabel id="category-label">Category</InputLabel>
-            <Select
-              labelId="category-label"
-              id="category"
-              value={category}
-              onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-                setCategory(event.target.value as string);
+              onClick={() => {
+                setType("expense");
               }}
-              disabled={isSubmitting}
             >
-              {type === "expense"
-                ? expenseCategories &&
-                  expenseCategories.size > 0 &&
-                  expenseCategories.docs.map((category, i) => {
-                    let categoryData: any = category.data();
-                    return (
-                      <MenuItem value={category.id} key={i}>
-                        {categoryData.name}
-                      </MenuItem>
-                    );
-                  })
-                : incomeCategories &&
-                  incomeCategories.size > 0 &&
-                  incomeCategories.docs.map((category, i) => {
-                    let categoryData: any = category.data();
-                    return (
-                      <MenuItem value={category.id} key={i}>
-                        {categoryData.name}
-                      </MenuItem>
-                    );
-                  })}
-            </Select>
-          </FormControl>
-          <TextField
-            required
-            id="amount"
-            label="Amount"
-            value={amount}
-            margin="normal"
-            type="number"
-            onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-              setAmount(event.target.value as number);
-            }}
-            disabled={isSubmitting}
-          />
+              Expense
+            </Button>
+            <Button
+              style={{
+                backgroundColor: colors.button.income,
+                color: "white",
+                margin: "0 0.25rem"
+              }}
+              onClick={() => {
+                setType("income");
+              }}
+            >
+              Income
+            </Button>
+          </div>
+          <InputLabel id="category-label">Category</InputLabel>
+          <div className={clsx(classes.rowCenter, classes.rowSelect)}>
+            {categoryData &&
+              categoryData.size > 0 &&
+              categoryData.docs.map((cat, i) => {
+                let data: any = cat.data();
+                return (
+                  <div
+                    key={i}
+                    onClick={() => {
+                      setCategory(cat.id);
+                    }}
+                    style={{
+                      backgroundColor:
+                        category === cat.id ? colors.button[type] : "#999",
+                      color: "white",
+                      padding: "0.25rem",
+                      borderRadius: "5px",
+                      margin: "0.75rem 0.5rem"
+                    }}
+                  >
+                    <Typography>{data.name}</Typography>
+                  </div>
+                );
+              })}
+          </div>
+
           <TextField
             required
             id="description"
@@ -262,8 +291,9 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
             }}
             disabled={isSubmitting}
           />
+
           {suggestions && (
-            <div style={{ margin: "0.5rem 0" }}>
+            <div style={{ margin: "1.25rem 0" }}>
               <Typography
                 variant="body2"
                 color="textSecondary"
@@ -271,34 +301,22 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
               >
                 Places based on your location
               </Typography>
-              {suggestions.map((suggestion, i) => {
-                return (
-                  <span
-                    onClick={() => setDescription(suggestion.name)}
-                    className={classes.suggestion}
-                    key={i}
-                  >
-                    {suggestion.name}
-                  </span>
-                );
-              })}
+              <div className={classes.suggestions}>
+                {suggestions.map((suggestion, i) => {
+                  return (
+                    <Typography
+                      onClick={() => setDescription(suggestion.name)}
+                      className={classes.suggestion}
+                      key={i}
+                      variant="body2"
+                      color="textSecondary"
+                    >
+                      {suggestion.name}
+                    </Typography>
+                  );
+                })}
+              </div>
             </div>
-          )}
-          {type === "expense" && (
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={taxDeductible}
-                  onChange={handleToggle}
-                  value="taxDeductible"
-                  inputProps={{ "aria-label": "secondary checkbox" }}
-                  color="primary"
-                  disabled={isSubmitting}
-                />
-              }
-              label="Tax Deductible?"
-              className={classes.switch}
-            />
           )}
           <DateTimePicker
             label="Transaction Date Time"
@@ -307,13 +325,14 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
             onChange={handleDateChange}
             disabled={isSubmitting}
           />
+
           <div>
             <Typography>Receipt Photo</Typography>
             <DropzoneArea
               onChange={files => setFiles(files)}
               filesLimit={1}
               acceptedFiles={FILE_UPLOAD.ACCEPTED_MIME_TYPES}
-              dropzoneText="Drag and Drop"
+              dropzoneText="Drag a file or click to upload"
             />
           </div>
         </DialogContent>
