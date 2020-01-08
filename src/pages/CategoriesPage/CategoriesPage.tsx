@@ -110,6 +110,33 @@ const CategoriesPage: FC = () => {
     }
   };
 
+  const onUpdate = async (
+    newCategoryName: string,
+    id: string,
+    type: string
+  ) => {
+    if (user && user.uid) {
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .collection("categories")
+        .doc(type)
+        .collection("types")
+        .doc(id)
+        .update({
+          name: newCategoryName
+        });
+      dispatchNotifications({
+        type: "@@NOTIFICATION/PUSH",
+        notification: {
+          message: `Successfully updated category to ${newCategoryName}!! 🚀`,
+          type: "info"
+        }
+      });
+    }
+  };
+
   if (!user || !user.uid) {
     return <Redirect to="/" />;
   }
@@ -147,6 +174,7 @@ const CategoriesPage: FC = () => {
                         setAvatarIdType(type);
                         setAvatarIdFileUpload(id);
                       }}
+                      onUpdate={onUpdate}
                     />
                   );
                 })

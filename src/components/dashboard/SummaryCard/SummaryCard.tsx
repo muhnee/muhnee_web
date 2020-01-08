@@ -11,6 +11,8 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 
+import MoneyTypography from "../../MoneyTypography";
+
 import Skeleton from "@material-ui/lab/Skeleton";
 
 import SummaryCardProps from "./types";
@@ -52,9 +54,7 @@ const SummaryCard: FC<SummaryCardProps> = props => {
               {title}
             </Typography>
             {typeof amount === "string" ? (
-              <Typography variant="h5" component="h2">
-                {amount}
-              </Typography>
+              <MoneyTypography variant="h5">{amount}</MoneyTypography>
             ) : (
               amount
             )}

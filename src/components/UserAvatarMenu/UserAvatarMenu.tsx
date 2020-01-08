@@ -8,7 +8,7 @@ import Menu from "@material-ui/core/Menu";
 import Typography from "@material-ui/core/Typography";
 
 import { doSignOut } from "../../firebase/firebase";
-import PolicyLinks from "../PolicyLinks";
+import PolicyLinks from "../core/PolicyLinks";
 
 import useStyles from "./styles";
 import { UserAvatarMenuProps } from "./types";

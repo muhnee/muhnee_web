@@ -7,7 +7,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
 import AppBar from "../../components/layouts/AppBar";
-import SidebarLink from "../../components/sidebar/SidebarLink/SidebarLink";
+import SidebarLink from "../../components/core/sidebar/SidebarLink/SidebarLink";
 import UserAvatarMenu from "../../components/UserAvatarMenu";
 import Footer from "../../components/layouts/Footer";
 

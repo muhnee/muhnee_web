@@ -30,5 +30,11 @@ export default interface CategoriesListItemProps {
     name: Category.name
   ) => void;
 
+  onUpdate?: (
+    newCategoryName: string,
+    id: Category.id,
+    type: TransactionTypes
+  ) => void;
+
   secondaryTitle?: string;
 }
