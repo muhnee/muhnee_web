@@ -10,9 +10,9 @@ const theme: ThemeOptions = {
     secondary: deepOrange
   },
   typography: {
-    fontFamily: "Quicksand",
+    fontFamily: "Montserrat",
     body2: {
-      fontFamily: "Merriweather"
+      fontFamily: "Varela Round"
     }
   }
 };
