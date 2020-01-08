@@ -230,7 +230,7 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
           <div className={classes.rowCenter}>
             <Button
               style={{
-                backgroundColor: colors.expense,
+                backgroundColor: colors.button.expense,
                 color: "white",
                 margin: "0 0.25rem"
               }}
@@ -242,7 +242,7 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
             </Button>
             <Button
               style={{
-                backgroundColor: colors.income,
+                backgroundColor: colors.button.income,
                 color: "white",
                 margin: "0 0.25rem"
               }}
@@ -267,11 +267,11 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
                     }}
                     style={{
                       backgroundColor:
-                        category === cat.id ? colors.income : "#999",
+                        category === cat.id ? colors.button[type] : "#999",
                       color: "white",
                       padding: "0.25rem",
                       borderRadius: "5px",
-                      margin: "0.25rem 0.5rem"
+                      margin: "0.75rem 0.5rem"
                     }}
                   >
                     <Typography>{data.name}</Typography>
