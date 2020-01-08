@@ -37,4 +37,9 @@ export default interface CategoriesListItemProps {
   ) => void;
 
   secondaryTitle?: string;
+
+  /**
+   * Can the category be edited (default: true)
+   */
+  editable?: boolean;
 }
