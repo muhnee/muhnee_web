@@ -21,6 +21,16 @@ const useStyles = makeStyles({
     marginRight: "1rem",
     textDecoration: "underline",
     cursor: "pointer"
+  },
+  rowCenter: {
+    display: "flex",
+    flexWrap: "wrap",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  rowSelect: {
+    maxWidth: "100%",
+    overflowY: "scroll"
   }
 });
 
