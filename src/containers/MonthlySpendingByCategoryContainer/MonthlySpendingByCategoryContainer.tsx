@@ -92,6 +92,7 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
               secondaryTitle={`$${category.amount.toFixed(2)}`}
               type="expense"
               key={i}
+              editable={false}
             />
           );
         }
