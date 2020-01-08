@@ -271,17 +271,21 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
               >
                 Places based on your location
               </Typography>
-              {suggestions.map((suggestion, i) => {
-                return (
-                  <span
-                    onClick={() => setDescription(suggestion.name)}
-                    className={classes.suggestion}
-                    key={i}
-                  >
-                    {suggestion.name}
-                  </span>
-                );
-              })}
+              <div className={classes.suggestions}>
+                {suggestions.map((suggestion, i) => {
+                  return (
+                    <Typography
+                      onClick={() => setDescription(suggestion.name)}
+                      className={classes.suggestion}
+                      key={i}
+                      variant="body2"
+                      color="textSecondary"
+                    >
+                      {suggestion.name}
+                    </Typography>
+                  );
+                })}
+              </div>
             </div>
           )}
           {type === "expense" && (

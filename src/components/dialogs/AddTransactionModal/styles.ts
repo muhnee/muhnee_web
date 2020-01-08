@@ -13,6 +13,10 @@ const useStyles = makeStyles({
     backgroundColor: green[500],
     color: "white"
   },
+  suggestions: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
   suggestion: {
     marginRight: "1rem",
     textDecoration: "underline",
