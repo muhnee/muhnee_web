@@ -30,7 +30,10 @@ const useStyles = makeStyles({
   },
   rowSelect: {
     maxWidth: "100%",
-    overflowY: "scroll"
+    overflowY: "hidden",
+    overflowX: "scroll",
+    minHeight: "3rem",
+    padding: "0.75rem 0"
   }
 });
 

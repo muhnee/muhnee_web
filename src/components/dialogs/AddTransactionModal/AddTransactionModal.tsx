@@ -256,7 +256,7 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
           <InputLabel id="category-label">Category</InputLabel>
           <div className={clsx(classes.rowCenter, classes.rowSelect)}>
             {categoryData &&
-              categoryData.size > 0 &&
+              categoryData.size >= 0 &&
               categoryData.docs.map((cat, i) => {
                 let data: any = cat.data();
                 return (
@@ -274,7 +274,7 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
                       margin: "0.75rem 0.5rem"
                     }}
                   >
-                    <Typography>{data.name}</Typography>
+                    <Typography variant="body2">{data.name}</Typography>
                   </div>
                 );
               })}
