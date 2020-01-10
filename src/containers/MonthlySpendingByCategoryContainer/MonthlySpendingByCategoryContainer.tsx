@@ -7,6 +7,7 @@ import List from "@material-ui/core/List";
 import Skeleton from "@material-ui/lab/Skeleton";
 
 import CategoriesListItem from "../../components/CategoriesListItem";
+import MaterialPieChart from "../../components/charts/MaterialPieChart";
 
 import EmptyStateContainer from "../EmptyStateContainer";
 
@@ -15,7 +16,6 @@ import CategoriesContext from "../../contexts/CategoriesContext";
 
 import { MonthlySpendingByCategoryContainerProps } from "./types";
 import { Transaction } from "../../types/Transaction";
-import { CategorySpend } from "../../types/Category";
 
 const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerProps> = ({
   date
@@ -74,38 +74,23 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
     }
   });
 
-  const summary: CategorySpend[] = Object.keys(spendByCategory).map(
-    categoryId => {
-      if (categoryMap.expense[categoryId]) {
-        return {
-          category: categoryMap.expense[categoryId],
-          amount: spendByCategory[categoryId]
-        };
-      }
-      return null;
-    }
-  );
+  const summary = Object.keys(spendByCategory).map(categoryId => {
+    return {
+      category: categoryMap.expense[categoryId],
+      amount: spendByCategory[categoryId]
+    };
+  });
 
-  return summary.length > 0 ? (
-    <List>
-      {summary.map((category, i) => {
-        if (category) {
-          return (
-            <CategoriesListItem
-              category={category.category}
-              secondaryTitle={`$${category.amount.toFixed(2)}`}
-              type="expense"
-              key={i}
-              editable={false}
-            />
-          );
-        }
-        return null;
-      })}
-    </List>
-  ) : (
-    <span>No transactions found</span>
-  );
+  if (!summary || summary.length <= 0) {
+    return (
+      <EmptyStateContainer
+        title="No transactions found"
+        caption="Add a transaction to get started"
+      />
+    );
+  }
+
+  return <MaterialPieChart data={summary} />;
 };
 
 export default MonthlySpendingByCategoryContainer;
