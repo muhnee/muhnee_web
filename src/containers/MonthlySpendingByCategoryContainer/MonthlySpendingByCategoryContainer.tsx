@@ -3,17 +3,19 @@ import firebase from "firebase";
 
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
+import List from "@material-ui/core/List";
 import Skeleton from "@material-ui/lab/Skeleton";
+
+import CategoriesListItem from "../../components/CategoriesListItem";
 
 import EmptyStateContainer from "../EmptyStateContainer";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
+import CategoriesContext from "../../contexts/CategoriesContext";
 
 import { MonthlySpendingByCategoryContainerProps } from "./types";
 import { Transaction } from "../../types/Transaction";
-import { List } from "@material-ui/core";
-import CategoriesContext from "../../contexts/CategoriesContext";
-import CategoriesListItem from "../../components/CategoriesListItem";
+import { CategorySpend } from "../../types/Category";
 
 const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerProps> = ({
   date
@@ -72,15 +74,17 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
     }
   });
 
-  const summary = Object.keys(spendByCategory).map(categoryId => {
-    if (categoryMap.expense[categoryId]) {
-      return {
-        category: categoryMap.expense[categoryId],
-        amount: spendByCategory[categoryId]
-      };
+  const summary: CategorySpend[] = Object.keys(spendByCategory).map(
+    categoryId => {
+      if (categoryMap.expense[categoryId]) {
+        return {
+          category: categoryMap.expense[categoryId],
+          amount: spendByCategory[categoryId]
+        };
+      }
+      return null;
     }
-    return null;
-  });
+  );
 
   return summary.length > 0 ? (
     <List>

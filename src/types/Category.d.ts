@@ -8,3 +8,9 @@ export interface Category {
   // the id of the category
   id: string;
 }
+
+export interface CategorySpend {
+  name?: string;
+
+  amount?: number;
+}
