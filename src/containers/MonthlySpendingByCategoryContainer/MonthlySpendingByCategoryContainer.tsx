@@ -3,10 +3,8 @@ import firebase from "firebase";
 
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
-import List from "@material-ui/core/List";
 import Skeleton from "@material-ui/lab/Skeleton";
 
-import CategoriesListItem from "../../components/CategoriesListItem";
 import MaterialPieChart from "../../components/charts/MaterialPieChart";
 
 import EmptyStateContainer from "../EmptyStateContainer";
