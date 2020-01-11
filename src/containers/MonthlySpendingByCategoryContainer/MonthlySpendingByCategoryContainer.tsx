@@ -3,6 +3,7 @@ import firebase from "firebase";
 
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
+import Checkbox from "@material-ui/core/Checkbox";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -25,7 +26,7 @@ import { Transaction } from "../../types/Transaction";
 const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerProps> = ({
   date
 }) => {
-  const [activeIndex, setActiveIndex] = useState<Number | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const { user } = useContext(AuthenticationContext);
   const { categoryMap } = useContext(CategoriesContext);
   const targetDate = `${date.year()}-${date.month() + 1}`;
@@ -53,6 +54,17 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
 
   const onMouseLeave = (data: object, index: number) => {
     setActiveIndex(null);
+  };
+
+  const onTableSelect = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (event.target.checked) {
+      setActiveIndex(index);
+    } else {
+      setActiveIndex(null);
+    }
   };
 
   if (isMonthlyTransactionsLoading || !categoryMap.expense) {
@@ -107,14 +119,16 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
   return (
     <>
       <MaterialPieChart
+        activeIndex={activeIndex}
         data={summary}
         onMouseEnter={onMouseOver}
         onMouseLeave={onMouseLeave}
       />
       <TableContainer>
-        <Table>
+        <Table size="small">
           <TableHead>
             <TableRow>
+              <TableCell></TableCell>
               <TableCell>Category</TableCell>
               <TableCell align="right">Amount</TableCell>
             </TableRow>
@@ -130,6 +144,12 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
                     : "#ccc";
                 return (
                   <TableRow key={i}>
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        checked={i === activeIndex}
+                        onChange={event => onTableSelect(event, i)}
+                      />
+                    </TableCell>
                     <TableCell
                       component="th"
                       scope="row"

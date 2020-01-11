@@ -30,6 +30,7 @@ const CustomTooltip: FC<TooltipProps> = ({ active, payload, label }) => {
 const MaterialPieChart: FC<MaterialPieChartProps> = ({
   data,
   label,
+  activeIndex = null,
   onMouseEnter = () => {},
   onMouseLeave = () => {}
 }) => {
@@ -39,6 +40,7 @@ const MaterialPieChart: FC<MaterialPieChartProps> = ({
     theme.palette.secondary.main,
     green[500]
   ];
+
   if (!data) {
     return null;
   }
@@ -56,9 +58,15 @@ const MaterialPieChart: FC<MaterialPieChartProps> = ({
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
         >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
+          {data.map((entry, index) => {
+            const color =
+              activeIndex === null
+                ? COLORS[index % COLORS.length]
+                : activeIndex === index
+                ? COLORS[index % COLORS.length]
+                : "#ccc";
+            return <Cell key={`cell-${index}`} fill={color} />;
+          })}
         </Pie>
         <Tooltip content={<CustomTooltip />} />
       </PieChart>
