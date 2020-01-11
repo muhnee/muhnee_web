@@ -11,7 +11,7 @@ import {
 
 import Paper from "@material-ui/core/Paper";
 import { useTheme, Theme } from "@material-ui/core/styles";
-import { blue, green } from "@material-ui/core/colors";
+import { green } from "@material-ui/core/colors";
 
 import MaterialPieChartProps from "./types";
 
@@ -27,9 +27,18 @@ const CustomTooltip: FC<TooltipProps> = ({ active, payload, label }) => {
   return null;
 };
 
-const MaterialPieChart: FC<MaterialPieChartProps> = ({ data, label }) => {
+const MaterialPieChart: FC<MaterialPieChartProps> = ({
+  data,
+  label,
+  onMouseEnter = () => {},
+  onMouseLeave = () => {}
+}) => {
   const theme: Theme = useTheme();
-  const COLORS = [theme.palette.primary.main, blue[500], green[500]];
+  const COLORS = [
+    theme.palette.primary.main,
+    theme.palette.secondary.main,
+    green[500]
+  ];
   if (!data) {
     return null;
   }
@@ -44,6 +53,8 @@ const MaterialPieChart: FC<MaterialPieChartProps> = ({ data, label }) => {
           endAngle={0}
           innerRadius={60}
           outerRadius={80}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
         >
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
