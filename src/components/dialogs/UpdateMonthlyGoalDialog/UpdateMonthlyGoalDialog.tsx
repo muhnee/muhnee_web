@@ -23,7 +23,7 @@ const UpdateMonthlyGoalDialog: FC<UpdateMonthlyGoalDialogProps> = ({
   const { user } = useContext(AuthenticationContext);
   const dispatchNotifications = useNotificationDispatch();
 
-  const [monthlyGoal, setMonthlyGoal] = useState<Number>(0);
+  const [monthlyGoal, setMonthlyGoal] = useState<number>(0);
 
   useEffect(() => {
     async function getData() {

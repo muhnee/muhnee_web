@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 
 import MenuIcon from "@material-ui/icons/Menu";
 
-import UserAvatarMenu from "../../UserAvatarMenu";
+import UserAvatarMenu from "../../core/UserAvatarMenu";
 
 import AuthenticationContext from "../../../contexts/AuthenticationContext";
 

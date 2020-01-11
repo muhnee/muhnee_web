@@ -1,9 +1,8 @@
 import { Theme, makeStyles, createStyles } from "@material-ui/core";
 import { SidebarLinkProps } from "./types";
-import { blue } from "@material-ui/core/colors";
 
 const useStyles = makeStyles<Theme, SidebarLinkProps>(theme => {
-  const highlightColor = blue[500];
+  const highlightColor = theme.palette.secondary.main;
 
   return createStyles({
     root: ({ to }) => {

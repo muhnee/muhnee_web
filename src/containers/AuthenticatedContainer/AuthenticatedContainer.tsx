@@ -8,7 +8,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 import AppBar from "../../components/layouts/AppBar";
 import SidebarLink from "../../components/core/sidebar/SidebarLink/SidebarLink";
-import UserAvatarMenu from "../../components/UserAvatarMenu";
+import UserAvatarMenu from "../../components/core/UserAvatarMenu";
 import Footer from "../../components/layouts/Footer";
 
 import LoadingContainer from "../LoadingContainer";

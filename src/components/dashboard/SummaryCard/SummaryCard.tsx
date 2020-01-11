@@ -11,7 +11,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 
-import MoneyTypography from "../../MoneyTypography";
+import MoneyTypography from "../../core/MoneyTypography";
 
 import Skeleton from "@material-ui/lab/Skeleton";
 

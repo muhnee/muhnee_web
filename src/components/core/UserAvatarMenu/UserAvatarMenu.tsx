@@ -7,8 +7,8 @@ import Divider from "@material-ui/core/Divider";
 import Menu from "@material-ui/core/Menu";
 import Typography from "@material-ui/core/Typography";
 
-import { doSignOut } from "../../firebase/firebase";
-import PolicyLinks from "../core/PolicyLinks";
+import { doSignOut } from "../../../firebase/firebase";
+import PolicyLinks from "../PolicyLinks";
 
 import useStyles from "./styles";
 import { UserAvatarMenuProps } from "./types";
