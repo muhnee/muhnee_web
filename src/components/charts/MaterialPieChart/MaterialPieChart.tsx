@@ -9,18 +9,20 @@ import {
   TooltipProps
 } from "recharts";
 
-import Paper from "@material-ui/core/Paper";
 import { useTheme, Theme } from "@material-ui/core/styles";
 import { green } from "@material-ui/core/colors";
+
+import ChartTooltip from "../Tooltip";
 
 import MaterialPieChartProps from "./types";
 
 const CustomTooltip: FC<TooltipProps> = ({ active, payload, label }) => {
   if (active && payload && payload[0]) {
     return (
-      <Paper>
-        <p className="label">{`${payload[0].payload["category"]["name"]} : $${payload[0].value}`}</p>
-      </Paper>
+      <ChartTooltip
+        title={payload[0].payload["category"]["name"]}
+        description={`Amount: $${payload[0].value}`}
+      />
     );
   }
 
