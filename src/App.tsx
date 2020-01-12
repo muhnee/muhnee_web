@@ -1,7 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import { MuiThemeProvider, useMediaQuery, Snackbar } from "@material-ui/core";
+import { MuiThemeProvider } from "@material-ui/core";
+import Snackbar from "@material-ui/core/Snackbar";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import MobileWarningBanner from "./components/layouts/MobileWarningBanner";
 import SnackbarWrapper from "./components/core/Snackbar/Snackbar";

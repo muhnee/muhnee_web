@@ -9,7 +9,6 @@ import {
   TooltipProps
 } from "recharts";
 
-import Paper from "@material-ui/core/Paper";
 import { useTheme, Theme } from "@material-ui/core/styles";
 import { green } from "@material-ui/core/colors";
 
