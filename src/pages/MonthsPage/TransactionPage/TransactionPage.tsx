@@ -251,6 +251,8 @@ const TransactionPage: FC = () => {
     );
   }
 
+  const isDescriptionTooLong = description.length > 50;
+
   return (
     <>
       <MuiPickersUtilsProvider utils={MomentUtils}>
@@ -341,6 +343,12 @@ const TransactionPage: FC = () => {
                       ) => {
                         setDescription(event.target.value as string);
                       }}
+                      error={isDescriptionTooLong}
+                      helperText={
+                        isDescriptionTooLong
+                          ? `Too many characters (${description.length}/50)`
+                          : `Enter a description for your transaction (${description.length}/50)`
+                      }
                     />
                     <div className={classes.transactionAmount}>
                       <TextField
@@ -418,6 +426,7 @@ const TransactionPage: FC = () => {
                   onClick={() => {
                     updateTransaction();
                   }}
+                  disabled={isDescriptionTooLong}
                   style={{ color: "#fff" }}
                 >
                   Update Transaction
