@@ -25,7 +25,6 @@ import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import { DropzoneArea } from "material-ui-dropzone";
 
-import useGeolocation from "../../../hooks/useGeolocation";
 import AuthenticationContext from "../../../contexts/AuthenticationContext";
 import CategoriesContext from "../../../contexts/CategoriesContext";
 import { useNotificationDispatch } from "../../../contexts/NotificationProvider";
@@ -36,11 +35,6 @@ import { colors } from "../../../config/colors";
 import AddTransactionDialogProps from "./types";
 import { TransactionTypes } from "../../../types/Transaction";
 
-type LocationSuggestion = {
-  name: string;
-  placeId: string;
-};
-
 const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
   open = false,
   onClose = () => {}
@@ -48,7 +42,6 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
   const { user } = useContext(AuthenticationContext);
   const { incomeCategories, expenseCategories } = useContext(CategoriesContext);
   const dispatchNotifications = useNotificationDispatch();
-  const { position } = useGeolocation();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -61,9 +54,6 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
     moment()
   );
   const [files, setFiles] = useState<File[]>([]);
-  const [suggestions, setSuggestions] = useState<LocationSuggestion[] | null>(
-    []
-  );
 
   const resetData = () => {
     setType("expense");
@@ -77,26 +67,6 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
 
   useEffect(() => {
     resetData();
-    if (position) {
-      console.info(`Position: ${JSON.stringify(position, null, 2)}`);
-      const getGeo = firebase.functions().httpsCallable("getGeosuggestions");
-      getGeo({
-        latitude: position.latitude,
-        longitude: position.longitude
-      }).then(pos => {
-        const suggestionData: LocationSuggestion[] = pos.data
-          .slice(0, 5)
-          .map((data: any) => {
-            return {
-              name: data.name,
-              placeId: data.place_id
-            };
-          });
-        setSuggestions(suggestionData);
-      });
-    } else {
-      console.warn("GEOLOCATION NOT AVAILABLE: No suggestions can be given");
-    }
   }, [
     setType,
     setAmount,
@@ -305,32 +275,6 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
             }
           />
 
-          {suggestions && (
-            <div style={{ margin: "1.25rem 0" }}>
-              <Typography
-                variant="body2"
-                color="textSecondary"
-                style={{ marginBottom: "0.05rem" }}
-              >
-                Places based on your location
-              </Typography>
-              <div className={classes.suggestions}>
-                {suggestions.map((suggestion, i) => {
-                  return (
-                    <Typography
-                      onClick={() => setDescription(suggestion.name)}
-                      className={classes.suggestion}
-                      key={i}
-                      variant="body2"
-                      color="textSecondary"
-                    >
-                      {suggestion.name}
-                    </Typography>
-                  );
-                })}
-              </div>
-            </div>
-          )}
           <DateTimePicker
             label="Transaction Date Time"
             inputVariant="outlined"
