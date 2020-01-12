@@ -52,8 +52,10 @@ const AddCategoryDialog: FC<AddCategoryDialogProps> = ({
   };
 
   const formId = "add-category-dialog";
+  const isCategoryNameTooLong = name.length > 50;
+
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>Add New Category</DialogTitle>
       <DialogContent>
         <FormControl fullWidth>
@@ -85,10 +87,19 @@ const AddCategoryDialog: FC<AddCategoryDialogProps> = ({
             setName(event.target.value as string);
           }}
           fullWidth
+          error={isCategoryNameTooLong}
+          helperText={
+            isCategoryNameTooLong
+              ? `Too many characters (${name.length}/50)`
+              : `Enter a name for your category (${name.length}/50)`
+          }
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => onAddNewCategory(type, name)} disabled={!name}>
+        <Button
+          onClick={() => onAddNewCategory(type, name)}
+          disabled={!name || isCategoryNameTooLong}
+        >
           Submit
         </Button>
       </DialogActions>
