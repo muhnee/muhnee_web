@@ -4,6 +4,7 @@ import moment, { Moment } from "moment";
 type State = {
   addTransactionModalOpen: boolean;
   editMonthlyGoalOpen: boolean;
+  addCategoryDialogOpen: boolean;
   date: Moment;
 };
 
@@ -12,7 +13,9 @@ type Action = {
     | "@@UI/ADD_TRANSACTION_MODAL_OPEN"
     | "@@UI/ADD_TRANSACTION_MODAL_CLOSE"
     | "@@UI/EDIT_MONTHLY_GOAL_MODAL_OPEN"
-    | "@@UI/EDIT_MONTHLY_GOAL_MODAL_CLOSE";
+    | "@@UI/EDIT_MONTHLY_GOAL_MODAL_CLOSE"
+    | "@@UI/ADD_CATEGORY_DIALOG_OPEN"
+    | "@@UI/ADD_CATEGORY_DIALOG_CLOSE";
   date?: Moment;
 };
 
@@ -37,6 +40,11 @@ export const reducer = (state: State, action: Action) => {
       return { ...state };
     case "@@UI/EDIT_MONTHLY_GOAL_MODAL_CLOSE":
       return { ...state, editMonthlyGoalOpen: false };
+    case "@@UI/ADD_CATEGORY_DIALOG_OPEN":
+      return { ...state, addCategoryDialogOpen: true };
+
+    case "@@UI/ADD_CATEGORY_DIALOG_CLOSE":
+      return { ...state, addCategoryDialogOpen: false };
 
     default:
       return state;
@@ -46,6 +54,7 @@ export const reducer = (state: State, action: Action) => {
 const initialState = {
   addTransactionModalOpen: false,
   editMonthlyGoalOpen: false,
+  addCategoryDialogOpen: false,
   date: moment()
 };
 

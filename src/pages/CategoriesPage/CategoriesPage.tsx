@@ -4,6 +4,7 @@ import firebase from "firebase";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import Fab from "@material-ui/core/Fab";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 
@@ -11,14 +12,14 @@ import Skeleton from "@material-ui/lab/Skeleton";
 
 import { DropzoneDialog } from "material-ui-dropzone";
 
-import CategoriesListItem from "../../components/CategoriesListItem";
+import AddIcon from "@material-ui/icons/AddBox";
 
-import AddCategoryContainer from "../../containers/AddCategoryContainer";
+import CategoriesListItem from "../../components/CategoriesListItem";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 import CategoriesContext from "../../contexts/CategoriesContext";
-
 import { useNotificationDispatch } from "../../contexts/NotificationProvider";
+import { useUIDispatch } from "../../contexts/UIProvider";
 
 import useStyles from "./styles";
 
@@ -28,33 +29,12 @@ const CategoriesPage: FC = () => {
     CategoriesContext
   );
   const dispatchNotifications = useNotificationDispatch();
+  const uiDispatch = useUIDispatch();
 
   const [avatarIdFileUpload, setAvatarIdFileUpload] = useState("");
   const [avatarIdType, setAvatarIdType] = useState("");
 
   const classes = useStyles();
-
-  const onAddNewCategory = (type: string, newCategory: string) => {
-    if (user && user.uid) {
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(user.uid)
-        .collection("categories")
-        .doc(type)
-        .collection("types")
-        .add({
-          name: newCategory
-        });
-      dispatchNotifications({
-        type: "@@NOTIFICATION/PUSH",
-        notification: {
-          message: `Successfully added ${newCategory}!! 🚀`,
-          type: "success"
-        }
-      });
-    }
-  };
 
   const onCategoryRemove = (type: string, id: string, name: string) => {
     if (user && user.uid) {
@@ -180,13 +160,6 @@ const CategoriesPage: FC = () => {
                 })
               : null}
           </List>
-          <div>
-            <AddCategoryContainer
-              onSubmit={newCategory => {
-                onAddNewCategory("expense", newCategory);
-              }}
-            />
-          </div>
         </CardContent>
       </Card>
       <Card className={classes.container} variant="outlined">
@@ -220,13 +193,6 @@ const CategoriesPage: FC = () => {
                 })
               : null}
           </List>
-          <div>
-            <AddCategoryContainer
-              onSubmit={newCategory => {
-                onAddNewCategory("income", newCategory);
-              }}
-            />
-          </div>
         </CardContent>
       </Card>
       <DropzoneDialog
@@ -241,6 +207,19 @@ const CategoriesPage: FC = () => {
           setAvatarIdFileUpload("");
         }}
       />
+      <Fab
+        variant="extended"
+        color="primary"
+        onClick={() =>
+          uiDispatch({
+            type: "@@UI/ADD_CATEGORY_DIALOG_OPEN"
+          })
+        }
+        className={classes.fab}
+      >
+        <AddIcon className={classes.extendedIcon} />
+        Add Category
+      </Fab>
     </div>
   );
 };

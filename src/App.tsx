@@ -32,6 +32,7 @@ import muiTheme from "./config/theme";
 
 import useStyles from "./styles";
 import UpdateMonthlyGoalDialog from "./components/dialogs/UpdateMonthlyGoalDialog";
+import AddCategoryDialog from "./components/dialogs/AddCategoryDialog";
 
 // CoreComponent handles the router, the state in addition to Providers for hooks
 const Core: React.FC = () => {
@@ -63,7 +64,12 @@ const Core: React.FC = () => {
 const App: React.FC = () => {
   const dispatch = useNotificationDispatch();
   const { notification } = useNotificationState();
-  const { addTransactionModalOpen, editMonthlyGoalOpen, date } = useState();
+  const {
+    addTransactionModalOpen,
+    editMonthlyGoalOpen,
+    date,
+    addCategoryDialogOpen
+  } = useState();
   const dispatchModalClose = useUIDispatch();
 
   const handleClose = () => {
@@ -113,6 +119,12 @@ const App: React.FC = () => {
         date={date}
         onClose={() =>
           dispatchModalClose({ type: "@@UI/EDIT_MONTHLY_GOAL_MODAL_CLOSE" })
+        }
+      />
+      <AddCategoryDialog
+        open={addCategoryDialogOpen}
+        onClose={() =>
+          dispatchModalClose({ type: "@@UI/ADD_CATEGORY_DIALOG_CLOSE" })
         }
       />
     </>
