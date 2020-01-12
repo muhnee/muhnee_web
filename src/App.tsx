@@ -7,7 +7,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import MobileWarningBanner from "./components/layouts/MobileWarningBanner";
 import SnackbarWrapper from "./components/core/Snackbar/Snackbar";
-import AddTransactionModal from "./components/dialogs/AddTransactionModal";
+import AddTransactionDialog from "./components/dialogs/AddTransactionDialog";
 
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -102,7 +102,7 @@ const App: React.FC = () => {
           />
         )}
       </Snackbar>
-      <AddTransactionModal
+      <AddTransactionDialog
         open={addTransactionModalOpen}
         onClose={() => {
           handleModalClose();

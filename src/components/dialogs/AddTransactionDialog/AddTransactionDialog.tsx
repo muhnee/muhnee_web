@@ -29,7 +29,7 @@ import { useNotificationDispatch } from "../../../contexts/NotificationProvider"
 import useStyles from "./styles";
 import { FILE_UPLOAD } from "../../../config/settings";
 import { colors } from "../../../config/colors";
-import AddTransactionModalProps from "./types";
+import AddTransactionDialogProps from "./types";
 import { TransactionTypes } from "../../../types/Transaction";
 
 type LocationSuggestion = {
@@ -37,7 +37,7 @@ type LocationSuggestion = {
   placeId: string;
 };
 
-const AddTransactionModal: FC<AddTransactionModalProps> = ({
+const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
   open = false,
   onClose = () => {}
 }) => {
@@ -354,4 +354,4 @@ const AddTransactionModal: FC<AddTransactionModalProps> = ({
   );
 };
 
-export default AddTransactionModal;
+export default AddTransactionDialog;
