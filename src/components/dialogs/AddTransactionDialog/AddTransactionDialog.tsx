@@ -67,14 +67,7 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
 
   useEffect(() => {
     resetData();
-  }, [
-    setType,
-    setAmount,
-    setDescription,
-    setTaxDeductible,
-    handleDateChange,
-    position
-  ]);
+  }, [setType, setAmount, setDescription, setTaxDeductible, handleDateChange]);
 
   const addData = async () => {
     if (user && selectedDate) {
