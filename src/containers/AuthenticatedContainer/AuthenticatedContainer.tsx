@@ -9,7 +9,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import AppBar from "../../components/layouts/AppBar";
 import SidebarLink from "../../components/core/sidebar/SidebarLink/SidebarLink";
 import UserAvatarMenu from "../../components/core/UserAvatarMenu";
-import Footer from "../../components/layouts/Footer";
 
 import LoadingContainer from "../LoadingContainer";
 
@@ -96,7 +95,6 @@ const AuthenticatedContainer: FC = ({ children }) => {
         <div style={{ padding: "0.25rem 0.5rem", flex: 1, display: "flex" }}>
           {children}
         </div>
-        <Footer />
       </div>
     </div>
   );

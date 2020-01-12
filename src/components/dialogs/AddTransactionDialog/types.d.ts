@@ -1,4 +1,4 @@
-export default interface AddTransactionModalProps {
+export default interface AddTransactionDialogProps {
   /**
    * Wether or not the modal is open (displayed to the user)
    */

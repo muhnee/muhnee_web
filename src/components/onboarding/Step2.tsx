@@ -9,8 +9,10 @@ import AddCategoryContainer from "../../containers/AddCategoryContainer";
 import CategoriesContext from "../../contexts/CategoriesContext";
 import { useNotificationDispatch } from "../../contexts/NotificationProvider";
 
-import useStyles from "./styles";
 import { Step1Props } from "./types";
+import { TransactionTypes } from "../../types/Transaction";
+
+import useStyles from "./styles";
 
 const Step2: FC<Step1Props> = ({ user }) => {
   const { expenseCategories } = useContext(CategoriesContext);
@@ -18,7 +20,7 @@ const Step2: FC<Step1Props> = ({ user }) => {
 
   const classes = useStyles();
 
-  const onAddNewCategory = (type: string, newCategory: string) => {
+  const onAddNewCategory = (type: TransactionTypes, newCategory: string) => {
     if (user && user.uid) {
       firebase
         .firestore()
@@ -102,7 +104,7 @@ const Step2: FC<Step1Props> = ({ user }) => {
       </div>
       <div>
         <AddCategoryContainer
-          onSubmit={newCategory => {
+          onSubmit={(newCategory: string) => {
             onAddNewCategory("expense", newCategory);
           }}
         />

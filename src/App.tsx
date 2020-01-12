@@ -7,7 +7,8 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import MobileWarningBanner from "./components/layouts/MobileWarningBanner";
 import SnackbarWrapper from "./components/core/Snackbar/Snackbar";
-import AddTransactionModal from "./components/dialogs/AddTransactionModal";
+import AddTransactionDialog from "./components/dialogs/AddTransactionDialog";
+import AboutDialog from "./components/dialogs/AboutDialog";
 
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -32,6 +33,7 @@ import muiTheme from "./config/theme";
 
 import useStyles from "./styles";
 import UpdateMonthlyGoalDialog from "./components/dialogs/UpdateMonthlyGoalDialog";
+import AddCategoryDialog from "./components/dialogs/AddCategoryDialog";
 
 // CoreComponent handles the router, the state in addition to Providers for hooks
 const Core: React.FC = () => {
@@ -63,7 +65,13 @@ const Core: React.FC = () => {
 const App: React.FC = () => {
   const dispatch = useNotificationDispatch();
   const { notification } = useNotificationState();
-  const { addTransactionModalOpen, editMonthlyGoalOpen, date } = useState();
+  const {
+    addTransactionModalOpen,
+    editMonthlyGoalOpen,
+    date,
+    addCategoryDialogOpen,
+    aboutDialogOpen
+  } = useState();
   const dispatchModalClose = useUIDispatch();
 
   const handleClose = () => {
@@ -102,7 +110,7 @@ const App: React.FC = () => {
           />
         )}
       </Snackbar>
-      <AddTransactionModal
+      <AddTransactionDialog
         open={addTransactionModalOpen}
         onClose={() => {
           handleModalClose();
@@ -114,6 +122,16 @@ const App: React.FC = () => {
         onClose={() =>
           dispatchModalClose({ type: "@@UI/EDIT_MONTHLY_GOAL_MODAL_CLOSE" })
         }
+      />
+      <AddCategoryDialog
+        open={addCategoryDialogOpen}
+        onClose={() =>
+          dispatchModalClose({ type: "@@UI/ADD_CATEGORY_DIALOG_CLOSE" })
+        }
+      />
+      <AboutDialog
+        open={aboutDialogOpen}
+        onClose={() => dispatchModalClose({ type: "@@UI/ABOUT_DIALOG_CLOSE" })}
       />
     </>
   );

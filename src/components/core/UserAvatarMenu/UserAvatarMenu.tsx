@@ -10,8 +10,10 @@ import Typography from "@material-ui/core/Typography";
 import { doSignOut } from "../../../firebase/firebase";
 import PolicyLinks from "../PolicyLinks";
 
-import useStyles from "./styles";
+import { useUIDispatch } from "../../../contexts/UIProvider";
+
 import { UserAvatarMenuProps } from "./types";
+import useStyles from "./styles";
 
 const UserAvatarMenu: FC<UserAvatarMenuProps> = ({
   user,
@@ -19,6 +21,7 @@ const UserAvatarMenu: FC<UserAvatarMenuProps> = ({
 }) => {
   const classes = useStyles();
   const history = useHistory();
+  const uiDispatch = useUIDispatch();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -73,15 +76,31 @@ const UserAvatarMenu: FC<UserAvatarMenuProps> = ({
             }}
             variant="outlined"
             color="primary"
+            className={classes.button}
           >
             My Account
           </Button>
           <Button
-            onClick={() => doSignOut()}
+            onClick={() => {
+              doSignOut();
+              handleClick(null);
+            }}
             variant="outlined"
             color="primary"
+            className={classes.button}
           >
             Sign out
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            className={classes.button}
+            onClick={() => {
+              uiDispatch({ type: "@@UI/ABOUT_DIALOG_OPEN" });
+              handleClick(null);
+            }}
+          >
+            About App
           </Button>
         </div>
 
