@@ -12,6 +12,7 @@ const AddCategoryContainer: FC<AddCategoryContainerProps> = props => {
 
   const classes = useStyles();
 
+  const isCategoryNameTooLong = newCategory.length > 50;
   return (
     <div className={classes.root}>
       <TextField
@@ -19,12 +20,19 @@ const AddCategoryContainer: FC<AddCategoryContainerProps> = props => {
         onChange={e => handleNewCategoryChange(e.target.value)}
         label="New Category"
         className={classes.input}
+        error={isCategoryNameTooLong}
+        helperText={
+          isCategoryNameTooLong
+            ? `Too many characters (${newCategory.length}/50)`
+            : `Enter a name for your category (${newCategory.length}/50)`
+        }
       />
       <Button
         onClick={() => {
           onSubmit(newCategory);
           handleNewCategoryChange("");
         }}
+        disabled={isCategoryNameTooLong}
       >
         Submit
       </Button>
