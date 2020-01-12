@@ -10,10 +10,14 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormLabel from "@material-ui/core/FormLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputBase from "@material-ui/core/InputBase";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import InputLabel from "@material-ui/core/InputLabel";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
@@ -173,6 +177,16 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
     setTaxDeductible(checked);
   };
 
+  const handleTransactionTypeChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if ((event.target as HTMLInputElement).value === "expense") {
+      setType("expense");
+    } else {
+      setType("income");
+    }
+  };
+
   if (!user || !user.uid) {
     return null;
   }
@@ -222,36 +236,27 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
                     disabled={isSubmitting}
                   />
                 }
-                label={taxDeductible ? "Tax Deductible" : "Not Tax Deductible"}
+                label={"Tax Deductible"}
                 className={classes.switch}
               />
             )}
           </div>
           <div className={classes.rowCenter}>
-            <Button
-              style={{
-                backgroundColor: colors.button.expense,
-                color: "white",
-                margin: "0 0.25rem"
-              }}
-              onClick={() => {
-                setType("expense");
-              }}
-            >
-              Expense
-            </Button>
-            <Button
-              style={{
-                backgroundColor: colors.button.income,
-                color: "white",
-                margin: "0 0.25rem"
-              }}
-              onClick={() => {
-                setType("income");
-              }}
-            >
-              Income
-            </Button>
+            <FormGroup>
+              <FormLabel>Type</FormLabel>
+              <RadioGroup value={type} onChange={handleTransactionTypeChange}>
+                <FormControlLabel
+                  value="income"
+                  control={<Radio />}
+                  label="Income"
+                />
+                <FormControlLabel
+                  value="expense"
+                  control={<Radio />}
+                  label="Expense"
+                />
+              </RadioGroup>
+            </FormGroup>
           </div>
           <InputLabel id="category-label">Category</InputLabel>
           <div className={clsx(classes.rowCenter, classes.rowSelect)}>
