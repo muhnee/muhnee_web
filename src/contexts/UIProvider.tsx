@@ -2,6 +2,7 @@ import React, { FC, useReducer } from "react";
 import moment, { Moment } from "moment";
 
 type State = {
+  aboutDialogOpen: boolean;
   addTransactionModalOpen: boolean;
   editMonthlyGoalOpen: boolean;
   addCategoryDialogOpen: boolean;
@@ -15,7 +16,9 @@ type Action = {
     | "@@UI/EDIT_MONTHLY_GOAL_MODAL_OPEN"
     | "@@UI/EDIT_MONTHLY_GOAL_MODAL_CLOSE"
     | "@@UI/ADD_CATEGORY_DIALOG_OPEN"
-    | "@@UI/ADD_CATEGORY_DIALOG_CLOSE";
+    | "@@UI/ADD_CATEGORY_DIALOG_CLOSE"
+    | "@@UI/ABOUT_DIALOG_OPEN"
+    | "@@UI/ABOUT_DIALOG_CLOSE";
   date?: Moment;
 };
 
@@ -40,12 +43,18 @@ export const reducer = (state: State, action: Action) => {
       return { ...state };
     case "@@UI/EDIT_MONTHLY_GOAL_MODAL_CLOSE":
       return { ...state, editMonthlyGoalOpen: false };
+
+    /**
+     * ADD CATEGORY DIALOG
+     */
     case "@@UI/ADD_CATEGORY_DIALOG_OPEN":
       return { ...state, addCategoryDialogOpen: true };
-
     case "@@UI/ADD_CATEGORY_DIALOG_CLOSE":
       return { ...state, addCategoryDialogOpen: false };
-
+    case "@@UI/ABOUT_DIALOG_OPEN":
+      return { ...state, aboutDialogOpen: true };
+    case "@@UI/ABOUT_DIALOG_CLOSE":
+      return { ...state, aboutDialogOpen: false };
     default:
       return state;
   }
@@ -55,6 +64,7 @@ const initialState = {
   addTransactionModalOpen: false,
   editMonthlyGoalOpen: false,
   addCategoryDialogOpen: false,
+  aboutDialogOpen: false,
   date: moment()
 };
 

@@ -8,6 +8,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import MobileWarningBanner from "./components/layouts/MobileWarningBanner";
 import SnackbarWrapper from "./components/core/Snackbar/Snackbar";
 import AddTransactionDialog from "./components/dialogs/AddTransactionDialog";
+import AboutDialog from "./components/dialogs/AboutDialog";
 
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -68,7 +69,8 @@ const App: React.FC = () => {
     addTransactionModalOpen,
     editMonthlyGoalOpen,
     date,
-    addCategoryDialogOpen
+    addCategoryDialogOpen,
+    aboutDialogOpen
   } = useState();
   const dispatchModalClose = useUIDispatch();
 
@@ -126,6 +128,10 @@ const App: React.FC = () => {
         onClose={() =>
           dispatchModalClose({ type: "@@UI/ADD_CATEGORY_DIALOG_CLOSE" })
         }
+      />
+      <AboutDialog
+        open={aboutDialogOpen}
+        onClose={() => dispatchModalClose({ type: "@@UI/ABOUT_DIALOG_CLOSE" })}
       />
     </>
   );

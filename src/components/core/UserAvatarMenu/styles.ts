@@ -35,6 +35,10 @@ export const useStyles = makeStyles<Theme>(theme =>
       flex: 1,
       padding: "0.25rem 0.5rem",
       justifyContent: "space-evenly"
+    },
+    button: {
+      margin: "0.25rem 0",
+      width: "100%"
     }
   })
 );
