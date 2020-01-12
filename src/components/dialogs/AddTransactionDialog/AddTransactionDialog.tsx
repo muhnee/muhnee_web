@@ -199,6 +199,7 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
   const categoryData =
     type === "expense" ? expenseCategories : incomeCategories;
 
+  const isDescriptionTooLong = description.length > 50;
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <Dialog open={open} maxWidth="md" fullWidth onClose={onClose}>
@@ -292,9 +293,16 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
             value={description}
             margin="normal"
             onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-              setDescription(event.target.value as string);
+              const description = event.target.value as string;
+              setDescription(description);
             }}
             disabled={isSubmitting}
+            error={isDescriptionTooLong}
+            helperText={
+              isDescriptionTooLong
+                ? `Too many characters (${description.length}/50)`
+                : `Enter a description for your transaction (${description.length}/50)`
+            }
           />
 
           {suggestions && (
@@ -344,7 +352,7 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
         <DialogActions>
           <Button
             onClick={addData}
-            disabled={!isFormFilled || isSubmitting}
+            disabled={!isFormFilled || isSubmitting || isDescriptionTooLong}
             variant="contained"
             className={classes.actionButton}
           >
