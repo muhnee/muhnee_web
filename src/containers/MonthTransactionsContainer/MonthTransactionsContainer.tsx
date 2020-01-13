@@ -1,5 +1,4 @@
 import React, { FC, useContext } from "react";
-import firebase from "firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 
 import List from "@material-ui/core/List";
@@ -10,11 +9,13 @@ import { MonthTransactionsContainerProps } from "./types";
 import LoadingContainer from "../LoadingContainer";
 import TransactionCard from "../../components/cards/TransactionCard";
 import EmptyStateContainer from "../EmptyStateContainer";
+import { useFirestore } from "../../firebase/firebase";
 
 const MonthTransactionsContainer: FC<MonthTransactionsContainerProps> = props => {
   const { month, maxTransactions = null } = props;
   const { user } = useContext(AuthenticationContext);
   const targetDate = `${month.year()}-${month.month() + 1}`;
+  const firestore = useFirestore();
 
   const [
     monthlyTransactions,
@@ -22,8 +23,7 @@ const MonthTransactionsContainer: FC<MonthTransactionsContainerProps> = props =>
     error
   ] = useCollection(
     user
-      ? firebase
-          .firestore()
+      ? firestore
           .collection("users")
           .doc(user.uid)
           .collection("budget")

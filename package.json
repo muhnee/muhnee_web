@@ -31,9 +31,9 @@
     "firebase-tools": "^7.8.1"
   },
   "scripts": {
-    "start": "firebase use default && REACT_APP_FIREBASE_CONFIG=\"$(node ./bin/getFirebaseConfig.js)\" REACT_APP_VERSION=$npm_package_version react-scripts start",
+    "start": "REACT_APP_VERSION=$npm_package_version react-scripts start",
     "build": "REACT_APP_VERSION=$npm_package_version react-scripts build",
-    "deploy": "firebase deploy",
+    "deploy": "gcloud app deploy",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

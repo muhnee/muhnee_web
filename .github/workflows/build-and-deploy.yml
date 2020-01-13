@@ -17,6 +17,15 @@ jobs:
         run: npm run build
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
+        env:
+          REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
+          REACT_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN }}
+          REACT_APP_FIREBASE_DATABASE_URL: ${{ secrets.REACT_APP_FIREBASE_DATABASE_URL }}
+          REACT_APP_FIREBASE_PROJECT_ID: ${{ secrets.REACT_APP_FIREBASE_PROJECT_ID }}
+          REACT_APP_FIREBASE_STORAGE_BUCKET: ${{ secrets.REACT_APP_FIREBASE_STORAGE_BUCKET }}
+          REACT_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID }}
+          REACT_APP_FIREBASE_APP_ID: ${{ secrets.REACT_APP_FIREBASE_APP_ID }}
+          REACT_APP_FIREBASE_MEASUREMENT_ID: ${{ secrets.REACT_APP_FIREBASE_MEASUREMENT_ID }}
         with:
           name: build
           path: build
@@ -25,6 +34,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: GCP Setup
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       - name: Checkout Repo
         uses: actions/checkout@master
       - name: Download Artifact
@@ -33,5 +44,9 @@ jobs:
           name: build
       - name: Install Dependencies
         run: npm install
-      - name: Deploy to Firebase
-        run: npm run deploy -- --token ${{ secrets.FIREBASE_TOKEN }}
+      - name: Deploy to App Engine
+        with:
+          version: "275.0.0"
+          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+        run: gcloud app deploy --project=${{ secrets.REACT_APP_FIREBASE_PROJECT_ID }} --quiet

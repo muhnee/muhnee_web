@@ -1,5 +1,4 @@
 import React, { FC, useContext, useState } from "react";
-import firebase from "firebase";
 
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -17,6 +16,7 @@ import { useNotificationDispatch } from "../../../contexts/NotificationProvider"
 
 import AddCategoryDialogProps from "./types";
 import { TransactionTypes } from "../../../types/Transaction";
+import { useFirestore } from "../../../firebase/firebase";
 
 const AddCategoryDialog: FC<AddCategoryDialogProps> = ({
   open = false,
@@ -25,13 +25,14 @@ const AddCategoryDialog: FC<AddCategoryDialogProps> = ({
   const { user } = useContext(AuthenticationContext);
   const dispatchNotifications = useNotificationDispatch();
 
+  const firestore = useFirestore();
+
   const [type, setType] = useState<TransactionTypes>("expense");
   const [name, setName] = useState<string>("");
 
   const onAddNewCategory = (type: string, newCategory: string) => {
     if (user && user.uid) {
-      firebase
-        .firestore()
+      firestore
         .collection("users")
         .doc(user.uid)
         .collection("categories")

@@ -1,5 +1,4 @@
 import React, { FC, useContext, useEffect, useState } from "react";
-import firebase from "firebase";
 
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -14,6 +13,7 @@ import AuthenticationContext from "../../../contexts/AuthenticationContext";
 import { useNotificationDispatch } from "../../../contexts/NotificationProvider";
 
 import { UpdateMonthlyGoalDialogProps } from "./types";
+import { useFirestore } from "../../../firebase/firebase";
 
 const UpdateMonthlyGoalDialog: FC<UpdateMonthlyGoalDialogProps> = ({
   open,
@@ -22,14 +22,14 @@ const UpdateMonthlyGoalDialog: FC<UpdateMonthlyGoalDialogProps> = ({
 }) => {
   const { user } = useContext(AuthenticationContext);
   const dispatchNotifications = useNotificationDispatch();
+  const firestore = useFirestore();
 
   const [monthlyGoal, setMonthlyGoal] = useState<number>(0);
 
   useEffect(() => {
     async function getData() {
       if (user && user.uid) {
-        const userMonthlyData = await firebase
-          .firestore()
+        const userMonthlyData = await firestore
           .collection("users")
           .doc(user.uid)
           .collection("budget")
@@ -42,12 +42,11 @@ const UpdateMonthlyGoalDialog: FC<UpdateMonthlyGoalDialogProps> = ({
       }
     }
     getData();
-  }, [date, user, setMonthlyGoal]);
+  }, [date, user, setMonthlyGoal, firestore]);
 
   const updateSavingsGoal = async () => {
     if (user && user.uid) {
-      await firebase
-        .firestore()
+      await firestore
         .collection("users")
         .doc(user.uid)
         .collection("budget")

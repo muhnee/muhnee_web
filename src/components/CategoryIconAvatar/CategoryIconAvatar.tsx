@@ -1,5 +1,4 @@
 import React, { FC, useEffect, useState } from "react";
-import firebase from "firebase";
 
 import Avatar from "@material-ui/core/Avatar";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -11,9 +10,13 @@ import { CategoryIconAvatarProps } from "./types";
 import useStyles from "./styles";
 import { useNotificationDispatch } from "../../contexts/NotificationProvider";
 
+import { useStorage } from "../../firebase/firebase";
+
 const CategoryIconAvatar: FC<CategoryIconAvatarProps> = props => {
   const { onClick = () => {}, category, type = "expense" } = props;
   const classes = useStyles(props);
+
+  const storage = useStorage();
 
   const [isLoading, setIsLoading] = useState(false);
   const [avatarIcon, setAvatarIcon] = useState("");
@@ -23,9 +26,9 @@ const CategoryIconAvatar: FC<CategoryIconAvatarProps> = props => {
     async function getIcon() {
       setIsLoading(true);
       if (category && category.icon) {
-        const firebaseRef = firebase
-          .storage()
-          .refFromURL(`gs://muhnee-app.appspot.com/${category.icon}`);
+        const firebaseRef = storage.refFromURL(
+          `gs://muhnee-app.appspot.com/${category.icon}`
+        );
 
         try {
           setAvatarIcon(await firebaseRef.getDownloadURL());
@@ -45,7 +48,8 @@ const CategoryIconAvatar: FC<CategoryIconAvatarProps> = props => {
     category,
     dispatchNotifications,
     setAvatarIcon,
-    setIsLoading
+    setIsLoading,
+    storage
   ]);
   if (isLoading) {
     return (
