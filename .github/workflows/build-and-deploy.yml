@@ -42,7 +42,7 @@ jobs:
           name: build
       - name: Install Dependencies
         run: npm install
-      - name: Setup GCP SDK
+      - name: Setup Google Cloud SDK
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           version: "275.0.0"
