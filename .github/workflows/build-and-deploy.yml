@@ -34,6 +34,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: GCP Setup
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       - name: Checkout Repo
         uses: actions/checkout@master
       - name: Download Artifact
@@ -43,7 +45,6 @@ jobs:
       - name: Install Dependencies
         run: npm install
       - name: Deploy to App Engine
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           version: "275.0.0"
           service_account_email: ${{ secrets.GCP_SA_EMAIL }}
