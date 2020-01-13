@@ -1,4 +1,5 @@
-import firebase from "firebase";
+import * as firebase from "firebase";
+import "firebase/auth";
 
 let googleAuthProvider = new firebase.auth.GoogleAuthProvider();
 
