@@ -1,8 +1,7 @@
 import React, { FC, useContext, useState, useEffect } from "react";
 import moment from "moment";
-import firebase from "firebase";
 
-import { doSignOut } from "../../firebase/firebase";
+import { doSignOut, useFirestore } from "../../firebase/firebase";
 
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -22,6 +21,7 @@ import useStyles from "./styles";
 const AccountPage: FC = () => {
   const { user, isLoaded } = useContext(AuthenticationContext);
   const dispatchNotifications = useNotificationDispatch();
+  const firestore = useFirestore();
 
   const [monthlySavingsGoal, setMonthlySavingsGoal] = useState(0);
 
@@ -30,8 +30,7 @@ const AccountPage: FC = () => {
   useEffect(() => {
     async function getData() {
       if (user && user.uid) {
-        const userDoc = await firebase
-          .firestore()
+        const userDoc = await firestore
           .collection("users")
           .doc(user.uid)
           .get();
@@ -42,12 +41,11 @@ const AccountPage: FC = () => {
       }
     }
     getData();
-  }, [user, setMonthlySavingsGoal]);
+  }, [user, setMonthlySavingsGoal, firestore]);
 
   const updateSavingsGoal = async () => {
     if (user && user.uid) {
-      await firebase
-        .firestore()
+      await firestore
         .collection("users")
         .doc(user.uid)
         .update({

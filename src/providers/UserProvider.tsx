@@ -1,20 +1,15 @@
 import React, { FC, useContext } from "react";
-import firebase from "firebase";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 
 import AuthenticationContext from "../contexts/AuthenticationContext";
 import { UserContextState, UserContext } from "../contexts/UserContext";
-
+import { useFirestore } from "../firebase/firebase";
 const UserProvider: FC = ({ children }) => {
   const { user } = useContext(AuthenticationContext);
+  const firestore = useFirestore();
 
   const [userProfile] = useDocumentData<UserContextState>(
-    user
-      ? firebase
-          .firestore()
-          .collection("users")
-          .doc(user.uid)
-      : null
+    user ? firestore.collection("users").doc(user.uid) : null
   );
 
   const userContent: UserContextState = {

@@ -1,6 +1,5 @@
 import React, { FC, useContext, useState } from "react";
 import { useHistory, Redirect } from "react-router-dom";
-import firebase from "firebase";
 import { useTransition, animated } from "react-spring";
 
 import Button from "@material-ui/core/Button";
@@ -14,12 +13,14 @@ import { UserContext } from "../../contexts/UserContext";
 import useStyles from "./styles";
 import { Paper } from "@material-ui/core";
 import LoadingContainer from "../../containers/LoadingContainer";
+import { useFirestore } from "../../firebase/firebase";
 
 const OnboardingPage: FC = () => {
   const [step, setStep] = useState(0);
 
   const { user, isLoaded } = useContext(AuthenticationContext);
   const { loaded, onboarded } = useContext(UserContext);
+  const firestore = useFirestore();
 
   const history = useHistory();
 
@@ -33,8 +34,7 @@ const OnboardingPage: FC = () => {
 
   const finaliseSetup = () => {
     if (user && user.uid) {
-      firebase
-        .firestore()
+      firestore
         .collection("users")
         .doc(user.uid)
         .update({

@@ -1,6 +1,5 @@
 import React, { FC, useContext, useState } from "react";
 import { Redirect } from "react-router-dom";
-import firebase from "firebase";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -22,6 +21,7 @@ import { useNotificationDispatch } from "../../contexts/NotificationProvider";
 import { useUIDispatch } from "../../contexts/UIProvider";
 
 import useStyles from "./styles";
+import { useFirestore, useStorage } from "../../firebase/firebase";
 
 const CategoriesPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -30,6 +30,8 @@ const CategoriesPage: FC = () => {
   );
   const dispatchNotifications = useNotificationDispatch();
   const uiDispatch = useUIDispatch();
+  const firestore = useFirestore();
+  const storage = useStorage();
 
   const [avatarIdFileUpload, setAvatarIdFileUpload] = useState("");
   const [avatarIdType, setAvatarIdType] = useState("");
@@ -38,8 +40,7 @@ const CategoriesPage: FC = () => {
 
   const onCategoryRemove = (type: string, id: string, name: string) => {
     if (user && user.uid) {
-      firebase
-        .firestore()
+      firestore
         .collection("users")
         .doc(user.uid)
         .collection("categories")
@@ -59,8 +60,7 @@ const CategoriesPage: FC = () => {
 
   const onUpdateAvatar = async (file: File[]) => {
     if (user && user.uid) {
-      const filesMetadata = await firebase
-        .storage()
+      const filesMetadata = await storage
         .ref()
         .child(
           `/users/${user.uid}/uploads/icons/${avatarIdType}/${avatarIdFileUpload}`
@@ -69,8 +69,7 @@ const CategoriesPage: FC = () => {
         .then(snapshot => {
           return snapshot;
         });
-      await firebase
-        .firestore()
+      await firestore
         .collection("users")
         .doc(user.uid)
         .collection("categories")
@@ -96,8 +95,7 @@ const CategoriesPage: FC = () => {
     type: string
   ) => {
     if (user && user.uid) {
-      await firebase
-        .firestore()
+      await firestore
         .collection("users")
         .doc(user.uid)
         .collection("categories")

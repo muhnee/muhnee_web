@@ -1,5 +1,4 @@
 import React, { FC, useContext, useState } from "react";
-import firebase from "firebase";
 
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
@@ -22,6 +21,7 @@ import CategoriesContext from "../../contexts/CategoriesContext";
 
 import { MonthlySpendingByCategoryContainerProps } from "./types";
 import { Transaction } from "../../types/Transaction";
+import { useFirestore } from "../../firebase/firebase";
 
 const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerProps> = ({
   date
@@ -30,6 +30,7 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
   const { user } = useContext(AuthenticationContext);
   const { categoryMap } = useContext(CategoriesContext);
   const targetDate = `${date.year()}-${date.month() + 1}`;
+  const firestore = useFirestore();
 
   const [
     monthlyTransactions,
@@ -37,8 +38,7 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
     error
   ] = useCollectionData<Transaction>(
     user
-      ? firebase
-          .firestore()
+      ? firestore
           .collection("users")
           .doc(user.uid)
           .collection("budget")

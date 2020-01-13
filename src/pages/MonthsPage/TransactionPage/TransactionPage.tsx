@@ -1,6 +1,5 @@
 import React, { FC, useContext, useState, useEffect } from "react";
 import moment from "moment";
-import firebase from "firebase";
 import { useParams, Redirect, useHistory } from "react-router-dom";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 
@@ -37,6 +36,7 @@ import CategoriesContext from "../../../contexts/CategoriesContext";
 import { useNotificationDispatch } from "../../../contexts/NotificationProvider";
 import { Link, Typography } from "@material-ui/core";
 import { FILE_UPLOAD } from "../../../config/settings";
+import { useFirestore, useStorage } from "../../../firebase/firebase";
 
 const TransactionPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -61,14 +61,15 @@ const TransactionPage: FC = () => {
 
   const history = useHistory();
   let { monthId, transactionId } = useParams();
+  const firestore = useFirestore();
+  const storage = useStorage();
   const classes = useStyles();
 
   useEffect(() => {
     async function getData() {
       if (user && user.uid) {
         setIsLoading(true);
-        const doc = await firebase
-          .firestore()
+        const doc = await firestore
           .collection("users")
           .doc(user.uid)
           .collection("budget")
@@ -85,9 +86,9 @@ const TransactionPage: FC = () => {
           setTaxDeductible(docData.taxDeductible);
           setCategory(docData.category || "");
           if (docData.receipt) {
-            const firebaseRef = firebase
-              .storage()
-              .refFromURL(`gs://muhnee-app.appspot.com/${docData.receipt}`);
+            const firebaseRef = storage.refFromURL(
+              `gs://muhnee-app.appspot.com/${docData.receipt}`
+            );
             try {
               setGSStorageURL(`gs://muhnee-app.appspot.com/${docData.receipt}`);
               setReceiptFilePath(await firebaseRef.getDownloadURL());
@@ -133,21 +134,19 @@ const TransactionPage: FC = () => {
     setIsLoading,
     setCategory,
     setReceiptFilePath,
-    dispatchNotifications
+    dispatchNotifications,
+    firestore,
+    storage
   ]);
 
   const onDeleteTransaction = async () => {
     if (user) {
       if (gsStorageURL) {
         try {
-          await firebase
-            .storage()
-            .refFromURL(gsStorageURL)
-            .delete();
+          await storage.refFromURL(gsStorageURL).delete();
         } catch {}
       }
-      await firebase
-        .firestore()
+      await firestore
         .collection("users")
         .doc(user.uid)
         .collection("budget")
@@ -179,8 +178,7 @@ const TransactionPage: FC = () => {
       if (files.length > 0) {
         filesMetadata = await uploadFiles();
       }
-      firebase
-        .firestore()
+      firestore
         .collection("users")
         .doc(user.uid)
         .collection("budget")
@@ -218,14 +216,10 @@ const TransactionPage: FC = () => {
     if (user && user.uid && files) {
       if (gsStorageURL) {
         try {
-          await firebase
-            .storage()
-            .refFromURL(gsStorageURL)
-            .delete();
+          await storage.refFromURL(gsStorageURL).delete();
         } catch {}
       }
-      return firebase
-        .storage()
+      return storage
         .ref()
         .child(
           `/users/${user.uid}/uploads/${moment().toISOString()}-${

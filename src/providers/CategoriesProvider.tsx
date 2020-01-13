@@ -1,5 +1,4 @@
 import React, { useContext, FC } from "react";
-import firebase from "firebase";
 
 import { useCollection } from "react-firebase-hooks/firestore";
 
@@ -7,14 +6,15 @@ import CategoriesContext from "../contexts/CategoriesContext";
 import AuthenticationContext from "../contexts/AuthenticationContext";
 
 import { _Category } from "../contexts/types";
+import { useFirestore } from "../firebase/firebase";
 
 const CategoriesProvider: FC = ({ children }) => {
   const { user } = useContext(AuthenticationContext);
+  const firestore = useFirestore();
 
   const [expenseCategories, isExpenseCategoriesLoading] = useCollection(
     user
-      ? firebase
-          .firestore()
+      ? firestore
           .collection("users")
           .doc(user.uid)
           .collection("categories")
@@ -25,8 +25,7 @@ const CategoriesProvider: FC = ({ children }) => {
 
   const [incomeCategories, isIncomeCategoriesLoading] = useCollection(
     user
-      ? firebase
-          .firestore()
+      ? firestore
           .collection("users")
           .doc(user.uid)
           .collection("categories")

@@ -1,7 +1,6 @@
 import React, { FC, useContext, useState } from "react";
 import clsx from "clsx";
 import { useHistory } from "react-router-dom";
-import firebase from "firebase";
 import moment, { Moment } from "moment";
 
 import { useDocumentData, useCollection } from "react-firebase-hooks/firestore";
@@ -25,10 +24,12 @@ import { Summary } from "../../types/Summary";
 
 import useStyles from "./styles";
 import { IconButton } from "@material-ui/core";
+import { useFirestore } from "../../firebase/firebase";
 
 const DashboardPage: FC = () => {
   const history = useHistory();
   const uiDispatch = useUIDispatch();
+  const firestore = useFirestore();
 
   const { user } = useContext(AuthenticationContext);
 
@@ -49,8 +50,7 @@ const DashboardPage: FC = () => {
    */
   const [monthlyExpenses, isMonthlyExpensesLoading] = useCollection(
     user
-      ? firebase
-          .firestore()
+      ? firestore
           .collection("users")
           .doc(user.uid)
           .collection("budget")
@@ -73,8 +73,7 @@ const DashboardPage: FC = () => {
    */
   const [monthlyIncome, isMonthlyIncomeLoading] = useCollection(
     user
-      ? firebase
-          .firestore()
+      ? firestore
           .collection("users")
           .doc(user.uid)
           .collection("budget")
@@ -88,8 +87,7 @@ const DashboardPage: FC = () => {
 
   const [summary] = useDocumentData<Summary>(
     user
-      ? firebase
-          .firestore()
+      ? firestore
           .collection("users")
           .doc(user.uid)
           .collection("budget")

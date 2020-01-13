@@ -1,5 +1,4 @@
 import React, { FC, useState, useContext, useEffect } from "react";
-import firebase from "firebase";
 import { useHistory, useParams } from "react-router-dom";
 import moment, { Moment } from "moment";
 import MomentUtils from "@date-io/moment";
@@ -24,6 +23,7 @@ import { Summary } from "../../../containers/MonthSummaryContainer/types";
 
 import AuthenticationContext from "../../../contexts/AuthenticationContext";
 import { useUIDispatch } from "../../../contexts/UIProvider";
+import { useFirestore } from "../../../firebase/firebase";
 
 import useStyles from "./styles";
 
@@ -34,6 +34,8 @@ const MonthlySummaryPage: FC = () => {
   // React Router Hooks
   const history = useHistory();
   let { monthId } = useParams();
+
+  const firestore = useFirestore();
   // Contexts
   const { user } = useContext(AuthenticationContext);
   const uiDispatch = useUIDispatch();
@@ -50,8 +52,7 @@ const MonthlySummaryPage: FC = () => {
     Summary
   >(
     user && month
-      ? firebase
-          .firestore()
+      ? firestore
           .collection("users")
           .doc(user.uid)
           .collection("budget")

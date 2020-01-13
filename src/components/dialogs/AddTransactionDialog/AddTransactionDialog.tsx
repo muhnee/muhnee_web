@@ -2,7 +2,6 @@ import React, { FC, useState, useContext, useEffect } from "react";
 import clsx from "clsx";
 import moment from "moment";
 import MomentUtils from "@date-io/moment";
-import firebase from "firebase";
 
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -34,6 +33,7 @@ import { FILE_UPLOAD } from "../../../config/settings";
 import { colors } from "../../../config/colors";
 import AddTransactionDialogProps from "./types";
 import { TransactionTypes } from "../../../types/Transaction";
+import { useFirestore, useStorage } from "../../../firebase/firebase";
 
 const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
   open = false,
@@ -42,6 +42,8 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
   const { user } = useContext(AuthenticationContext);
   const { incomeCategories, expenseCategories } = useContext(CategoriesContext);
   const dispatchNotifications = useNotificationDispatch();
+  const firestore = useFirestore();
+  const storage = useStorage();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -76,8 +78,7 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
       if (files.length > 0) {
         filesMetadata = await uploadFiles();
       }
-      firebase
-        .firestore()
+      firestore
         .collection("users")
         .doc(user.uid)
         .collection("budget")
@@ -116,8 +117,7 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
 
   const uploadFiles = () => {
     if (user && user.uid && files) {
-      return firebase
-        .storage()
+      return storage
         .ref()
         .child(
           `/users/${user.uid}/uploads/${moment().toISOString()}-${

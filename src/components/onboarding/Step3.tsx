@@ -1,5 +1,4 @@
 import React, { FC, useContext } from "react";
-import firebase from "firebase";
 
 import Chip from "@material-ui/core/Chip";
 import Typography from "@material-ui/core/Typography";
@@ -13,17 +12,18 @@ import { Step1Props } from "./types";
 import { TransactionTypes } from "../../types/Transaction";
 
 import useStyles from "./styles";
+import { useFirestore } from "../../firebase/firebase";
 
 const Step2: FC<Step1Props> = ({ user }) => {
   const { incomeCategories } = useContext(CategoriesContext);
   const dispatchNotifications = useNotificationDispatch();
+  const firestore = useFirestore();
 
   const classes = useStyles();
 
   const onAddNewCategory = (type: TransactionTypes, newCategory: string) => {
     if (user && user.uid) {
-      firebase
-        .firestore()
+      firestore
         .collection("users")
         .doc(user.uid)
         .collection("categories")
@@ -44,8 +44,7 @@ const Step2: FC<Step1Props> = ({ user }) => {
 
   const onCategoryRemove = (type: string, id: string, name: string) => {
     if (user && user.uid) {
-      firebase
-        .firestore()
+      firestore
         .collection("users")
         .doc(user.uid)
         .collection("categories")

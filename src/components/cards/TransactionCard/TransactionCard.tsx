@@ -1,6 +1,5 @@
 import React, { FC, useContext } from "react";
 import moment from "moment";
-import firebase from "firebase";
 
 import { useDocumentData } from "react-firebase-hooks/firestore";
 
@@ -19,16 +18,19 @@ import TransactionCardProps from "./types";
 import { Category } from "../../../types/Category";
 import CategoryIconAvatar from "../../CategoryIconAvatar";
 
+import { useFirestore } from "../../../firebase/firebase";
+
 const TransactionCard: FC<TransactionCardProps> = props => {
   const { user } = useContext(AuthenticationContext);
   const { transaction, month, transactionId } = props;
+
+  const firestore = useFirestore();
 
   const classes = useStyles(props);
 
   const [transactionCategory] = useDocumentData<Category>(
     user && transaction.category
-      ? firebase
-          .firestore()
+      ? firestore
           .collection("users")
           .doc(user.uid)
           .collection("categories")
