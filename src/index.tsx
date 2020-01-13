@@ -7,7 +7,6 @@ import LoadingContainer from "./containers/LoadingContainer";
 
 import App from "./App";
 
-import { initialiseFirebase } from "./firebase/firebase";
 import muiTheme from "./config/theme";
 
 import * as serviceWorker from "./serviceWorker";
@@ -30,7 +29,6 @@ import "./index.css";
     </MuiThemeProvider>,
     targetElement
   );
-  await initialiseFirebase();
   ReactDOM.render(<App />, targetElement);
 })();
 
