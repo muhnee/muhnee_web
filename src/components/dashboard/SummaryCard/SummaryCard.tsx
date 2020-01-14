@@ -28,7 +28,8 @@ const SummaryCard: FC<SummaryCardProps> = props => {
     transactions,
     isLoading = false,
     displayProgress = false,
-    progress = 0
+    progress = 0,
+    transactionsTitle = "Latest Transactions"
   } = props;
   const classes = useStyles(props);
 
@@ -61,62 +62,64 @@ const SummaryCard: FC<SummaryCardProps> = props => {
           </>
         )}
       </CardContent>
-      <Divider />
       {transactions && (
-        <CardContent>
-          <Typography>Latest Transactions</Typography>
-          {isLoading ? (
-            <Skeleton variant="rect" width="100%" height={"5rem"} />
-          ) : (
-            <List>
-              {transactions.docs.map((doc, i) => {
-                const docData = doc.data();
+        <>
+          <Divider />
+          <CardContent>
+            <Typography>{transactionsTitle}</Typography>
+            {isLoading ? (
+              <Skeleton variant="rect" width="100%" height={"5rem"} />
+            ) : (
+              <List>
+                {transactions.docs.map((doc, i) => {
+                  const docData = doc.data();
 
-                const transaction: Transaction = {
-                  type: docData.type,
-                  amount: docData.amount,
-                  description: docData.description,
-                  category: docData.category,
-                  taxDeductible: docData.taxDeductible,
-                  timestamp: docData.timestamp
-                };
+                  const transaction: Transaction = {
+                    type: docData.type,
+                    amount: docData.amount,
+                    description: docData.description,
+                    category: docData.category,
+                    taxDeductible: docData.taxDeductible,
+                    timestamp: docData.timestamp
+                  };
 
-                const transcationTimestmap = moment(
-                  transaction.timestamp.toDate()
-                );
+                  const transcationTimestmap = moment(
+                    transaction.timestamp.toDate()
+                  );
 
-                return (
-                  <ListItem
-                    key={i}
-                    className={classes.ListItem}
-                    onClick={() =>
-                      history.push(
-                        `/months/${transcationTimestmap.year()}-${transcationTimestmap.month() +
-                          1}/transactions/${doc.id}`
-                      )
-                    }
-                    button
-                  >
-                    <div style={{ flex: 1 }}>
-                      <ListItemText
-                        primary={transaction.description}
-                        secondary={transcationTimestmap.format("Do MMM")}
-                        secondaryTypographyProps={{
-                          style: {
-                            fontSize: "0.75rem"
-                          }
-                        }}
-                      />
-                    </div>
-                    <Typography>{`$${transaction.amount.toFixed(
-                      2
-                    )}`}</Typography>
-                  </ListItem>
-                );
-              })}
-            </List>
-          )}
-        </CardContent>
+                  return (
+                    <ListItem
+                      key={i}
+                      className={classes.ListItem}
+                      onClick={() =>
+                        history.push(
+                          `/months/${transcationTimestmap.year()}-${transcationTimestmap.month() +
+                            1}/transactions/${doc.id}`
+                        )
+                      }
+                      button
+                    >
+                      <div style={{ flex: 1 }}>
+                        <ListItemText
+                          primary={transaction.description}
+                          secondary={transcationTimestmap.format("Do MMM")}
+                          secondaryTypographyProps={{
+                            style: {
+                              fontSize: "0.75rem"
+                            }
+                          }}
+                        />
+                      </div>
+                      <Typography>{`$${transaction.amount.toFixed(
+                        2
+                      )}`}</Typography>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            )}
+          </CardContent>
+        </>
       )}
     </Card>
   );

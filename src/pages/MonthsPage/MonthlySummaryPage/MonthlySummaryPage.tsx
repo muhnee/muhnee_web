@@ -3,9 +3,8 @@ import { useHistory, useParams } from "react-router-dom";
 import moment, { Moment } from "moment";
 import MomentUtils from "@date-io/moment";
 
-import { useDocumentData } from "react-firebase-hooks/firestore";
+import { useDocumentData, useCollection } from "react-firebase-hooks/firestore";
 
-import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Fab from "@material-ui/core/Fab";
@@ -15,9 +14,8 @@ import EditIcon from "@material-ui/icons/Edit";
 
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 
-import MonthlySummaryCard from "../../../components/cards/MonthlySummaryCard";
+import SummaryCard from "../../../components/dashboard/SummaryCard";
 
-import MonthTransactionsContainer from "../../../containers/MonthTransactionsContainer";
 import MonthlySpendingByCategoryContainer from "../../../containers/MonthlySpendingByCategoryContainer";
 import { Summary } from "../../../containers/MonthSummaryContainer/types";
 
@@ -40,7 +38,7 @@ const MonthlySummaryPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
   const uiDispatch = useUIDispatch();
 
-  const [month, setMonth] = useState<Moment | null>(moment());
+  const [month, setMonth] = useState<Moment>(moment());
 
   useEffect(() => {
     if (monthId) {
@@ -48,15 +46,62 @@ const MonthlySummaryPage: FC = () => {
     }
   }, [monthId, setMonth]);
 
-  const [summary, isSummaryLoading, hasSummaryErrored] = useDocumentData<
-    Summary
-  >(
-    user && month
+  let targetDate;
+  if (month) {
+    targetDate = `${month.year()}-${month.month() + 1}`;
+  }
+
+  const [summary] = useDocumentData<Summary>(
+    user && targetDate
       ? firestore
           .collection("users")
           .doc(user.uid)
           .collection("budget")
-          .doc(`${month.year()}-${month.month() + 1}`)
+          .doc(targetDate)
+      : null
+  );
+
+  /**
+   *  NOTE: composite index is required on firestore
+   *
+   *  Current Configuration:
+   *  collection id: transactions
+   *
+   *  type ASC
+   *  timestamp DESC
+   */
+  const [monthlyExpenses, isMonthlyExpensesLoading] = useCollection(
+    user && targetDate
+      ? firestore
+          .collection("users")
+          .doc(user.uid)
+          .collection("budget")
+          .doc(targetDate)
+          .collection("transactions")
+          .where("type", "==", "expense")
+          .orderBy("timestamp", "desc")
+      : null
+  );
+
+  /**
+   *  NOTE: composite index is required on firestore
+   *
+   *  Current Configuration:
+   *  collection id: transactions
+   *
+   *  type ASC
+   *  timestamp DESC
+   */
+  const [monthlyIncome, isMonthlyIncomeLoading] = useCollection(
+    user && targetDate
+      ? firestore
+          .collection("users")
+          .doc(user.uid)
+          .collection("budget")
+          .doc(targetDate)
+          .collection("transactions")
+          .where("type", "==", "income")
+          .orderBy("timestamp", "desc")
       : null
   );
 
@@ -66,19 +111,37 @@ const MonthlySummaryPage: FC = () => {
     return <div className={classes.root}>Not Found</div>;
   }
 
-  let savings;
+  let currentSavings = 0;
 
   if (summary) {
-    savings = (summary.income || 0) - (summary.expenses || 0);
+    currentSavings = summary.income - summary.expenses;
+  }
+
+  let progress = 0;
+  if (summary) {
+    if (currentSavings > summary.savingsGoal) {
+      progress = 100;
+    } else {
+      progress = (currentSavings / summary.savingsGoal) * 100;
+    }
   }
 
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <div className={classes.root}>
         <div className={classes.header}>
-          <div style={{ display: "flex", flex: 1, flexWrap: "wrap" }}>
+          <div
+            style={{
+              display: "flex",
+              flex: 1,
+              flexWrap: "wrap",
+              alignItems: "center"
+            }}
+          >
             <div style={{ flex: 1, minWidth: 280 }}>
-              <Button onClick={() => history.goBack()}>&larr; Go Back</Button>
+              <Typography variant="h6">{`Summary for ${month.format(
+                "MMMM YYYY"
+              )}`}</Typography>
             </div>
 
             <DatePicker
@@ -95,67 +158,55 @@ const MonthlySummaryPage: FC = () => {
               }}
             />
           </div>
-          <div>
-            <Typography variant="h6">{`Summary for ${month.format(
-              "MMMM YYYY"
-            )}`}</Typography>
-          </div>
-          <div className={classes.monthlySummaryContainer}>
-            <MonthlySummaryCard
-              title="Income this month"
-              value={`$${
-                summary && summary.income ? summary.income.toFixed(2) : "0.00"
-              }`}
-              isLoading={isSummaryLoading}
-              hasErrored={Boolean(hasSummaryErrored)}
-            />
-            <MonthlySummaryCard
-              title="Expenses this month"
-              value={`$${
-                summary && summary.expenses
-                  ? summary.expenses.toFixed(2)
-                  : "0.00"
-              }`}
-              isLoading={isSummaryLoading}
-              hasErrored={Boolean(hasSummaryErrored)}
-            />
-            <MonthlySummaryCard
-              title="Total Savings"
-              value={`$${savings ? savings.toFixed(2) : "0.00"}`}
-              isLoading={isSummaryLoading}
-              hasErrored={Boolean(hasSummaryErrored)}
-            />
-            <MonthlySummaryCard
-              title="Monthly Goal"
-              value={`$${
-                summary && summary.savingsGoal
-                  ? summary.savingsGoal.toFixed(2)
-                  : "0.00"
-              }`}
-              isLoading={isSummaryLoading}
-              hasErrored={Boolean(hasSummaryErrored)}
-              secondaryAction={
-                <IconButton
-                  style={{ padding: "0.1rem" }}
-                  onClick={() =>
-                    uiDispatch({
-                      type: "@@UI/EDIT_MONTHLY_GOAL_MODAL_OPEN",
-                      date: month
-                    })
-                  }
-                >
-                  <EditIcon style={{ width: "0.75rem", height: "0.75rem" }} />
-                </IconButton>
-              }
-            />
-          </div>
         </div>
+
         <div className={classes.main}>
           <div className={classes.leftContainer}>
-            <Typography variant="h6" color="textSecondary">
-              Transactions this month
-            </Typography>
-            <MonthTransactionsContainer month={month} />
+            {" "}
+            <SummaryCard
+              title="Savings"
+              displayProgress={true}
+              progress={progress}
+              amount={
+                <span style={{ display: "flex" }}>
+                  <Typography>
+                    {summary &&
+                      `$${(summary.income - summary.expenses).toFixed(2)}/`}
+                  </Typography>
+                  <Typography color="textSecondary">
+                    {summary && `$${summary.savingsGoal.toFixed(2)}`}
+                  </Typography>
+                  <IconButton
+                    style={{ padding: "0.1rem" }}
+                    onClick={() =>
+                      uiDispatch({
+                        type: "@@UI/EDIT_MONTHLY_GOAL_MODAL_OPEN",
+                        date: month
+                      })
+                    }
+                  >
+                    <EditIcon style={{ width: "0.75rem", height: "0.75rem" }} />
+                  </IconButton>
+                </span>
+              }
+              isLoading={isMonthlyIncomeLoading}
+            />
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+              <SummaryCard
+                title="Income"
+                transactionsTitle="Transactions"
+                isLoading={isMonthlyExpensesLoading}
+                amount={summary && `$${summary.income.toFixed(2)}`}
+                transactions={monthlyExpenses}
+              />
+              <SummaryCard
+                title="Expenses"
+                transactionsTitle="Transactions"
+                isLoading={isMonthlyExpensesLoading}
+                amount={summary && `$${summary.expenses.toFixed(2)}`}
+                transactions={monthlyIncome}
+              />
+            </div>
           </div>
           <div className={classes.rightContainer}>
             <Typography variant="h6" color="textSecondary">
