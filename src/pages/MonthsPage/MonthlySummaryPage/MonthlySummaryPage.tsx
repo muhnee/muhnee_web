@@ -197,14 +197,14 @@ const MonthlySummaryPage: FC = () => {
                 transactionsTitle="Transactions"
                 isLoading={isMonthlyExpensesLoading}
                 amount={summary && `$${summary.income.toFixed(2)}`}
-                transactions={monthlyExpenses}
+                transactions={monthlyIncome}
               />
               <SummaryCard
                 title="Expenses"
                 transactionsTitle="Transactions"
                 isLoading={isMonthlyExpensesLoading}
                 amount={summary && `$${summary.expenses.toFixed(2)}`}
-                transactions={monthlyIncome}
+                transactions={monthlyExpenses}
               />
             </div>
           </div>
