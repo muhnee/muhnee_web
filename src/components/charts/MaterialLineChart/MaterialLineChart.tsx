@@ -5,7 +5,6 @@ import {
   Tooltip,
   TooltipProps,
   XAxis,
-  LabelList,
   Line,
   LineChart
 } from "recharts";
