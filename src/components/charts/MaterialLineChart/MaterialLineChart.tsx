@@ -5,15 +5,17 @@ import {
   Tooltip,
   TooltipProps,
   XAxis,
+  LabelList,
   Line,
   LineChart
 } from "recharts";
 
+import ChartTooltip from "../Tooltip";
+
 import { Theme, useTheme } from "@material-ui/core";
 
 import MaterialLineChartProps from "./types";
-
-import ChartTooltip from "../Tooltip";
+import useStyles from "./styles";
 
 const CustomTooltip: FC<TooltipProps> = ({ active, payload, label }) => {
   if (active && payload && payload[0]) {
@@ -30,6 +32,7 @@ const CustomTooltip: FC<TooltipProps> = ({ active, payload, label }) => {
 
 const MaterialLineChart: FC<MaterialLineChartProps> = props => {
   const theme: Theme = useTheme();
+  const classes = useStyles();
   const {
     data = [],
     lineColor = theme.palette.primary.main,
@@ -37,13 +40,15 @@ const MaterialLineChart: FC<MaterialLineChartProps> = props => {
   } = props;
   console.log(data);
   return (
-    <ResponsiveContainer maxHeight={300} width="100%" height={height}>
-      <LineChart data={data}>
-        <XAxis dataKey="date" />
-        <Tooltip content={<CustomTooltip />} />
-        <Line type="monotone" dataKey="amount" stroke={lineColor} />
-      </LineChart>
-    </ResponsiveContainer>
+    <div className={classes.root}>
+      <ResponsiveContainer maxHeight={300} width="100%" height={height}>
+        <LineChart data={data}>
+          <XAxis dataKey="date" />
+          <Tooltip content={<CustomTooltip />} />
+          <Line type="monotone" dataKey="amount" stroke={lineColor} />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 

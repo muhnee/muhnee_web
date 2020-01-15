@@ -112,6 +112,7 @@ const SummaryCard: FC<SummaryCardProps> = props => {
           <MaterialLineChart data={graphData} />
         </CardContent>
       )}
+
       {transactions && (
         <>
           <Divider />
