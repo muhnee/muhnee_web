@@ -11,11 +11,11 @@ const useStyles = makeStyles<Theme>(theme =>
       flex: 1
     },
     container: {
-      width: "100%",
       display: "flex",
       minWidth: 280,
+      flex: 1,
       flexDirection: "column",
-      margin: "0.5rem"
+      margin: "0rem 0.25rem"
     },
     categoryListContainer: {
       flex: 1
@@ -25,9 +25,14 @@ const useStyles = makeStyles<Theme>(theme =>
     },
     fab: {
       position: "fixed",
-      bottom: "2vh",
-      right: "2vw",
+      bottom: "3vh",
+      right: "3vw",
       color: "white"
+    },
+    row: {
+      display: "flex",
+      flexWrap: "wrap",
+      marginTop: "0.5rem"
     }
   })
 );

@@ -7,8 +7,7 @@ const useStyles = makeStyles<Theme>(theme => ({
     flex: 1
   },
   header: {
-    padding: "0.5rem 0.75rem",
-    backgroundColor: "#eee"
+    padding: "0.5rem 0.75rem"
   },
   monthlySummaryContainer: {
     display: "flex",
@@ -21,17 +20,18 @@ const useStyles = makeStyles<Theme>(theme => ({
   },
   main: {
     display: "flex",
-    flexWrap: "wrap"
+    flexWrap: "wrap",
+    flex: 1
   },
   leftContainer: {
     padding: "0.5rem 0.75rem",
     minWidth: 300,
-    flex: 3
+    flex: 2
   },
   rightContainer: {
     padding: "0.5rem 0.75rem",
     minWidth: 300,
-    flex: 2
+    flex: 1
   },
   fab: {
     position: "fixed",

@@ -37,4 +37,9 @@ export interface Transaction {
    * The Firestore Storage Link to the Upload
    */
   receipt?: string | null;
+
+  /**
+   * Firestore ID (used in some places)
+   */
+  id?: string;
 }

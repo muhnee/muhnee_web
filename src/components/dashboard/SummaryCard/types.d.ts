@@ -7,6 +7,11 @@ export default interface SummaryCardProps {
   title: string;
 
   /**
+   * Transactions SubHeading
+   */
+  transactionsTitle?: string;
+
+  /**
    * The actual amount to be displayed
    */
   amount?: number | string | JSX.Element | JSX.Element[];
@@ -21,4 +26,9 @@ export default interface SummaryCardProps {
   progress?: number;
 
   displayProgress?: boolean;
+
+  /**
+   * Should the card also show a line graph (Default: false)
+   */
+  showGraph?: boolean;
 }
