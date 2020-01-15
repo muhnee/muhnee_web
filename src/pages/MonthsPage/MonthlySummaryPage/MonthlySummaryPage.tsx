@@ -162,7 +162,6 @@ const MonthlySummaryPage: FC = () => {
 
         <div className={classes.main}>
           <div className={classes.leftContainer}>
-            {" "}
             <SummaryCard
               title="Savings"
               displayProgress={true}
@@ -198,6 +197,7 @@ const MonthlySummaryPage: FC = () => {
                 isLoading={isMonthlyExpensesLoading}
                 amount={summary && `$${summary.income.toFixed(2)}`}
                 transactions={monthlyIncome}
+                showGraph={true}
               />
               <SummaryCard
                 title="Expenses"
@@ -205,6 +205,7 @@ const MonthlySummaryPage: FC = () => {
                 isLoading={isMonthlyExpensesLoading}
                 amount={summary && `$${summary.expenses.toFixed(2)}`}
                 transactions={monthlyExpenses}
+                showGraph={true}
               />
             </div>
           </div>

@@ -26,4 +26,9 @@ export default interface SummaryCardProps {
   progress?: number;
 
   displayProgress?: boolean;
+
+  /**
+   * Should the card also show a line graph (Default: false)
+   */
+  showGraph?: boolean;
 }
