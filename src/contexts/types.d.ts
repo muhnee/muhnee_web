@@ -1,5 +1,6 @@
 import { User } from "firebase/app";
 import { firestore } from "firebase";
+import moment from "moment";
 
 export interface _Category {
   [id: string]: Category;
@@ -26,3 +27,20 @@ export interface CategoriesContextState {
   };
   isLoading: boolean;
 }
+
+export interface GlobalConfigState {
+  maintenance: {
+    enabled: boolean;
+    scheduledEnd: moment.Moment | null;
+    message: string;
+  };
+  isLoading: boolean;
+}
+
+type GlobalConfig = {
+  maintenance: {
+    enabled: boolean;
+    scheduledEnd: firestore.Timestamp;
+    message: string;
+  };
+};

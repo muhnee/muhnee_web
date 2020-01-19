@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { MuiThemeProvider } from "@material-ui/core";
@@ -9,6 +9,10 @@ import MobileWarningBanner from "./components/layouts/MobileWarningBanner";
 import SnackbarWrapper from "./components/core/Snackbar/Snackbar";
 import AddTransactionDialog from "./components/dialogs/AddTransactionDialog";
 import AboutDialog from "./components/dialogs/AboutDialog";
+import UpdateMonthlyGoalDialog from "./components/dialogs/UpdateMonthlyGoalDialog";
+import AddCategoryDialog from "./components/dialogs/AddCategoryDialog";
+
+import LoadingContainer from "./containers/LoadingContainer";
 
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -17,9 +21,11 @@ import MonthsPage from "./pages/MonthsPage";
 import OnboardingPage from "./pages/OnboardingPage";
 import CategoriesPage from "./pages/CategoriesPage";
 import AccountPage from "./pages/AccountPage";
+import MaintenancePage from "./pages/MaintenancePage";
 
 import AuthenticatedContainer from "./containers/AuthenticatedContainer";
 import CategoriesProvider from "./providers/CategoriesProvider";
+import GlobalConfigProvider from "./providers/GlobalConfigProvider";
 import UserProvider from "./providers/UserProvider";
 import { AuthenticationProvider } from "./providers/AuthenticationProvider";
 
@@ -28,12 +34,11 @@ import NotificationProvider, {
   useNotificationDispatch
 } from "./contexts/NotificationProvider";
 import UIProvider, { useState, useUIDispatch } from "./contexts/UIProvider";
+import GlobalConfigContext from "./contexts/GlobalConfigContext";
 
 import muiTheme from "./config/theme";
 
 import useStyles from "./styles";
-import UpdateMonthlyGoalDialog from "./components/dialogs/UpdateMonthlyGoalDialog";
-import AddCategoryDialog from "./components/dialogs/AddCategoryDialog";
 
 // CoreComponent handles the router, the state in addition to Providers for hooks
 const Core: React.FC = () => {
@@ -45,17 +50,19 @@ const Core: React.FC = () => {
       {matches && <MobileWarningBanner />}
       <div className={classes.root}>
         <Router>
-          <AuthenticationProvider>
-            <NotificationProvider>
-              <UIProvider>
-                <CategoriesProvider>
-                  <UserProvider>
-                    <App />
-                  </UserProvider>
-                </CategoriesProvider>
-              </UIProvider>
-            </NotificationProvider>
-          </AuthenticationProvider>
+          <GlobalConfigProvider>
+            <AuthenticationProvider>
+              <NotificationProvider>
+                <UIProvider>
+                  <CategoriesProvider>
+                    <UserProvider>
+                      <App />
+                    </UserProvider>
+                  </CategoriesProvider>
+                </UIProvider>
+              </NotificationProvider>
+            </AuthenticationProvider>
+          </GlobalConfigProvider>
         </Router>
       </div>
     </MuiThemeProvider>
@@ -73,6 +80,7 @@ const App: React.FC = () => {
     aboutDialogOpen
   } = useState();
   const dispatchModalClose = useUIDispatch();
+  const { maintenance, isLoading } = useContext(GlobalConfigContext);
 
   const handleClose = () => {
     dispatch({ type: "@@NOTIFICATION/POP" });
@@ -83,6 +91,18 @@ const App: React.FC = () => {
       type: "@@UI/ADD_TRANSACTION_MODAL_CLOSE"
     });
   };
+
+  if (isLoading) {
+    return <LoadingContainer />;
+  }
+
+  if (!isLoading && maintenance.enabled) {
+    return (
+      <Switch>
+        <Route path="/" component={MaintenancePage} />
+      </Switch>
+    );
+  }
 
   return (
     <>
