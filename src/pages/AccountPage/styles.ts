@@ -8,23 +8,24 @@ const useStyles = makeStyles({
   },
   headerContainer: {
     display: "flex",
-    flexDirection: "column",
     alignItems: "center",
     padding: "0.5rem 1.25rem"
   },
   container: {
     display: "flex",
-    flexDirection: "column",
-    padding: "0.5rem 1.25rem"
+    flexWrap: "wrap",
+    flexDirection: "row"
   },
   avatar: {
     height: 100,
     width: 100,
     margin: "0.5rem 0"
   },
-  row: {
-    display: "flex",
-    flexWrap: "wrap"
+  settingsCard: {
+    flex: 1,
+    minWidth: 280,
+    maxWidth: "30%",
+    margin: "0.25rem 0.75rem"
   }
 });
 

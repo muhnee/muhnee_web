@@ -1,10 +1,12 @@
 import React, { FC, useContext, useState, useEffect } from "react";
 import moment from "moment";
 
-import { doSignOut, useFirestore } from "../../firebase/firebase";
+import { useFirestore } from "../../firebase/firebase";
 
 import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardHeader from "@material-ui/core/CardHeader";
 import Divider from "@material-ui/core/Divider";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
@@ -72,34 +74,37 @@ const AccountPage: FC = () => {
 
   return (
     <div className={classes.root}>
-      <div className={classes.headerContainer}>
-        {user.photoURL && (
-          <Avatar src={user.photoURL} className={classes.avatar} />
-        )}
-        {user.displayName && (
-          <Typography variant="h6">{user.displayName}</Typography>
-        )}
-        {user.email && <Typography variant="body1">{user.email}</Typography>}
-        <Typography variant="body1" color="textSecondary">
-          {`Saving Money Since ${moment(user.metadata.creationTime).format(
-            "Do MMM YYYY"
-          )}`}
-        </Typography>
-        <Button onClick={() => doSignOut()}>Logout of Muhnee</Button>
-      </div>
+      <Card variant="outlined">
+        <CardContent className={classes.headerContainer}>
+          {user.photoURL && (
+            <Avatar src={user.photoURL} className={classes.avatar} />
+          )}
+          <div style={{ flex: 1, marginLeft: "0.75rem" }}>
+            {user.displayName && (
+              <Typography variant="h6">{user.displayName}</Typography>
+            )}
+            {user.email && (
+              <Typography variant="body1" gutterBottom>
+                {user.email}
+              </Typography>
+            )}
+            <Typography variant="body1" color="textSecondary">
+              {`Saving Money Since ${moment(user.metadata.creationTime).format(
+                "Do MMM YYYY"
+              )}`}
+            </Typography>
+          </div>
+        </CardContent>
+      </Card>
+      <div></div>
       <Divider />
       <div className={classes.container}>
-        <Typography variant="h6" color="textPrimary">
-          Account Settings
-        </Typography>
-      </div>
-      <Divider />
-      <div className={classes.container}>
-        <Typography variant="h6" color="textPrimary">
-          Budget Tool Settings
-        </Typography>
-        <div className={classes.row}>
-          <div>
+        <Card variant="outlined" className={classes.settingsCard}>
+          <CardHeader
+            title="Budget Tool Settings"
+            titleTypographyProps={{ variant: "h6" }}
+          />
+          <CardContent>
             <TextField
               label="Savings Target"
               value={monthlySavingsGoal}
@@ -124,8 +129,8 @@ const AccountPage: FC = () => {
               }}
               fullWidth
             />
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
