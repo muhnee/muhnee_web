@@ -20,7 +20,7 @@ const CustomTooltip: FC<TooltipProps> = ({ active, payload, label }) => {
   if (active && payload && payload[0]) {
     return (
       <ChartTooltip
-        title={payload[0].payload["category"]["name"]}
+        title={payload[0].payload["name"]}
         description={`Amount: $${payload[0].value}`}
       />
     );

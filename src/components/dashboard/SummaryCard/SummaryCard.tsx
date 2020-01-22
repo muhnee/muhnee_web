@@ -123,7 +123,7 @@ const SummaryCard: FC<SummaryCardProps> = props => {
             ) : (
               <List>
                 {transactionsDocs.map((transaction, i) => {
-                  const transcationTimestmap = moment(
+                  const transactionTimestmap = moment(
                     transaction.timestamp.toDate()
                   );
 
@@ -133,7 +133,7 @@ const SummaryCard: FC<SummaryCardProps> = props => {
                       className={classes.ListItem}
                       onClick={() =>
                         history.push(
-                          `/months/${transcationTimestmap.year()}-${transcationTimestmap.month() +
+                          `/months/${transactionTimestmap.year()}-${transactionTimestmap.month() +
                             1}/transactions/${transaction.id}`
                         )
                       }
@@ -142,7 +142,9 @@ const SummaryCard: FC<SummaryCardProps> = props => {
                       <div style={{ flex: 1 }}>
                         <ListItemText
                           primary={transaction.description}
-                          secondary={transcationTimestmap.format("Do MMM")}
+                          secondary={transactionTimestmap.format(
+                            "DD/MM/YYYY hh:mmA"
+                          )}
                           secondaryTypographyProps={{
                             style: {
                               fontSize: "0.75rem"
@@ -150,9 +152,11 @@ const SummaryCard: FC<SummaryCardProps> = props => {
                           }}
                         />
                       </div>
-                      <Typography>{`$${transaction.amount.toFixed(
-                        2
-                      )}`}</Typography>
+                      <MoneyTypography variant="body1" type={transaction.type}>
+                        {transaction.type === "income"
+                          ? `$${transaction.amount.toFixed(2)}`
+                          : `-$${transaction.amount.toFixed(2)}`}
+                      </MoneyTypography>
                     </ListItem>
                   );
                 })}
