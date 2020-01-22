@@ -7,6 +7,9 @@ export interface Category {
 
   // the id of the category
   id: string;
+
+  // the amount
+  amount?: number;
 }
 
 export interface CategorySpend {

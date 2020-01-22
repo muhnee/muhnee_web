@@ -1,6 +1,4 @@
-import React, { FC, useContext, useState } from "react";
-
-import { useCollectionData } from "react-firebase-hooks/firestore";
+import React, { FC, useState, useEffect } from "react";
 
 import Checkbox from "@material-ui/core/Checkbox";
 import Table from "@material-ui/core/Table";
@@ -16,37 +14,50 @@ import MaterialPieChart from "../../components/charts/MaterialPieChart";
 
 import EmptyStateContainer from "../EmptyStateContainer";
 
-import AuthenticationContext from "../../contexts/AuthenticationContext";
-import CategoriesContext from "../../contexts/CategoriesContext";
-
 import { MonthlySpendingByCategoryContainerProps } from "./types";
-import { Transaction } from "../../types/Transaction";
-import { useFirestore } from "../../firebase/firebase";
+import { Category } from "../../types/Category";
+import { useFunctions } from "../../firebase/firebase";
 
 const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerProps> = ({
   date
 }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const { user } = useContext(AuthenticationContext);
-  const { categoryMap } = useContext(CategoriesContext);
   const targetDate = `${date.year()}-${date.month() + 1}`;
-  const firestore = useFirestore();
+  const functions = useFunctions();
 
-  const [
-    monthlyTransactions,
-    isMonthlyTransactionsLoading,
-    error
-  ] = useCollectionData<Transaction>(
-    user
-      ? firestore
-          .collection("users")
-          .doc(user.uid)
-          .collection("budget")
-          .doc(targetDate)
-          .collection("transactions")
-          .orderBy("timestamp", "desc")
-      : null
-  );
+  const [summary, setSummary] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    let didCancel = false;
+
+    async function getData() {
+      if (!didCancel) {
+        setIsLoading(true);
+        const getSummaryForTransactions = functions.httpsCallable(
+          "getSummaryForTransactions"
+        );
+        const res = await getSummaryForTransactions({ month: targetDate });
+        const resData = res.data.expense;
+        const data = Object.keys(resData).map(key => {
+          const data = resData[key];
+          const category: Category = {
+            id: key,
+            amount: data.amount,
+            name: data.name,
+            icon: data.icon
+          };
+          return category;
+        });
+        setSummary(data);
+        setIsLoading(false);
+      }
+    }
+    getData();
+    return () => {
+      didCancel = false;
+    };
+  }, [functions, targetDate]);
 
   const onMouseOver = (data: object, index: number) => {
     setActiveIndex(index);
@@ -67,45 +78,9 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
     }
   };
 
-  if (isMonthlyTransactionsLoading || !categoryMap.expense) {
+  if (isLoading) {
     return <Skeleton variant="rect" width={"100%"} height={"100%"} />;
   }
-
-  if (error) {
-    return (
-      <EmptyStateContainer
-        title="Something went wrong!"
-        caption="Please refresh and try again later"
-      />
-    );
-  }
-
-  if (!monthlyTransactions) {
-    return (
-      <EmptyStateContainer
-        title="No transactions this month"
-        caption="Create a transaction to get started!"
-      />
-    );
-  }
-
-  let spendByCategory: { [id: string]: number } = {};
-  monthlyTransactions.forEach(data => {
-    if (data.type === "expense") {
-      if (spendByCategory[data.category]) {
-        spendByCategory[data.category] += data.amount || 0;
-      } else {
-        spendByCategory[data.category] = data.amount || 0;
-      }
-    }
-  });
-
-  const summary = Object.keys(spendByCategory).map(categoryId => {
-    return {
-      category: categoryMap.expense[categoryId],
-      amount: spendByCategory[categoryId]
-    };
-  });
 
   if (!summary || summary.length <= 0) {
     return (
@@ -157,14 +132,16 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
                         color: fontColor
                       }}
                     >
-                      {data.category && data.category.name}
+                      {data && data.name}
                     </TableCell>
                     <TableCell
                       align="right"
                       style={{
                         color: fontColor
                       }}
-                    >{`$${data.amount.toFixed(2)}`}</TableCell>
+                    >
+                      {data.amount ? `$${data.amount.toFixed(2)}` : "N/A"}
+                    </TableCell>
                   </TableRow>
                 );
               })}

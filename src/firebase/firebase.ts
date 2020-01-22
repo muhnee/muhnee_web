@@ -22,6 +22,8 @@ export const useFirestore = () => fbApp.firestore();
 
 export const useStorage = () => fbApp.storage();
 
+export const useFunctions = () => fbApp.functions();
+
 export const doSignInWithGoogle = () => {
   return fbApp.auth().signInWithRedirect(googleAuthProvider);
 };
