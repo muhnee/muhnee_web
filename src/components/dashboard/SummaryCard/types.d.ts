@@ -1,4 +1,5 @@
 import * as firebase from "firebase";
+import { TransactionTypes } from "../../../types/Transaction";
 
 export default interface SummaryCardProps {
   /**
@@ -31,4 +32,9 @@ export default interface SummaryCardProps {
    * Should the card also show a line graph (Default: false)
    */
   showGraph?: boolean;
+
+  /**
+   * Type of Card
+   */
+  type?: TransactionTypes;
 }

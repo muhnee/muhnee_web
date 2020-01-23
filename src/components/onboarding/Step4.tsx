@@ -15,7 +15,7 @@ import useStyles from "./styles";
 import { useFirestore } from "../../firebase/firebase";
 
 const Step2: FC<Step1Props> = ({ user }) => {
-  const { expenseCategories } = useContext(CategoriesContext);
+  const { incomeCategories } = useContext(CategoriesContext);
   const dispatchNotifications = useNotificationDispatch();
   const firestore = useFirestore();
 
@@ -64,49 +64,45 @@ const Step2: FC<Step1Props> = ({ user }) => {
 
   return (
     <div className={classes.root}>
-      <img
-        src="/images/shopping.svg"
-        className={classes.images}
-        alt="shopping trolley"
-      />
+      <img src="/images/wallet.svg" className={classes.images} alt="wallet" />
       <div className={classes.textContainer}>
         <Typography variant="h4">
-          Now, let's{" "}
-          <strong>add some categories to group your expenses.</strong>
+          <strong>Finally, </strong>let's add some and update categories for
+          your income.
         </Typography>
         <Typography variant="body1">
-          Categorising your expenses allow you to analyze your expenses much
-          better. For example, you can do analysis the amount of money you've
-          spent on meals, transportation, entertainment, etc.
+          This becomes really helpful if you have more than one source of
+          income. Some of these categories have been preloaded, feel free to
+          remove them and add more.
         </Typography>
-      </div>
-      <div className={classes.categories}>
-        {expenseCategories && expenseCategories.size > 0
-          ? expenseCategories.docs.map(category => {
-              let expenseCategory: any = category.data();
-              return (
-                <Chip
-                  label={expenseCategory.name}
-                  key={category.id}
-                  onDelete={() => {
-                    onCategoryRemove(
-                      "expense",
-                      category.id,
-                      expenseCategory.name
-                    );
-                  }}
-                  className={classes.chip}
-                />
-              );
-            })
-          : null}
-      </div>
-      <div>
-        <AddCategoryContainer
-          onSubmit={(newCategory: string) => {
-            onAddNewCategory("expense", newCategory);
-          }}
-        />
+        <div>
+          {incomeCategories && incomeCategories.size > 0
+            ? incomeCategories.docs.map(category => {
+                let categoryData: any = category.data();
+                return (
+                  <Chip
+                    label={categoryData.name}
+                    key={category.id}
+                    onDelete={() => {
+                      onCategoryRemove(
+                        "expense",
+                        category.id,
+                        categoryData.name
+                      );
+                    }}
+                    className={classes.chip}
+                  />
+                );
+              })
+            : null}
+        </div>
+        <div>
+          <AddCategoryContainer
+            onSubmit={(newCategory: string) => {
+              onAddNewCategory("income", newCategory);
+            }}
+          />
+        </div>
       </div>
     </div>
   );

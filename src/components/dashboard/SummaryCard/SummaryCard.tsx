@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import { useHistory } from "react-router-dom";
 import moment from "moment";
 
 import Card from "@material-ui/core/Card";
@@ -7,11 +6,10 @@ import CardContent from "@material-ui/core/CardContent";
 import Divider from "@material-ui/core/Divider";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 
 import MoneyTypography from "../../core/MoneyTypography";
+import TransactionsListItem from "../../TransactionsListItem";
 import MaterialLineChart from "../../charts/MaterialLineChart";
 
 import Skeleton from "@material-ui/lab/Skeleton";
@@ -22,7 +20,6 @@ import { Transaction } from "../../../types/Transaction";
 import useStyles from "./styles";
 
 const SummaryCard: FC<SummaryCardProps> = props => {
-  const history = useHistory();
   const {
     title,
     amount,
@@ -31,7 +28,8 @@ const SummaryCard: FC<SummaryCardProps> = props => {
     displayProgress = false,
     progress = 0,
     transactionsTitle = "Latest Transactions",
-    showGraph = false
+    showGraph = false,
+    type = "expense"
   } = props;
   const classes = useStyles(props);
 
@@ -46,7 +44,8 @@ const SummaryCard: FC<SummaryCardProps> = props => {
           category: docData.category,
           taxDeductible: docData.taxDeductible,
           timestamp: docData.timestamp,
-          id: doc.id
+          id: doc.id,
+          isRecurring: docData.isRecurring
         };
         return transaction;
       })
@@ -100,7 +99,9 @@ const SummaryCard: FC<SummaryCardProps> = props => {
               {title}
             </Typography>
             {typeof amount === "string" ? (
-              <MoneyTypography variant="h5">{amount}</MoneyTypography>
+              <MoneyTypography variant="h5" type={type}>
+                {amount}
+              </MoneyTypography>
             ) : (
               amount
             )}
@@ -123,41 +124,8 @@ const SummaryCard: FC<SummaryCardProps> = props => {
             ) : (
               <List>
                 {transactionsDocs.map((transaction, i) => {
-                  const transactionTimestmap = moment(
-                    transaction.timestamp.toDate()
-                  );
-
                   return (
-                    <ListItem
-                      key={i}
-                      className={classes.ListItem}
-                      onClick={() =>
-                        history.push(
-                          `/months/${transactionTimestmap.year()}-${transactionTimestmap.month() +
-                            1}/transactions/${transaction.id}`
-                        )
-                      }
-                      button
-                    >
-                      <div style={{ flex: 1 }}>
-                        <ListItemText
-                          primary={transaction.description}
-                          secondary={transactionTimestmap.format(
-                            "DD/MM/YYYY hh:mmA"
-                          )}
-                          secondaryTypographyProps={{
-                            style: {
-                              fontSize: "0.75rem"
-                            }
-                          }}
-                        />
-                      </div>
-                      <MoneyTypography variant="body1" type={transaction.type}>
-                        {transaction.type === "income"
-                          ? `$${transaction.amount.toFixed(2)}`
-                          : `-$${transaction.amount.toFixed(2)}`}
-                      </MoneyTypography>
-                    </ListItem>
+                    <TransactionsListItem transaction={transaction} key={i} />
                   );
                 })}
               </List>

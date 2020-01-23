@@ -66,7 +66,8 @@ const OnboardingPage: FC = () => {
   const pages = [
     <Onboarding.Step1 user={user} />,
     <Onboarding.Step2 user={user} />,
-    <Onboarding.Step3 user={user} />
+    <Onboarding.Step3 user={user} />,
+    <Onboarding.Step4 user={user} />
   ];
   return (
     <div className={classes.root}>
@@ -83,12 +84,12 @@ const OnboardingPage: FC = () => {
         </div>
         <MobileStepper
           variant="dots"
-          steps={3}
+          steps={4}
           position="static"
           activeStep={step}
           className={classes.stepContainer}
           nextButton={
-            step !== 2 ? (
+            step !== 3 ? (
               <Button
                 onClick={() => setStep(step + 1)}
                 variant="outlined"

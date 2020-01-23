@@ -25,6 +25,7 @@ import { Summary } from "../../types/Summary";
 import useStyles from "./styles";
 import { IconButton } from "@material-ui/core";
 import { useFirestore } from "../../firebase/firebase";
+import MoneyTypography from "../../components/core/MoneyTypography";
 
 const DashboardPage: FC = () => {
   const history = useHistory();
@@ -163,10 +164,14 @@ const DashboardPage: FC = () => {
                 progress={progress}
                 amount={
                   <span style={{ display: "flex" }}>
-                    <Typography>
-                      {summary &&
-                        `$${(summary.income - summary.expenses).toFixed(2)}/`}
-                    </Typography>
+                    <MoneyTypography
+                      variant="body1"
+                      type={currentSavings < 0 ? "expense" : "income"}
+                    >
+                      {summary && currentSavings >= 0
+                        ? `$${currentSavings.toFixed(2)}/`
+                        : `-$${Math.abs(currentSavings).toFixed(2)}/`}
+                    </MoneyTypography>
                     <Typography color="textSecondary">
                       {summary && `$${summary.savingsGoal.toFixed(2)}`}
                     </Typography>
@@ -190,16 +195,18 @@ const DashboardPage: FC = () => {
             </div>
             <div className={classes.summaryContainer}>
               <SummaryCard
-                title="Expenses"
-                amount={summary && `$${summary.expenses.toFixed(2)}`}
-                transactions={monthlyExpenses}
-                isLoading={isMonthlyExpensesLoading}
-              />
-              <SummaryCard
                 title="Income"
                 amount={summary && `$${summary.income.toFixed(2)}`}
                 transactions={monthlyIncome}
                 isLoading={isMonthlyIncomeLoading}
+                type="income"
+              />
+              <SummaryCard
+                title="Expenses"
+                amount={summary && `-$${summary.expenses.toFixed(2)}`}
+                transactions={monthlyExpenses}
+                isLoading={isMonthlyExpensesLoading}
+                type="expense"
               />
             </div>
             <div style={{ display: "flex", flexDirection: "row-reverse" }}>

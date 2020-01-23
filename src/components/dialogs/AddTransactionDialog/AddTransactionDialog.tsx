@@ -1,4 +1,5 @@
 import React, { FC, useState, useContext, useEffect } from "react";
+import firebase from "firebase";
 import clsx from "clsx";
 import moment from "moment";
 import MomentUtils from "@date-io/moment";
@@ -32,7 +33,7 @@ import useStyles from "./styles";
 import { FILE_UPLOAD } from "../../../config/settings";
 import { colors } from "../../../config/colors";
 import AddTransactionDialogProps from "./types";
-import { TransactionTypes } from "../../../types/Transaction";
+import { Transaction, TransactionTypes } from "../../../types/Transaction";
 import { useFirestore, useStorage } from "../../../firebase/firebase";
 
 const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
@@ -55,6 +56,7 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
   const [selectedDate, handleDateChange] = useState<MaterialUiPickersDate>(
     moment()
   );
+  const [isRecurring, setIsRecurring] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
 
   const resetData = () => {
@@ -65,6 +67,7 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
     setTaxDeductible(false);
     handleDateChange(moment());
     setFiles([]);
+    setIsRecurring(false);
   };
 
   useEffect(() => {
@@ -78,23 +81,25 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
       if (files.length > 0) {
         filesMetadata = await uploadFiles();
       }
+
+      const transaction: Transaction = {
+        type,
+        amount: +amount,
+        description,
+        taxDeductible,
+        timestamp: firebase.firestore.Timestamp.fromDate(selectedDate.toDate()),
+        category: category,
+        receipt: filesMetadata ? filesMetadata.metadata.fullPath || null : null,
+        isRecurring: isRecurring
+      };
+
       firestore
         .collection("users")
         .doc(user.uid)
         .collection("budget")
         .doc(`${selectedDate.year()}-${selectedDate.month() + 1}`)
         .collection("transactions")
-        .add({
-          type,
-          amount: +amount,
-          description,
-          taxDeductible,
-          timestamp: selectedDate.toDate(),
-          category: category,
-          receipt: filesMetadata
-            ? filesMetadata.metadata.fullPath || null
-            : null
-        })
+        .add(transaction)
         .then(() => {
           setIsSubmitting(false);
           dispatchNotifications({
@@ -189,20 +194,38 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
               }}
             />
             {type === "expense" && (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={taxDeductible}
-                    onChange={handleToggle}
-                    value="taxDeductible"
-                    inputProps={{ "aria-label": "secondary checkbox" }}
-                    color="primary"
-                    disabled={isSubmitting}
-                  />
-                }
-                label={"Tax Deductible"}
-                className={classes.switch}
-              />
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={taxDeductible}
+                      onChange={handleToggle}
+                      value="taxDeductible"
+                      inputProps={{ "aria-label": "secondary checkbox" }}
+                      color="primary"
+                      disabled={isSubmitting}
+                    />
+                  }
+                  label={"Tax Deductible"}
+                  className={classes.switch}
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={isRecurring}
+                      onChange={(event, checked) => {
+                        setIsRecurring(checked);
+                      }}
+                      value="isRecurring"
+                      inputProps={{ "aria-label": "recurring payment" }}
+                      color="primary"
+                      disabled={isSubmitting}
+                    />
+                  }
+                  label={"Recurring Payment"}
+                  className={classes.switch}
+                />
+              </div>
             )}
           </div>
           <div className={classes.rowCenter}>
