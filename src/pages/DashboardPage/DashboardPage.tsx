@@ -195,18 +195,18 @@ const DashboardPage: FC = () => {
             </div>
             <div className={classes.summaryContainer}>
               <SummaryCard
-                title="Expenses"
-                amount={summary && `-$${summary.expenses.toFixed(2)}`}
-                transactions={monthlyExpenses}
-                isLoading={isMonthlyExpensesLoading}
-                type="expense"
-              />
-              <SummaryCard
                 title="Income"
                 amount={summary && `$${summary.income.toFixed(2)}`}
                 transactions={monthlyIncome}
                 isLoading={isMonthlyIncomeLoading}
                 type="income"
+              />
+              <SummaryCard
+                title="Expenses"
+                amount={summary && `-$${summary.expenses.toFixed(2)}`}
+                transactions={monthlyExpenses}
+                isLoading={isMonthlyExpensesLoading}
+                type="expense"
               />
             </div>
             <div style={{ display: "flex", flexDirection: "row-reverse" }}>

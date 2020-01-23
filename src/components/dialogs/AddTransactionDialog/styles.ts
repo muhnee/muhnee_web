@@ -7,7 +7,7 @@ const useStyles = makeStyles({
     flexDirection: "column"
   },
   switch: {
-    margin: "1.25rem 0"
+    margin: "0.25rem 0"
   },
   actionButton: {
     backgroundColor: green[500],

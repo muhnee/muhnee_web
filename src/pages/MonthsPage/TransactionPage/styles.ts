@@ -12,7 +12,7 @@ const useStyles = makeStyles({
     flexWrap: "wrap"
   },
   switch: {
-    margin: "1.25rem 0"
+    margin: "0.5rem 0"
   },
   receipt: {
     marginTop: "0.25rem",

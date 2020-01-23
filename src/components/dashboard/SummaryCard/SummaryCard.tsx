@@ -44,7 +44,8 @@ const SummaryCard: FC<SummaryCardProps> = props => {
           category: docData.category,
           taxDeductible: docData.taxDeductible,
           timestamp: docData.timestamp,
-          id: doc.id
+          id: doc.id,
+          isRecurring: docData.isRecurring
         };
         return transaction;
       })

@@ -4,6 +4,10 @@ import { useHistory } from "react-router-dom";
 
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import Tooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
+
+import RecurringIcon from "@material-ui/icons/Loop";
 
 import MoneyTypography from "../core/MoneyTypography";
 
@@ -32,7 +36,19 @@ const TransactionsListItem: FC<TransactionsListItemProps> = ({
     >
       <div style={{ flex: 1 }}>
         <ListItemText
-          primary={transaction.description}
+          primary={
+            <div className={classes.primary}>
+              <Typography>{transaction.description}</Typography>
+              {transaction.isRecurring && (
+                <Tooltip
+                  title="This transaction has been marked as recurring "
+                  aria-label="This transaction has been marked as recurring "
+                >
+                  <RecurringIcon className={classes.recurringIcon} />
+                </Tooltip>
+              )}
+            </div>
+          }
           secondary={timestamp.format("DD/MM/YYYY hh:mmA")}
           secondaryTypographyProps={{
             style: {
