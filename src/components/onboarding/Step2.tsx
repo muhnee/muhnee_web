@@ -1,66 +1,58 @@
-import React, { FC, useContext } from "react";
+import React, { FC, useEffect, useState } from "react";
 
-import Chip from "@material-ui/core/Chip";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
-import AddCategoryContainer from "../../containers/AddCategoryContainer";
-
-import CategoriesContext from "../../contexts/CategoriesContext";
 import { useNotificationDispatch } from "../../contexts/NotificationProvider";
 
 import { Step1Props } from "./types";
-import { TransactionTypes } from "../../types/Transaction";
 
 import useStyles from "./styles";
 import { useFirestore } from "../../firebase/firebase";
 
 const Step2: FC<Step1Props> = ({ user }) => {
-  const { expenseCategories } = useContext(CategoriesContext);
   const dispatchNotifications = useNotificationDispatch();
   const firestore = useFirestore();
 
-  const classes = useStyles();
+  const [monthlySavingsGoal, setMonthlySavingsGoal] = useState(0);
 
-  const onAddNewCategory = (type: TransactionTypes, newCategory: string) => {
+  const updateSavingsGoal = async () => {
     if (user && user.uid) {
-      firestore
+      await firestore
         .collection("users")
         .doc(user.uid)
-        .collection("categories")
-        .doc(type)
-        .collection("types")
-        .add({
-          name: newCategory
+        .update({
+          monthlySavingsGoal: monthlySavingsGoal
         });
       dispatchNotifications({
         type: "@@NOTIFICATION/PUSH",
         notification: {
-          message: `Successfully added ${newCategory}!! 🚀`,
-          type: "success"
+          message: "Updated default savings goal for user",
+          type: "success",
+          title: "Successfully updated savings goal"
         }
       });
     }
   };
 
-  const onCategoryRemove = (type: string, id: string, name: string) => {
-    if (user && user.uid) {
-      firestore
-        .collection("users")
-        .doc(user.uid)
-        .collection("categories")
-        .doc(type)
-        .collection("types")
-        .doc(id)
-        .delete();
-      dispatchNotifications({
-        type: "@@NOTIFICATION/PUSH",
-        notification: {
-          message: `Successfully removed ${name}!! 🚀`,
-          type: "info"
+  useEffect(() => {
+    async function getData() {
+      if (user && user.uid) {
+        const userDoc = await firestore
+          .collection("users")
+          .doc(user.uid)
+          .get();
+        if (userDoc.exists) {
+          const userData: any = userDoc.data();
+          setMonthlySavingsGoal(userData.monthlySavingsGoal || 0);
         }
-      });
+      }
     }
-  };
+    getData();
+  }, [user, setMonthlySavingsGoal, firestore]);
+
+  const classes = useStyles();
 
   return (
     <div className={classes.root}>
@@ -71,41 +63,35 @@ const Step2: FC<Step1Props> = ({ user }) => {
       />
       <div className={classes.textContainer}>
         <Typography variant="h4">
-          <strong>Firstly</strong>, let's add some categories to group your
-          expenses.
+          <strong>Firstly</strong>, let's setup a savings goal for you.
         </Typography>
         <Typography variant="body1">
-          Categorising your expenses allow you to analyze your expenses much
-          better. For example, you can do analysis the amount of money you've
-          spent on meals, transportation, entertainment, etc.
+          This will your default savings goal. Setting a goal allows you to help
+          save towards a new target. You can always change this later
         </Typography>
       </div>
       <div className={classes.categories}>
-        {expenseCategories && expenseCategories.size > 0
-          ? expenseCategories.docs.map(category => {
-              let expenseCategory: any = category.data();
-              return (
-                <Chip
-                  label={expenseCategory.name}
-                  key={category.id}
-                  onDelete={() => {
-                    onCategoryRemove(
-                      "expense",
-                      category.id,
-                      expenseCategory.name
-                    );
-                  }}
-                  className={classes.chip}
-                />
-              );
-            })
-          : null}
-      </div>
-      <div>
-        <AddCategoryContainer
-          onSubmit={(newCategory: string) => {
-            onAddNewCategory("expense", newCategory);
+        <TextField
+          label="Savings Target"
+          value={monthlySavingsGoal}
+          type="number"
+          inputProps={{ min: 0, step: 0.01 }}
+          onChange={event => {
+            setMonthlySavingsGoal(parseFloat(event.target.value));
           }}
+          onKeyDown={event => {
+            if (event.key === "Enter") {
+              // then trigger save
+              updateSavingsGoal();
+            }
+          }}
+          onBlur={event => {
+            updateSavingsGoal();
+          }}
+          InputProps={{
+            startAdornment: <InputAdornment position="start">$</InputAdornment>
+          }}
+          fullWidth
         />
       </div>
     </div>
