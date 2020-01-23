@@ -42,4 +42,9 @@ export interface Transaction {
    * Firestore ID (used in some places)
    */
   id?: string;
+
+  /**
+   * Does the transaction repeat itself
+   */
+  isRecurring?: boolean;
 }
