@@ -33,7 +33,7 @@ const AboutDialog: FC<FooterDialogProps> = ({
         <Typography variant="h6" color="textPrimary" gutterBottom>
           Version: v{process.env.REACT_APP_VERSION}
         </Typography>
-        <Typography variant="body1" color="textSecondary" gutterBottom>
+        <Typography variant="body1" color="textPrimary" gutterBottom>
           Copyright &copy; Muhnee 2019{" "}
           {moment().year() !== 2019 ? `- ${moment().year()}` : ``} <br />
           Please click{" "}
@@ -49,6 +49,20 @@ const AboutDialog: FC<FooterDialogProps> = ({
             here
           </Link>{" "}
           if you are experiencing issues.
+        </Typography>
+        <Typography>
+          Please submit feedback{" "}
+          <Link
+            href="https://muhnee.atlassian.net/servicedesk/customer/portal/2"
+            target="_blank"
+            rel="noreferrer noopener"
+            color="inherit"
+            style={{
+              textDecoration: "underline"
+            }}
+          >
+            https://tinyurl.com/muhnee-feedback
+          </Link>
         </Typography>
       </DialogContent>
       <DialogActions>
