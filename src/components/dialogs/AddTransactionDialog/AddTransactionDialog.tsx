@@ -10,14 +10,17 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import FormControl from "@material-ui/core/FormGroup";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputBase from "@material-ui/core/InputBase";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
+import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
@@ -33,7 +36,11 @@ import useStyles from "./styles";
 import { FILE_UPLOAD } from "../../../config/settings";
 import { colors } from "../../../config/colors";
 import AddTransactionDialogProps from "./types";
-import { Transaction, TransactionTypes } from "../../../types/Transaction";
+import {
+  Transaction,
+  TransactionTypes,
+  RecurringDays
+} from "../../../types/Transaction";
 import { useFirestore, useStorage } from "../../../firebase/firebase";
 
 const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
@@ -56,7 +63,7 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
   const [selectedDate, handleDateChange] = useState<MaterialUiPickersDate>(
     moment()
   );
-  const [isRecurring, setIsRecurring] = useState(false);
+  const [recurringDays, setRecurringDays] = useState<RecurringDays>(0);
   const [files, setFiles] = useState<File[]>([]);
 
   const resetData = () => {
@@ -67,7 +74,7 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
     setTaxDeductible(false);
     handleDateChange(moment());
     setFiles([]);
-    setIsRecurring(false);
+    setRecurringDays(0);
   };
 
   useEffect(() => {
@@ -90,7 +97,7 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
         timestamp: firebase.firestore.Timestamp.fromDate(selectedDate.toDate()),
         category: category,
         receipt: filesMetadata ? filesMetadata.metadata.fullPath || null : null,
-        isRecurring: isRecurring
+        recurringDays: recurringDays || 0
       };
 
       firestore
@@ -209,22 +216,6 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
                   label={"Tax Deductible"}
                   className={classes.switch}
                 />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={isRecurring}
-                      onChange={(event, checked) => {
-                        setIsRecurring(checked);
-                      }}
-                      value="isRecurring"
-                      inputProps={{ "aria-label": "recurring payment" }}
-                      color="primary"
-                      disabled={isSubmitting}
-                    />
-                  }
-                  label={"Recurring Payment"}
-                  className={classes.switch}
-                />
               </div>
             )}
           </div>
@@ -271,7 +262,27 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
                 );
               })}
           </div>
-
+          <FormControl>
+            <InputLabel id="recurring-days-label">Recurring Days</InputLabel>
+            <Select
+              labelId="recurring-days-label"
+              id="recurring-days"
+              value={recurringDays}
+              onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+                setRecurringDays(event.target.value as RecurringDays);
+              }}
+              variant="filled"
+            >
+              <MenuItem value={0}>0</MenuItem>
+              <MenuItem value={1}>1</MenuItem>
+              <MenuItem value={2}>2</MenuItem>
+              <MenuItem value={5}>5</MenuItem>
+              <MenuItem value={7}>7</MenuItem>
+              <MenuItem value={14}>14</MenuItem>
+              <MenuItem value={21}>21</MenuItem>
+              <MenuItem value={32}>32</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             required
             id="description"
@@ -279,8 +290,7 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
             value={description}
             margin="normal"
             onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-              const description = event.target.value as string;
-              setDescription(description);
+              setDescription(event.target.value as string);
             }}
             disabled={isSubmitting}
             error={isDescriptionTooLong}
