@@ -34,11 +34,15 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
     async function getData() {
       if (!didCancel) {
         setIsLoading(true);
-        const getSummaryForTransactions = functions.httpsCallable(
-          "getSummaryForTransactions"
+        const getCurrentSummaryforTransactions = functions.httpsCallable(
+          "getCurrentSummaryforTransactions"
         );
-        const res = await getSummaryForTransactions({ month: targetDate });
-        const resData = res.data.expense;
+        const res = await getCurrentSummaryforTransactions({
+          date: date.toISOString(),
+          transactionType: "expense",
+          summaryType: "month"
+        });
+        const resData = res.data;
         const data = Object.keys(resData).map(key => {
           const data = resData[key];
           const category: Category = {
@@ -57,7 +61,7 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
     return () => {
       didCancel = false;
     };
-  }, [functions, targetDate]);
+  }, [functions, date]);
 
   const onMouseOver = (data: object, index: number) => {
     setActiveIndex(index);

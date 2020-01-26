@@ -1,5 +1,7 @@
 export type TransactionTypes = "expense" | "income";
 
+export type RecurringDays = 0 | 1 | 2 | 5 | 7 | 14 | 21 | 32;
+
 export interface Transaction {
   /**
    * The category of transaction
@@ -44,7 +46,7 @@ export interface Transaction {
   id?: string;
 
   /**
-   * Does the transaction repeat itself
+   * How many days does the transaction repeat itself
    */
-  isRecurring?: boolean;
+  recurringDays?: RecurringDays;
 }

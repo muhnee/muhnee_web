@@ -39,12 +39,17 @@ const TransactionsListItem: FC<TransactionsListItemProps> = ({
           primary={
             <div className={classes.primary}>
               <Typography>{transaction.description}</Typography>
-              {transaction.isRecurring && (
+              {transaction.recurringDays && (
                 <Tooltip
-                  title="This transaction has been marked as recurring "
-                  aria-label="This transaction has been marked as recurring "
+                  title={`This transaction recurs every ${transaction.recurringDays} days`}
+                  aria-label={`This transaction recurs every ${transaction.recurringDays} days`}
                 >
-                  <RecurringIcon className={classes.recurringIcon} />
+                  <div>
+                    <RecurringIcon className={classes.recurringIcon} />
+                    <sup
+                      style={{ fontSize: "0.75rem" }}
+                    >{`${transaction.recurringDays} days`}</sup>
+                  </div>
                 </Tooltip>
               )}
             </div>

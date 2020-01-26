@@ -41,7 +41,11 @@ import CategoriesContext from "../../../contexts/CategoriesContext";
 import { useNotificationDispatch } from "../../../contexts/NotificationProvider";
 import { FILE_UPLOAD } from "../../../config/settings";
 
-import { Transaction, TransactionTypes } from "../../../types/Transaction";
+import {
+  RecurringDays,
+  Transaction,
+  TransactionTypes
+} from "../../../types/Transaction";
 
 const TransactionPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -63,7 +67,7 @@ const TransactionPage: FC = () => {
   );
   const [recieptFilePath, setReceiptFilePath] = useState("");
   const [gsStorageURL, setGSStorageURL] = useState("");
-  const [isRecurring, setIsRecurring] = useState<boolean>(false);
+  const [recurringDays, setRecurringDays] = useState<RecurringDays>(0);
 
   const history = useHistory();
   let { monthId, transactionId } = useParams();
@@ -91,7 +95,7 @@ const TransactionPage: FC = () => {
           setDescription(docData.description);
           setTaxDeductible(docData.taxDeductible);
           setCategory(docData.category || "");
-          setIsRecurring(docData.isRecurring);
+          setRecurringDays(docData.recurringDays);
           if (docData.receipt) {
             const firebaseRef = storage.refFromURL(
               `gs://muhnee-app.appspot.com/${docData.receipt}`
@@ -140,7 +144,7 @@ const TransactionPage: FC = () => {
     setTaxDeductible,
     setIsLoading,
     setCategory,
-    setIsRecurring,
+    setRecurringDays,
     setReceiptFilePath,
     dispatchNotifications,
     firestore,
@@ -180,8 +184,6 @@ const TransactionPage: FC = () => {
     setTaxDeductible(checked);
   };
 
-  console.log(isRecurring);
-
   const updateTransaction = async () => {
     if (user && selectedDate) {
       let filesMetadata;
@@ -197,7 +199,7 @@ const TransactionPage: FC = () => {
         timestamp: firebase.firestore.Timestamp.fromDate(selectedDate.toDate()),
         category,
         receipt: filesMetadata ? filesMetadata.metadata.fullPath || null : null,
-        isRecurring: isRecurring
+        recurringDays: recurringDays
       };
 
       firestore
@@ -396,23 +398,6 @@ const TransactionPage: FC = () => {
                           label="Tax Deductible"
                           className={classes.switch}
                         />
-                        <FormControlLabel
-                          control={
-                            <Switch
-                              checked={isRecurring}
-                              onChange={(event, checked) => {
-                                setIsRecurring(checked);
-                              }}
-                              value="isRecurring"
-                              inputProps={{
-                                "aria-label": "is transaction recurring"
-                              }}
-                              color="primary"
-                            />
-                          }
-                          label="Recurring Transaction"
-                          className={classes.switch}
-                        />
                       </div>
                     </div>
                     <DateTimePicker
@@ -421,6 +406,31 @@ const TransactionPage: FC = () => {
                       value={selectedDate}
                       onChange={handleDateChange}
                     />
+                    <FormControl>
+                      <InputLabel id="recurring-days-label">
+                        Recurring Days
+                      </InputLabel>
+                      <Select
+                        labelId="recurring-days-label"
+                        id="recurring-days"
+                        value={recurringDays}
+                        onChange={(
+                          event: React.ChangeEvent<{ value: unknown }>
+                        ) => {
+                          setRecurringDays(event.target.value as RecurringDays);
+                        }}
+                        variant="filled"
+                      >
+                        <MenuItem value={0}>0</MenuItem>
+                        <MenuItem value={1}>1</MenuItem>
+                        <MenuItem value={2}>2</MenuItem>
+                        <MenuItem value={5}>5</MenuItem>
+                        <MenuItem value={7}>7</MenuItem>
+                        <MenuItem value={14}>14</MenuItem>
+                        <MenuItem value={21}>21</MenuItem>
+                        <MenuItem value={32}>32</MenuItem>
+                      </Select>
+                    </FormControl>
                   </CardContent>
                 </Card>
               </div>
