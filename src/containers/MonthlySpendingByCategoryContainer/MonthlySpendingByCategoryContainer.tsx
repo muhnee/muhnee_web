@@ -61,7 +61,7 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
     return () => {
       didCancel = false;
     };
-  }, [functions, targetDate]);
+  }, [functions, date]);
 
   const onMouseOver = (data: object, index: number) => {
     setActiveIndex(index);
