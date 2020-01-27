@@ -1,5 +1,5 @@
 runtime: nodejs10
-api_version: 1
+
 handlers:
   - url: /
     static_files: build/index.html
