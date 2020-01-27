@@ -1,6 +1,8 @@
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import "firebase/functions";
+import "firebase/storage";
 import googleAuthProvider from "./authProviders/googleAuthProvider";
 import facebookAuthProvider from "./authProviders/facebookAuthProvider";
 
