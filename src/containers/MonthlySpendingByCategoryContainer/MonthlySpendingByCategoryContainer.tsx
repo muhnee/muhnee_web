@@ -22,7 +22,6 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
   date
 }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const targetDate = `${date.year()}-${date.month() + 1}`;
   const functions = useFunctions();
 
   const [summary, setSummary] = useState<Category[]>([]);
