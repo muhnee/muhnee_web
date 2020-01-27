@@ -42,13 +42,12 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
           summaryType: "month"
         });
         const resData = res.data;
-        const data = Object.keys(resData).map(key => {
-          const data = resData[key];
+        const data = resData.map((catData: any) => {
           const category: Category = {
-            id: key,
-            amount: data.amount,
-            name: data.name,
-            icon: data.icon
+            id: catData.id,
+            amount: catData.amount,
+            name: catData.name,
+            icon: catData.icon
           };
           return category;
         });
