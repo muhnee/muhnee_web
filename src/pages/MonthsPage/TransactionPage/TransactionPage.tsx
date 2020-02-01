@@ -92,7 +92,7 @@ const TransactionPage: FC = () => {
           setType(docData.type);
           setAmount(docData.amount);
           handleDateChange(moment(new Date(docData.timestamp.toDate())));
-          setDescription(docData.description);
+          setDescription(docData.description || "");
           setTaxDeductible(docData.taxDeductible);
           setCategory(docData.category || "");
           setRecurringDays(docData.recurringDays);
