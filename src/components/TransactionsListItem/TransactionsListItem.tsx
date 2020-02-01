@@ -39,7 +39,7 @@ const TransactionsListItem: FC<TransactionsListItemProps> = ({
           primary={
             <div className={classes.primary}>
               <Typography>{transaction.description}</Typography>
-              {transaction.recurringDays && (
+              {transaction.recurringDays ? (
                 <Tooltip
                   title={`This transaction recurs every ${transaction.recurringDays} days`}
                   aria-label={`This transaction recurs every ${transaction.recurringDays} days`}
@@ -51,7 +51,7 @@ const TransactionsListItem: FC<TransactionsListItemProps> = ({
                     >{`${transaction.recurringDays} days`}</sup>
                   </div>
                 </Tooltip>
-              )}
+              ) : null}
             </div>
           }
           secondary={timestamp.format("DD/MM/YYYY hh:mmA")}

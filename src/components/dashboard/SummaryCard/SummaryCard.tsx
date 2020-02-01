@@ -40,7 +40,7 @@ const SummaryCard: FC<SummaryCardProps> = props => {
         const transaction: Transaction = {
           type: docData.type,
           amount: docData.amount,
-          description: docData.description,
+          description: docData.description || "(no description)",
           category: docData.category,
           taxDeductible: docData.taxDeductible,
           timestamp: docData.timestamp,
