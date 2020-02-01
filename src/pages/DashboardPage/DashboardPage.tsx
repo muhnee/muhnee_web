@@ -101,7 +101,7 @@ const DashboardPage: FC = () => {
   }
 
   let currentSavings = 0;
-  if (summary) {
+  if (summary && summary.savingsGoal) {
     currentSavings = summary.income - summary.expenses;
   }
 
@@ -173,7 +173,9 @@ const DashboardPage: FC = () => {
                         : `-$${Math.abs(currentSavings).toFixed(2)}/`}
                     </MoneyTypography>
                     <Typography color="textSecondary">
-                      {summary && `$${summary.savingsGoal.toFixed(2)}`}
+                      {summary && summary.savingsGoal
+                        ? `$${summary.savingsGoal.toFixed(2)}`
+                        : "$0.00"}
                     </Typography>
                     <IconButton
                       style={{ padding: "0.1rem" }}
@@ -196,14 +198,20 @@ const DashboardPage: FC = () => {
             <div className={classes.summaryContainer}>
               <SummaryCard
                 title="Income"
-                amount={summary && `$${summary.income.toFixed(2)}`}
+                amount={
+                  summary &&
+                  `$${summary.income ? summary.income.toFixed(2) : 0}`
+                }
                 transactions={monthlyIncome}
                 isLoading={isMonthlyIncomeLoading}
                 type="income"
               />
               <SummaryCard
                 title="Expenses"
-                amount={summary && `-$${summary.expenses.toFixed(2)}`}
+                amount={
+                  summary &&
+                  `-$${summary.expenses ? summary.expenses.toFixed(2) : 0}`
+                }
                 transactions={monthlyExpenses}
                 isLoading={isMonthlyExpensesLoading}
                 type="expense"
