@@ -51,7 +51,7 @@ const LandingPage: FC = () => {
         <div className={classes.loginContainer}>
           <Typography variant="h5">Welcome to Muhnee</Typography>
           <Typography variant="body1" color="textSecondary">
-            A simple way to manage your money.
+            Personal Finance, Simplified.
           </Typography>
 
           <div
