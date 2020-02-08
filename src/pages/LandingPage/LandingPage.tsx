@@ -29,7 +29,7 @@ const LoginContainer: FC = () => {
 
   return (
     <Paper className={classes.loginContainer}>
-      <div style={{ margin: "0.5rem 0 1.25rem 0" }}>
+      <div className={classes.logoContainer}>
         <div>
           <img src="/images/Muhnee.png" width={50} alt="Muhnee logo" />
           <Typography variant="h5">Muhnee</Typography>
@@ -40,31 +40,16 @@ const LoginContainer: FC = () => {
       </div>
       <Divider />
 
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          marginTop: "1.25rem"
-        }}
-      >
+      <div className={classes.loginText}>
         <Typography variant="h5" style={{ fontWeight: 700 }}>
-          Welcome Back
+          Welcome to Muhnee
         </Typography>
         <Typography variant="h6" color="textSecondary">
           Sign in to Continue
         </Typography>
       </div>
 
-      <div
-        style={{
-          margin: "2rem 0",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center"
-        }}
-      >
+      <div className={classes.authProviders}>
         <img
           src="/images/auth/signin_with_google.png"
           alt="Sign in with Google"
@@ -118,7 +103,7 @@ const LoginContainer: FC = () => {
       </div>
       <Divider />
 
-      <div style={{ marginTop: "0.5rem" }}>
+      <div className={classes.footer}>
         <Typography variant="caption">
           By signing in you are accepting our{" "}
           <Link
@@ -137,7 +122,7 @@ const LoginContainer: FC = () => {
           policies.
         </Typography>
       </div>
-      <div style={{ marginTop: "0.5rem" }}>
+      <div className={classes.footer}>
         <Typography variant="caption">
           Copyright &copy; Muhnee {moment().year()}
         </Typography>
@@ -172,7 +157,7 @@ const LandingPage: FC = () => {
 
   return (
     <div className={classes.root}>
-      <div className={classes.leftContainer}>
+      <div className={classes.background}>
         {transitions.map(e => {
           const { props } = e;
           return (

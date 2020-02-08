@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flex: 1,
       display: "flex"
     },
-    leftContainer: {
+    background: {
       flex: 2,
       display: "flex",
       justifyContent: "center",
@@ -22,7 +22,22 @@ const useStyles = makeStyles((theme: Theme) =>
     loginImage: {
       margin: "0.25rem 0",
       cursor: "pointer"
-    }
+    },
+    loginText: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      marginTop: "1.25rem"
+    },
+    logoContainer: { margin: "0.5rem 0 1.25rem 0" },
+    authProviders: {
+      margin: "2rem 0",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center"
+    },
+    footer: { marginTop: "0.5rem" }
   })
 );
 
