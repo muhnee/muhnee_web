@@ -13,7 +13,6 @@ import LoadingContainer from "../../containers/LoadingContainer";
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 
 import useStyles from "./styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import {
   doSignInWithGoogle,
@@ -32,7 +31,7 @@ const LoginContainer: FC = () => {
     <Paper className={classes.loginContainer}>
       <div style={{ margin: "0.5rem 0 1.25rem 0" }}>
         <div>
-          <img src="/images/Muhnee.png" width={50} />
+          <img src="/images/Muhnee.png" width={50} alt="Muhnee logo" />
           <Typography variant="h5">Muhnee</Typography>
         </div>
         <Typography variant="body1" color="textSecondary">
@@ -68,6 +67,7 @@ const LoginContainer: FC = () => {
       >
         <img
           src="/images/auth/signin_with_google.png"
+          alt="Sign in with Google"
           className={classes.loginImage}
           width={200}
           onClick={() =>
@@ -84,6 +84,7 @@ const LoginContainer: FC = () => {
         />
         <img
           src="/images/auth/facebook.png"
+          alt="Continue with Facebook"
           className={classes.loginImage}
           width={200}
           onClick={() =>
@@ -100,6 +101,7 @@ const LoginContainer: FC = () => {
         />
         <img
           src="/images/auth/appleid_button.png"
+          alt="Sign in with Apple"
           className={classes.loginImage}
           onClick={() =>
             doSignInWithApple().catch(err => {
@@ -172,7 +174,7 @@ const LandingPage: FC = () => {
     <div className={classes.root}>
       <div className={classes.leftContainer}>
         {transitions.map(e => {
-          const { item, key, props } = e;
+          const { props } = e;
           return (
             <animated.div style={props}>
               <LoginContainer />
