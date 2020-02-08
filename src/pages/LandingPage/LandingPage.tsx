@@ -14,11 +14,7 @@ import AuthenticationContext from "../../contexts/AuthenticationContext";
 
 import useStyles from "./styles";
 
-import {
-  doSignInWithGoogle,
-  doSignInWithFacebook,
-  doSignInWithApple
-} from "../../firebase/firebase";
+import { doSignInWithGoogle, doSignInWithApple } from "../../firebase/firebase";
 
 import { useNotificationDispatch } from "../../contexts/NotificationProvider";
 import { UserContext } from "../../contexts/UserContext";
@@ -57,23 +53,6 @@ const LoginContainer: FC = () => {
           width={200}
           onClick={() =>
             doSignInWithGoogle().catch(err => {
-              dispatch({
-                type: "@@NOTIFICATION/PUSH",
-                notification: {
-                  type: "error",
-                  message: err.message
-                }
-              });
-            })
-          }
-        />
-        <img
-          src="/images/auth/facebook.png"
-          alt="Continue with Facebook"
-          className={classes.loginImage}
-          width={200}
-          onClick={() =>
-            doSignInWithFacebook().catch(err => {
               dispatch({
                 type: "@@NOTIFICATION/PUSH",
                 notification: {
