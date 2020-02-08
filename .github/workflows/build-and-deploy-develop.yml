@@ -2,7 +2,7 @@ name: Build and Deploy to dev
 on:
   push:
     branches:
-      - master
+      - develop
 
 jobs:
   build:
