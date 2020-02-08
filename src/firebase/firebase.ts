@@ -4,8 +4,8 @@ import "firebase/firestore";
 import "firebase/functions";
 import "firebase/storage";
 import "firebase/messaging";
-import googleAuthProvider from "./authProviders/googleAuthProvider";
-import facebookAuthProvider from "./authProviders/facebookAuthProvider";
+
+import AuthProviders from "./authProviders";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -28,10 +28,13 @@ export const useStorage = () => fbApp.storage();
 export const useFunctions = () => fbApp.functions();
 
 export const doSignInWithGoogle = () => {
-  return fbApp.auth().signInWithRedirect(googleAuthProvider);
+  return fbApp.auth().signInWithRedirect(AuthProviders.googleAuthProvider);
 };
 
 export const doSignInWithFacebook = () =>
-  fbApp.auth().signInWithRedirect(facebookAuthProvider);
+  fbApp.auth().signInWithRedirect(AuthProviders.facebookAuthProvider);
+
+export const doSignInWithApple = () =>
+  fbApp.auth().signInWithRedirect(AuthProviders.appleAuthProvider);
 
 export const doSignOut = () => fbApp.auth().signOut();

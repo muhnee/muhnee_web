@@ -12,19 +12,17 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      background: `linear-gradient(to top right, ${grey[100]}, ${grey[300]})`
+      background: `linear-gradient(to top right, ${theme.palette.primary.main}, #8E91F3)`
     },
     loginContainer: {
       background: "white",
       width: "80%",
-      padding: "1.5rem 1.5rem"
+      padding: "1.5rem 1.5rem",
+      maxWidth: 800
     },
-    rightContainer: {
-      flex: 3,
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      background: `linear-gradient(to top right, ${theme.palette.primary.light}, ${theme.palette.primary.main})`
+    loginImage: {
+      margin: "0.25rem 0",
+      cursor: "pointer"
     }
   })
 );
