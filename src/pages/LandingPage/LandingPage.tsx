@@ -25,17 +25,6 @@ const LoginContainer: FC = () => {
 
   return (
     <Paper className={classes.loginContainer}>
-      <div className={classes.logoContainer}>
-        <div>
-          <img src="/images/Muhnee.png" width={50} alt="Muhnee logo" />
-          <Typography variant="h5">Muhnee</Typography>
-        </div>
-        <Typography variant="body1" color="textSecondary">
-          Personal Finance, Simplified.
-        </Typography>
-      </div>
-      <Divider />
-
       <div className={classes.loginText}>
         <Typography variant="h5" style={{ fontWeight: 700 }}>
           Welcome to Muhnee
@@ -141,6 +130,18 @@ const LandingPage: FC = () => {
           const { props } = e;
           return (
             <animated.div style={props}>
+              <div className={classes.logoContainer}>
+                <img
+                  src="/images/muhnee_reverse.png"
+                  width={100}
+                  alt="Muhnee logo"
+                  style={{ marginBottom: "1rem" }}
+                />
+                <Typography variant="h4">Muhnee</Typography>
+                <Typography variant="h6">
+                  Personal Finance, Simplified.
+                </Typography>
+              </div>
               <LoginContainer />
             </animated.div>
           );

@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     loginContainer: {
       background: "white",
-      width: "80%",
+      flex: 1,
       padding: "1.5rem 1.5rem",
       maxWidth: 800
     },
@@ -31,7 +31,13 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: "center",
       marginTop: "1.25rem"
     },
-    logoContainer: { margin: "0.5rem 0 1.25rem 0" },
+    logoContainer: {
+      padding: "1.5rem 1.5rem",
+      color: "white",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center"
+    },
     authProviders: {
       margin: "2rem 0",
       display: "flex",
