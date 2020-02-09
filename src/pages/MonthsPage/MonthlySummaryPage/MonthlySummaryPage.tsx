@@ -15,6 +15,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 
 import SummaryCard from "../../../components/dashboard/SummaryCard";
+import MoneyTypography from "../../../components/core/MoneyTypography";
 
 import MonthlySpendingByCategoryContainer from "../../../containers/MonthlySpendingByCategoryContainer";
 import { Summary } from "../../../containers/MonthSummaryContainer/types";
@@ -51,14 +52,16 @@ const MonthlySummaryPage: FC = () => {
 
   useEffect(() => {
     async function getData() {
-      setIsTransactionsLoading(true);
       const getAllTransactions = functions.httpsCallable("getAllTransactions");
+      setIsTransactionsLoading(true);
       const res = await getAllTransactions({
-        date: moment().toISOString(),
+        date: month.toISOString(),
         summaryType: "month"
       });
+
+      const income: Transaction[] = [];
+      const expense: Transaction[] = [];
       res.data.forEach((trans: any) => {
-        console.log(trans.timestamp);
         const transaction: Transaction = {
           id: trans.id,
           amount: trans.amount,
@@ -71,18 +74,22 @@ const MonthlySummaryPage: FC = () => {
         };
 
         if (trans.type === "expense") {
-          setExpenseTransactions([...expenseTransactions, transaction]);
+          expense.push(transaction);
         } else {
-          setIncomeTransactions([...incomeTransactions, transaction]);
+          income.push(transaction);
         }
-        setIsTransactionsLoading(false);
       });
+      setIncomeTransactions(income);
+      setExpenseTransactions(expense);
+      setIsTransactionsLoading(false);
     }
     if (monthId) {
       setMonth(moment(monthId, "YYYY-MM"));
+      getData();
+    } else {
+      history.push("/");
     }
-    getData();
-  }, [monthId, setMonth]);
+  }, [monthId, setMonth, functions]);
 
   let targetDate;
   if (month) {
@@ -161,10 +168,14 @@ const MonthlySummaryPage: FC = () => {
               progress={progress}
               amount={
                 <span style={{ display: "flex" }}>
-                  <Typography>
-                    {summary &&
-                      `$${(summary.income - summary.expenses).toFixed(2)}/`}
-                  </Typography>
+                  <MoneyTypography
+                    variant="body1"
+                    type={currentSavings < 0 ? "expense" : "income"}
+                  >
+                    {summary && currentSavings >= 0
+                      ? `$${currentSavings.toFixed(2)}/`
+                      : `-$${Math.abs(currentSavings).toFixed(2)}/`}
+                  </MoneyTypography>
                   <Typography color="textSecondary">
                     {summary && `$${summary.savingsGoal.toFixed(2)}`}
                   </Typography>
