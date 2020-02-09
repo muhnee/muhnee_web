@@ -69,7 +69,7 @@ const AuthenticatedContainer: FC = ({ children }) => {
           }}
         >
           <img
-            src="/images/Muhnee.png"
+            src="/images/muhnee_reverse.png"
             alt="Muhnee logo"
             style={{ width: 50 }}
           />

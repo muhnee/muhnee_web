@@ -10,7 +10,7 @@ export const colors = {
     income: "#A5D15B",
     expense: "#E43524"
   },
-  background: `linear-gradient(to bottom left, ${branding.main}, ${branding.muhnee_purple})`
+  background: `linear-gradient(to top right, ${branding.main}, ${branding.muhnee_purple})`
 };
 
 export default colors;
