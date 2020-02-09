@@ -34,6 +34,10 @@ export interface GlobalConfigState {
     scheduledEnd: moment.Moment | null;
     message: string;
   };
+  enabledLogin: {
+    googleAuth: boolean;
+    appleAuth: boolean;
+  };
   isLoading: boolean;
 }
 
@@ -42,5 +46,9 @@ type GlobalConfig = {
     enabled: boolean;
     scheduledEnd: firestore.Timestamp;
     message: string;
+  };
+  enabledLogin: {
+    googleAuth: boolean;
+    appleAuth: boolean;
   };
 };

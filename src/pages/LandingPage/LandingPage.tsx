@@ -11,6 +11,7 @@ import Paper from "@material-ui/core/Paper";
 import LoadingContainer from "../../containers/LoadingContainer";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
+import GlobalConfigContext from "../../contexts/GlobalConfigContext";
 
 import useStyles from "./styles";
 
@@ -22,6 +23,7 @@ import { UserContext } from "../../contexts/UserContext";
 const LoginContainer: FC = () => {
   const dispatch = useNotificationDispatch();
   const classes = useStyles();
+  const globalConfigContext = useContext(GlobalConfigContext);
 
   return (
     <Paper className={classes.loginContainer}>
@@ -35,39 +37,43 @@ const LoginContainer: FC = () => {
       </div>
 
       <div className={classes.authProviders}>
-        <img
-          src="/images/auth/signin_with_google.png"
-          alt="Sign in with Google"
-          className={classes.loginImage}
-          width={200}
-          onClick={() =>
-            doSignInWithGoogle().catch(err => {
-              dispatch({
-                type: "@@NOTIFICATION/PUSH",
-                notification: {
-                  type: "error",
-                  message: err.message
-                }
-              });
-            })
-          }
-        />
-        <img
-          src="/images/auth/appleid_button.png"
-          alt="Sign in with Apple"
-          className={classes.loginImage}
-          onClick={() =>
-            doSignInWithApple().catch(err => {
-              dispatch({
-                type: "@@NOTIFICATION/PUSH",
-                notification: {
-                  type: "error",
-                  message: err.message
-                }
-              });
-            })
-          }
-        />
+        {globalConfigContext.enabledLogin.googleAuth && (
+          <img
+            src="/images/auth/signin_with_google.png"
+            alt="Sign in with Google"
+            className={classes.loginImage}
+            width={200}
+            onClick={() =>
+              doSignInWithGoogle().catch(err => {
+                dispatch({
+                  type: "@@NOTIFICATION/PUSH",
+                  notification: {
+                    type: "error",
+                    message: err.message
+                  }
+                });
+              })
+            }
+          />
+        )}
+        {globalConfigContext.enabledLogin.appleAuth && (
+          <img
+            src="/images/auth/appleid_button.png"
+            alt="Sign in with Apple"
+            className={classes.loginImage}
+            onClick={() =>
+              doSignInWithApple().catch(err => {
+                dispatch({
+                  type: "@@NOTIFICATION/PUSH",
+                  notification: {
+                    type: "error",
+                    message: err.message
+                  }
+                });
+              })
+            }
+          />
+        )}
       </div>
       <Divider />
 

@@ -24,6 +24,12 @@ const GlobalConfigProvider: FC = ({ children }) => {
               : null,
           message: globalConfig ? globalConfig.maintenance.message : ""
         },
+        enabledLogin: {
+          googleAuth: globalConfig
+            ? globalConfig.enabledLogin.googleAuth
+            : false,
+          appleAuth: globalConfig ? globalConfig.enabledLogin.appleAuth : false
+        },
         isLoading: isGlobalConfigLoading
       }}
     >
