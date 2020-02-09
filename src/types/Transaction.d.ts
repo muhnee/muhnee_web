@@ -22,8 +22,9 @@ export interface Transaction {
 
   /**
    * Timestamp
+   * ISO String
    */
-  timestamp: firebase.firestore.Timestamp;
+  timestamp: string;
 
   /**
    * Whether or not the item is tax deductable

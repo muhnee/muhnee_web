@@ -41,11 +41,7 @@ import CategoriesContext from "../../../contexts/CategoriesContext";
 import { useNotificationDispatch } from "../../../contexts/NotificationProvider";
 import { FILE_UPLOAD } from "../../../config/settings";
 
-import {
-  RecurringDays,
-  Transaction,
-  TransactionTypes
-} from "../../../types/Transaction";
+import { RecurringDays, TransactionTypes } from "../../../types/Transaction";
 
 const TransactionPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
@@ -191,7 +187,7 @@ const TransactionPage: FC = () => {
         filesMetadata = await uploadFiles();
       }
 
-      const transaction: Transaction = {
+      const transaction: any = {
         type,
         amount: +amount,
         description,

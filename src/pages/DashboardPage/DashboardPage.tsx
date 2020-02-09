@@ -1,9 +1,9 @@
-import React, { FC, useContext, useState } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import clsx from "clsx";
 import { useHistory } from "react-router-dom";
 import moment, { Moment } from "moment";
 
-import { useDocumentData, useCollection } from "react-firebase-hooks/firestore";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
@@ -24,67 +24,64 @@ import { Summary } from "../../types/Summary";
 
 import useStyles from "./styles";
 import { IconButton } from "@material-ui/core";
-import { useFirestore } from "../../firebase/firebase";
+import { useFirestore, useFunctions } from "../../firebase/firebase";
 import MoneyTypography from "../../components/core/MoneyTypography";
+import { Transaction } from "../../types/Transaction";
 
 const DashboardPage: FC = () => {
   const history = useHistory();
   const uiDispatch = useUIDispatch();
   const firestore = useFirestore();
+  const functions = useFunctions();
 
   const { user } = useContext(AuthenticationContext);
 
   // TODO: add support for changing months on dashboard
   const [thisMonth, setThisMonth] = useState<Moment>(moment());
+
+  const [expenseTransactions, setExpenseTransactions] = useState<Transaction[]>(
+    []
+  );
+  const [incomeTransactions, setIncomeTransactions] = useState<Transaction[]>(
+    []
+  );
+  const [isTransactionsLoading, setIsTransactionsLoading] = useState(false);
+
   const classes = useStyles();
 
   const targetDate = `${thisMonth.year()}-${thisMonth.month() + 1}`;
 
-  /**
-   *  NOTE: composite index is required on firestore
-   *
-   *  Current Configuration:
-   *  collection id: transactions
-   *
-   *  type ASC
-   *  timestamp DESC
-   */
-  const [monthlyExpenses, isMonthlyExpensesLoading] = useCollection(
-    user
-      ? firestore
-          .collection("users")
-          .doc(user.uid)
-          .collection("budget")
-          .doc(targetDate)
-          .collection("transactions")
-          .where("type", "==", "expense")
-          .orderBy("timestamp", "desc")
-          .limit(3)
-      : null
-  );
+  useEffect(() => {
+    async function getData() {
+      setIsTransactionsLoading(true);
+      const getAllTransactions = functions.httpsCallable("getAllTransactions");
+      const res = await getAllTransactions({
+        date: moment().toISOString(),
+        summaryType: "month"
+      });
+      console.log(res.data);
+      res.data.forEach((trans: any) => {
+        const transaction: Transaction = {
+          id: trans.id,
+          amount: trans.amount,
+          description: trans.description,
+          category: trans.category.id,
+          taxDeductible: trans.deductible,
+          recurringDays: trans.recurringDays,
+          type: trans.type,
+          timestamp: trans.timestamp
+        };
 
-  /**
-   *  NOTE: composite index is required on firestore
-   *
-   *  Current Configuration:
-   *  collection id: transactions
-   *
-   *  type ASC
-   *  timestamp DESC
-   */
-  const [monthlyIncome, isMonthlyIncomeLoading] = useCollection(
-    user
-      ? firestore
-          .collection("users")
-          .doc(user.uid)
-          .collection("budget")
-          .doc(targetDate)
-          .collection("transactions")
-          .where("type", "==", "income")
-          .orderBy("timestamp", "desc")
-          .limit(3)
-      : null
-  );
+        if (trans.type === "expense") {
+          setExpenseTransactions([...expenseTransactions, transaction]);
+        } else {
+          setIncomeTransactions([...incomeTransactions, transaction]);
+        }
+        setIsTransactionsLoading(false);
+      });
+    }
+    getData();
+  }, []);
 
   const [summary] = useDocumentData<Summary>(
     user
@@ -192,7 +189,7 @@ const DashboardPage: FC = () => {
                     </IconButton>
                   </span>
                 }
-                isLoading={isMonthlyIncomeLoading}
+                isLoading={isTransactionsLoading}
               />
             </div>
             <div className={classes.summaryContainer}>
@@ -202,8 +199,8 @@ const DashboardPage: FC = () => {
                   summary &&
                   `$${summary.income ? summary.income.toFixed(2) : 0}`
                 }
-                transactions={monthlyIncome}
-                isLoading={isMonthlyIncomeLoading}
+                transactions={incomeTransactions}
+                isLoading={isTransactionsLoading}
                 type="income"
               />
               <SummaryCard
@@ -212,8 +209,8 @@ const DashboardPage: FC = () => {
                   summary &&
                   `-$${summary.expenses ? summary.expenses.toFixed(2) : 0}`
                 }
-                transactions={monthlyExpenses}
-                isLoading={isMonthlyExpensesLoading}
+                transactions={expenseTransactions}
+                isLoading={isTransactionsLoading}
                 type="expense"
               />
             </div>

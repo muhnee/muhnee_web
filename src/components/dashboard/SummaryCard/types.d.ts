@@ -1,5 +1,5 @@
 import * as firebase from "firebase";
-import { TransactionTypes } from "../../../types/Transaction";
+import { Transaction, TransactionTypes } from "../../../types/Transaction";
 
 export default interface SummaryCardProps {
   /**
@@ -17,7 +17,7 @@ export default interface SummaryCardProps {
    */
   amount?: number | string | JSX.Element | JSX.Element[];
 
-  transactions?: firebase.firestore.QuerySnapshot;
+  transactions?: Transaction[];
 
   isLoading?: boolean;
 

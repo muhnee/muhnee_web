@@ -15,7 +15,6 @@ import MaterialLineChart from "../../charts/MaterialLineChart";
 import Skeleton from "@material-ui/lab/Skeleton";
 
 import SummaryCardProps from "./types";
-import { Transaction } from "../../../types/Transaction";
 
 import useStyles from "./styles";
 
@@ -33,31 +32,14 @@ const SummaryCard: FC<SummaryCardProps> = props => {
   } = props;
   const classes = useStyles(props);
 
-  const transactionsDocs: Transaction[] = transactions
-    ? transactions.docs.map(doc => {
-        const docData = doc.data();
-
-        const transaction: Transaction = {
-          type: docData.type,
-          amount: docData.amount,
-          description: docData.description || "(no description)",
-          category: docData.category,
-          taxDeductible: docData.taxDeductible,
-          timestamp: docData.timestamp,
-          id: doc.id,
-          recurringDays: docData.recurringDays
-        };
-        return transaction;
-      })
-    : [];
-
   let dateSummary: {
     [id: string]: number;
   } = {};
 
-  if (transactionsDocs) {
-    transactionsDocs.forEach(transaction => {
-      const date = moment(transaction.timestamp.toDate());
+  if (transactions) {
+    transactions.forEach(transaction => {
+      console.log(transaction.timestamp);
+      const date = moment(transaction.timestamp);
       if (dateSummary[date.format("YYYY-MM-DD")]) {
         dateSummary[date.format("YYYY-MM-DD")] += transaction.amount;
       } else {
@@ -123,7 +105,7 @@ const SummaryCard: FC<SummaryCardProps> = props => {
               <Skeleton variant="rect" width="100%" height={"5rem"} />
             ) : (
               <List>
-                {transactionsDocs.map((transaction, i) => {
+                {transactions.map((transaction, i) => {
                   return (
                     <TransactionsListItem transaction={transaction} key={i} />
                   );

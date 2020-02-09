@@ -36,11 +36,7 @@ import useStyles from "./styles";
 import { FILE_UPLOAD } from "../../../config/settings";
 import { colors } from "../../../config/colors";
 import AddTransactionDialogProps from "./types";
-import {
-  Transaction,
-  TransactionTypes,
-  RecurringDays
-} from "../../../types/Transaction";
+import { TransactionTypes, RecurringDays } from "../../../types/Transaction";
 import { useFirestore, useStorage } from "../../../firebase/firebase";
 
 const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
@@ -89,7 +85,7 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
         filesMetadata = await uploadFiles();
       }
 
-      const transaction: Transaction = {
+      const transaction: any = {
         type,
         amount: +amount,
         description,
