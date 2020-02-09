@@ -53,13 +53,15 @@ const DashboardPage: FC = () => {
 
   useEffect(() => {
     async function getData() {
-      setIsTransactionsLoading(true);
       const getAllTransactions = functions.httpsCallable("getAllTransactions");
+      setIsTransactionsLoading(true);
       const res = await getAllTransactions({
-        date: moment().toISOString(),
+        date: thisMonth.toISOString(),
         summaryType: "month"
       });
-      console.log(res.data);
+
+      const income: Transaction[] = [];
+      const expense: Transaction[] = [];
       res.data.forEach((trans: any) => {
         const transaction: Transaction = {
           id: trans.id,
@@ -73,15 +75,17 @@ const DashboardPage: FC = () => {
         };
 
         if (trans.type === "expense") {
-          setExpenseTransactions([...expenseTransactions, transaction]);
+          expense.push(transaction);
         } else {
-          setIncomeTransactions([...incomeTransactions, transaction]);
+          income.push(transaction);
         }
-        setIsTransactionsLoading(false);
       });
+      setIncomeTransactions(income);
+      setExpenseTransactions(expense);
+      setIsTransactionsLoading(false);
     }
     getData();
-  }, []);
+  }, [functions, thisMonth]);
 
   const [summary] = useDocumentData<Summary>(
     user
@@ -99,7 +103,7 @@ const DashboardPage: FC = () => {
 
   let currentSavings = 0;
   if (summary && summary.savingsGoal) {
-    currentSavings = summary.income - summary.expenses;
+    currentSavings = (summary.income || 0) - (summary.expenses || 0);
   }
 
   let progress = 0;

@@ -1,4 +1,5 @@
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
+import colors from "../../config/colors";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -11,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      background: `linear-gradient(to top right, ${theme.palette.primary.main}, #8E91F3)`
+      background: colors.background
     },
     loginContainer: {
       background: "white",

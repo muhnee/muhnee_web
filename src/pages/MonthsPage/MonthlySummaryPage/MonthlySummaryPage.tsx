@@ -106,9 +106,8 @@ const MonthlySummaryPage: FC = () => {
   }
 
   let currentSavings = 0;
-
-  if (summary) {
-    currentSavings = summary.income - summary.expenses;
+  if (summary && summary.savingsGoal) {
+    currentSavings = (summary.income || 0) - (summary.expenses || 0);
   }
 
   let progress = 0;
@@ -189,7 +188,10 @@ const MonthlySummaryPage: FC = () => {
                 title="Income"
                 transactionsTitle="Transactions"
                 isLoading={isTransactionsLoading}
-                amount={summary && `$${summary.income.toFixed(2)}`}
+                amount={
+                  summary &&
+                  `$${summary.income ? summary.income.toFixed(2) : 0}`
+                }
                 transactions={incomeTransactions}
                 showGraph={true}
               />
@@ -197,7 +199,10 @@ const MonthlySummaryPage: FC = () => {
                 title="Expenses"
                 transactionsTitle="Transactions"
                 isLoading={isTransactionsLoading}
-                amount={summary && `$${summary.expenses.toFixed(2)}`}
+                amount={
+                  summary &&
+                  `$${summary.expenses ? summary.expenses.toFixed(2) : 0}`
+                }
                 transactions={expenseTransactions}
                 showGraph={true}
               />
