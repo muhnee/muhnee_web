@@ -1,4 +1,5 @@
 import { makeStyles, createStyles } from "@material-ui/core/styles";
+import colors from "../../config/colors";
 
 export const useStyles = makeStyles(theme =>
   createStyles({
@@ -9,7 +10,7 @@ export const useStyles = makeStyles(theme =>
       overflow: "hidden"
     },
     sidebar: {
-      backgroundColor: theme.palette.primary.main,
+      background: colors.background,
       padding: "0.25rem 0 0.25rem 0.25rem",
       minWidth: 125,
       borderRight: "1px solid #ccc",
