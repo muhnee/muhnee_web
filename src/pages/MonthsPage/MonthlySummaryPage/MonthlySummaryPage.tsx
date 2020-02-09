@@ -3,7 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 import moment, { Moment } from "moment";
 import MomentUtils from "@date-io/moment";
 
-import { useDocumentData, useCollection } from "react-firebase-hooks/firestore";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
@@ -15,13 +15,15 @@ import EditIcon from "@material-ui/icons/Edit";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 
 import SummaryCard from "../../../components/dashboard/SummaryCard";
+import MoneyTypography from "../../../components/core/MoneyTypography";
 
 import MonthlySpendingByCategoryContainer from "../../../containers/MonthlySpendingByCategoryContainer";
 import { Summary } from "../../../containers/MonthSummaryContainer/types";
 
 import AuthenticationContext from "../../../contexts/AuthenticationContext";
 import { useUIDispatch } from "../../../contexts/UIProvider";
-import { useFirestore } from "../../../firebase/firebase";
+import { useFirestore, useFunctions } from "../../../firebase/firebase";
+import { Transaction } from "../../../types/Transaction";
 
 import useStyles from "./styles";
 
@@ -34,17 +36,60 @@ const MonthlySummaryPage: FC = () => {
   let { monthId } = useParams();
 
   const firestore = useFirestore();
+  const functions = useFunctions();
   // Contexts
   const { user } = useContext(AuthenticationContext);
   const uiDispatch = useUIDispatch();
 
   const [month, setMonth] = useState<Moment>(moment());
+  const [expenseTransactions, setExpenseTransactions] = useState<Transaction[]>(
+    []
+  );
+  const [incomeTransactions, setIncomeTransactions] = useState<Transaction[]>(
+    []
+  );
+  const [isTransactionsLoading, setIsTransactionsLoading] = useState(false);
 
   useEffect(() => {
+    async function getData() {
+      const getAllTransactions = functions.httpsCallable("getAllTransactions");
+      setIsTransactionsLoading(true);
+      const res = await getAllTransactions({
+        date: month.toISOString(),
+        summaryType: "month"
+      });
+
+      const income: Transaction[] = [];
+      const expense: Transaction[] = [];
+      res.data.forEach((trans: any) => {
+        const transaction: Transaction = {
+          id: trans.id,
+          amount: trans.amount,
+          description: trans.description,
+          category: trans.category.id,
+          taxDeductible: trans.deductible,
+          recurringDays: trans.recurringDays,
+          type: trans.type,
+          timestamp: trans.timestamp
+        };
+
+        if (trans.type === "expense") {
+          expense.push(transaction);
+        } else {
+          income.push(transaction);
+        }
+      });
+      setIncomeTransactions(income);
+      setExpenseTransactions(expense);
+      setIsTransactionsLoading(false);
+    }
     if (monthId) {
       setMonth(moment(monthId, "YYYY-MM"));
+      getData();
+    } else {
+      history.push("/");
     }
-  }, [monthId, setMonth]);
+  }, [monthId, setMonth, functions]);
 
   let targetDate;
   if (month) {
@@ -61,50 +106,6 @@ const MonthlySummaryPage: FC = () => {
       : null
   );
 
-  /**
-   *  NOTE: composite index is required on firestore
-   *
-   *  Current Configuration:
-   *  collection id: transactions
-   *
-   *  type ASC
-   *  timestamp DESC
-   */
-  const [monthlyExpenses, isMonthlyExpensesLoading] = useCollection(
-    user && targetDate
-      ? firestore
-          .collection("users")
-          .doc(user.uid)
-          .collection("budget")
-          .doc(targetDate)
-          .collection("transactions")
-          .where("type", "==", "expense")
-          .orderBy("timestamp", "desc")
-      : null
-  );
-
-  /**
-   *  NOTE: composite index is required on firestore
-   *
-   *  Current Configuration:
-   *  collection id: transactions
-   *
-   *  type ASC
-   *  timestamp DESC
-   */
-  const [monthlyIncome, isMonthlyIncomeLoading] = useCollection(
-    user && targetDate
-      ? firestore
-          .collection("users")
-          .doc(user.uid)
-          .collection("budget")
-          .doc(targetDate)
-          .collection("transactions")
-          .where("type", "==", "income")
-          .orderBy("timestamp", "desc")
-      : null
-  );
-
   const classes = useStyles();
 
   if (!monthId || !month) {
@@ -112,9 +113,8 @@ const MonthlySummaryPage: FC = () => {
   }
 
   let currentSavings = 0;
-
-  if (summary) {
-    currentSavings = summary.income - summary.expenses;
+  if (summary && summary.savingsGoal) {
+    currentSavings = (summary.income || 0) - (summary.expenses || 0);
   }
 
   let progress = 0;
@@ -168,10 +168,14 @@ const MonthlySummaryPage: FC = () => {
               progress={progress}
               amount={
                 <span style={{ display: "flex" }}>
-                  <Typography>
-                    {summary &&
-                      `$${(summary.income - summary.expenses).toFixed(2)}/`}
-                  </Typography>
+                  <MoneyTypography
+                    variant="body1"
+                    type={currentSavings < 0 ? "expense" : "income"}
+                  >
+                    {summary && currentSavings >= 0
+                      ? `$${currentSavings.toFixed(2)}/`
+                      : `-$${Math.abs(currentSavings).toFixed(2)}/`}
+                  </MoneyTypography>
                   <Typography color="textSecondary">
                     {summary && `$${summary.savingsGoal.toFixed(2)}`}
                   </Typography>
@@ -188,23 +192,29 @@ const MonthlySummaryPage: FC = () => {
                   </IconButton>
                 </span>
               }
-              isLoading={isMonthlyIncomeLoading}
+              isLoading={isTransactionsLoading}
             />
             <div style={{ display: "flex", flexWrap: "wrap" }}>
               <SummaryCard
                 title="Income"
                 transactionsTitle="Transactions"
-                isLoading={isMonthlyExpensesLoading}
-                amount={summary && `$${summary.income.toFixed(2)}`}
-                transactions={monthlyIncome}
+                isLoading={isTransactionsLoading}
+                amount={
+                  summary &&
+                  `$${summary.income ? summary.income.toFixed(2) : 0}`
+                }
+                transactions={incomeTransactions}
                 showGraph={true}
               />
               <SummaryCard
                 title="Expenses"
                 transactionsTitle="Transactions"
-                isLoading={isMonthlyExpensesLoading}
-                amount={summary && `$${summary.expenses.toFixed(2)}`}
-                transactions={monthlyExpenses}
+                isLoading={isTransactionsLoading}
+                amount={
+                  summary &&
+                  `$${summary.expenses ? summary.expenses.toFixed(2) : 0}`
+                }
+                transactions={expenseTransactions}
                 showGraph={true}
               />
             </div>

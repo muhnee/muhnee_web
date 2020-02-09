@@ -18,7 +18,7 @@ import useStyles from "./styles";
 const TransactionsListItem: FC<TransactionsListItemProps> = ({
   transaction
 }) => {
-  const timestamp = moment(transaction.timestamp.toDate());
+  const timestamp = moment(transaction.timestamp);
 
   const classes = useStyles();
   const history = useHistory();

@@ -8,6 +8,10 @@ const GlobalConfigContext = React.createContext<GlobalConfigState>({
     scheduledEnd: null,
     message: ""
   },
+  enabledLogin: {
+    googleAuth: false,
+    appleAuth: false
+  },
   isLoading: false
 });
 

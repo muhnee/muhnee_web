@@ -4,7 +4,6 @@ import { Redirect } from "react-router";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 
 import AppBar from "../../components/layouts/AppBar";
 import SidebarLink from "../../components/core/sidebar/SidebarLink/SidebarLink";
@@ -62,15 +61,18 @@ const AuthenticatedContainer: FC = ({ children }) => {
   return (
     <div className={classes.root}>
       <div className={classes.sidebar}>
-        <ListItem style={{ marginBottom: "1.25rem" }}>
-          <ListItemText
-            primaryTypographyProps={{
-              variant: "h5",
-              style: { color: "#fff" }
-            }}
-          >
-            Muhnee
-          </ListItemText>
+        <ListItem
+          style={{
+            marginBottom: "1.25rem",
+            display: "flex",
+            justifyContent: "center"
+          }}
+        >
+          <img
+            src="/images/muhnee_reverse.png"
+            alt="Muhnee logo"
+            style={{ width: 50 }}
+          />
         </ListItem>
 
         <SidebarInner />

@@ -1,5 +1,5 @@
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
-import { grey } from "@material-ui/core/colors";
+import colors from "../../config/colors";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -7,25 +7,44 @@ const useStyles = makeStyles((theme: Theme) =>
       flex: 1,
       display: "flex"
     },
-    leftContainer: {
+    background: {
       flex: 2,
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      background: `linear-gradient(to top right, ${grey[100]}, ${grey[300]})`
+      background: colors.background
     },
     loginContainer: {
       background: "white",
-      width: "80%",
-      padding: "1.5rem 1.5rem"
+      flex: 1,
+      padding: "1.5rem 1.5rem",
+      maxWidth: 800
     },
-    rightContainer: {
-      flex: 3,
+    loginImage: {
+      margin: "0.25rem 0",
+      cursor: "pointer"
+    },
+    loginText: {
+      flex: 1,
       display: "flex",
-      justifyContent: "center",
+      flexDirection: "column",
       alignItems: "center",
-      background: `linear-gradient(to top right, ${theme.palette.primary.light}, ${theme.palette.primary.main})`
-    }
+      marginTop: "1.25rem"
+    },
+    logoContainer: {
+      padding: "1.5rem 1.5rem",
+      color: "white",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center"
+    },
+    authProviders: {
+      margin: "2rem 0",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center"
+    },
+    footer: { marginTop: "0.5rem" }
   })
 );
 
