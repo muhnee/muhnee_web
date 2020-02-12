@@ -13,6 +13,7 @@ import LoadingContainer from "../LoadingContainer";
 
 import DashboardIcon from "@material-ui/icons/InsertChart";
 import CategoriesIcon from "@material-ui/icons/Category";
+import ScheduledIcon from "@material-ui/icons/Schedule";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 
@@ -35,6 +36,11 @@ const SidebarInner: FC = () => {
           icon={<CategoriesIcon />}
           to="/categories"
           label="Categories"
+        />
+        <SidebarLink
+          icon={<ScheduledIcon />}
+          to="/scheduled"
+          label="Scheduled"
         />
       </List>
     </>
