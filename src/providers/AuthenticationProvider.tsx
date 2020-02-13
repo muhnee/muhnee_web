@@ -3,6 +3,8 @@ import { User } from "firebase/app";
 import { useAuth } from "../firebase/firebase";
 import AuthenticationContext from "../contexts/AuthenticationContext";
 
+import { Nullable } from "../types";
+
 /**
  * This component checks the user's authentication state
  * and passes the user's info and decoded token (if available)

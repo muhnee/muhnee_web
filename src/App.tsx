@@ -39,6 +39,7 @@ import GlobalConfigContext from "./contexts/GlobalConfigContext";
 import muiTheme from "./config/theme";
 
 import useStyles from "./styles";
+import UpcomingTransactionsPage from "./pages/UpcomingTransactionsPage";
 
 // CoreComponent handles the router, the state in addition to Providers for hooks
 const Core: React.FC = () => {
@@ -114,6 +115,7 @@ const App: React.FC = () => {
           <Route path="/account" component={AccountPage} exact />
           <Route path="/months" component={MonthsPage} />
           <Route path="/categories" component={CategoriesPage} />
+          <Route path="/scheduled" component={UpcomingTransactionsPage} />
         </AuthenticatedContainer>
         <Route path="/" component={NotFoundPage} />
       </Switch>
