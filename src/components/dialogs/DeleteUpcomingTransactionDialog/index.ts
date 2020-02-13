@@ -1,0 +1,2 @@
+import DeleteUpcomingTransactionDialog from "./DeleteUpcomingTransactionDialog";
+export default DeleteUpcomingTransactionDialog;

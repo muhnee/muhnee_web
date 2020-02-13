@@ -13,6 +13,8 @@ import { red } from "@material-ui/core/colors";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 
+import DeleteUpcomingTransactionDialog from "../../components/dialogs/DeleteUpcomingTransactionDialog";
+
 import LoadingContainer from "../../containers/LoadingContainer";
 
 import { useFunctions } from "../../firebase/firebase";
@@ -35,6 +37,7 @@ const UpcomingTransactionsPage: FC = () => {
   const functions = useFunctions();
 
   const [queue, setQueue] = useState<DateListItem[]>([]);
+  const [selectedTransactionId, setSelectedTransactionId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -73,58 +76,76 @@ const UpcomingTransactionsPage: FC = () => {
   }, [functions]);
 
   return (
-    <div className={classes.root}>
-      <Typography variant="h5">Upcoming Transactions</Typography>
-      {isLoading && <LoadingContainer />}
-      {!isLoading && queue.length > 0 && (
-        <List>
-          {queue.map((queueItem, key) => {
-            return (
-              <React.Fragment key={key}>
-                <Typography>{queueItem.date.format("DD MMM YYYY")}</Typography>
-                {queueItem.items.map((item, i) => {
-                  return (
-                    <React.Fragment key={i}>
-                      <ListItem
-                        style={{ backgroundColor: "#CDCDCD", color: "#777" }}
-                      >
-                        <ListItemText
-                          primary={`${
-                            item.transaction.type === "income"
-                              ? "Income"
-                              : "Expense"
-                          } - ${moment(item.timestamp).format(
-                            "DD-MMM-YYYY hh:mm a"
-                          )}`}
-                          primaryTypographyProps={{ variant: "body2" }}
-                          secondary={
-                            <>
-                              <Typography>
-                                {`${item.transaction.description}`}
-                              </Typography>
-                              <Typography variant="body2">
-                                {`This
+    <React.Fragment>
+      <div className={classes.root}>
+        <Typography variant="h5">Upcoming Transactions</Typography>
+        {isLoading && <LoadingContainer />}
+        {!isLoading && queue.length > 0 && (
+          <List>
+            {queue.map((queueItem, key) => {
+              return (
+                <React.Fragment key={key}>
+                  <Typography>
+                    {queueItem.date.format("DD MMM YYYY")}
+                  </Typography>
+                  {queueItem.items.map((item, i) => {
+                    return (
+                      <React.Fragment key={i}>
+                        <ListItem
+                          style={{ backgroundColor: "#CDCDCD", color: "#777" }}
+                        >
+                          <ListItemText
+                            primary={`${
+                              item.transaction.type === "income"
+                                ? "Income"
+                                : "Expense"
+                            } - ${moment(item.timestamp).format(
+                              "DD-MMM-YYYY hh:mm a"
+                            )}`}
+                            primaryTypographyProps={{ variant: "body2" }}
+                            secondary={
+                              <>
+                                <Typography>
+                                  {`${item.transaction.description}`}
+                                </Typography>
+                                <Typography variant="body2">
+                                  {`This
                                 transaction occurs every ${item.transaction.recurringDays} day(s)`}
-                              </Typography>
-                            </>
-                          }
-                        />
-                        <ListItemSecondaryAction>
-                          <IconButton style={{ color: red[300] }}>
-                            <DeleteIcon />
-                          </IconButton>
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                      <Divider variant="inset" component="li" />
-                    </React.Fragment>
-                  );
-                })}
-              </React.Fragment>
-            );
-          })}
-        </List>
-      )}
-    </div>
+                                </Typography>
+                              </>
+                            }
+                          />
+                          <ListItemSecondaryAction>
+                            <IconButton
+                              style={{ color: red[300] }}
+                              onClick={() => {
+                                if (item.id) {
+                                  setSelectedTransactionId(item.id);
+                                }
+                              }}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                        </ListItem>
+                        <Divider variant="inset" component="li" />
+                      </React.Fragment>
+                    );
+                  })}
+                </React.Fragment>
+              );
+            })}
+          </List>
+        )}
+      </div>
+      <DeleteUpcomingTransactionDialog
+        id={selectedTransactionId}
+        open={Boolean(selectedTransactionId)}
+        onClose={() => {
+          setSelectedTransactionId("");
+        }}
+      />
+    </React.Fragment>
   );
 };
 
