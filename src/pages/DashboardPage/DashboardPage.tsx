@@ -5,6 +5,7 @@ import { useDocumentData } from "react-firebase-hooks/firestore";
 
 import Fab from "@material-ui/core/Fab";
 import List from "@material-ui/core/List";
+import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 
 import TransactionsListItem from "../../components/TransactionsListItem";
@@ -129,13 +130,22 @@ const DashboardPage: FC = () => {
           {isTransactionsLoading ? (
             <LoadingContainer />
           ) : (
-            <List>
-              {transactions.map((transaction, i) => {
-                return (
-                  <TransactionsListItem transaction={transaction} key={i} />
-                );
-              })}
-            </List>
+            <div>
+              <List>
+                {transactions.map((transaction, i) => {
+                  return (
+                    <TransactionsListItem transaction={transaction} key={i} />
+                  );
+                })}
+              </List>
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <Typography variant="body2">
+                  <Link href={`/months/${targetDate}`}>
+                    See All Transactions >>
+                  </Link>
+                </Typography>
+              </div>
+            </div>
           )}
         </div>
       </div>
