@@ -276,6 +276,7 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
               <MenuItem value={7}>7</MenuItem>
               <MenuItem value={14}>14</MenuItem>
               <MenuItem value={21}>21</MenuItem>
+              <MenuItem value={28}>28</MenuItem>
               <MenuItem value={32}>32</MenuItem>
             </Select>
           </FormControl>

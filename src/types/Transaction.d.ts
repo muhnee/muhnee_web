@@ -1,6 +1,6 @@
 export type TransactionTypes = "expense" | "income";
 
-export type RecurringDays = 0 | 1 | 2 | 5 | 7 | 14 | 21 | 32;
+export type RecurringDays = 0 | 1 | 2 | 5 | 7 | 14 | 21 | 28 | 32;
 
 export interface Transaction {
   /**
