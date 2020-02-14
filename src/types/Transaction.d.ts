@@ -8,7 +8,7 @@ export interface Transaction {
    * the category is a UID to the doc found in the collection
    * `/users/{uid}/categories/{type}/types/`
    */
-  category: string;
+  category: string | Category;
 
   /**
    * The amount of the transaction

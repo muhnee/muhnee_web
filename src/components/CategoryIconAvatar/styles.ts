@@ -10,7 +10,8 @@ const useStyles = makeStyles<Theme, CategoryIconAvatarProps>(theme =>
       return {
         border: `2px solid ${mainColor}`,
         color: mainColor,
-        backgroundColor: "#fff"
+        backgroundColor: "#fff",
+        borderRadius: "33% 0"
       };
     }
   })
