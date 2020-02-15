@@ -7,7 +7,8 @@ const useStyles = makeStyles<Theme>(theme =>
       display: "flex",
       minWidth: 280,
       flex: 1,
-      flexWrap: "wrap"
+      flexWrap: "wrap",
+      width: "100%"
     },
     primary: {
       display: "flex"

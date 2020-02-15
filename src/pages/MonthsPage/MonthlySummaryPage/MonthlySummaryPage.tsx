@@ -66,7 +66,7 @@ const MonthlySummaryPage: FC = () => {
           id: trans.id,
           amount: trans.amount,
           description: trans.description,
-          category: trans.category.id,
+          category: trans.category,
           taxDeductible: trans.deductible,
           recurringDays: trans.recurringDays,
           type: trans.type,

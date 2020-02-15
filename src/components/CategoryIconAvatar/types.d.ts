@@ -11,7 +11,7 @@ export interface CategoryIconAvatarProps {
   /**
    * category id
    */
-  category?: Category;
+  category: Category;
   /**
    * The type of transcation
    */

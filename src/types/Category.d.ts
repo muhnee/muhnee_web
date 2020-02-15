@@ -1,6 +1,6 @@
 export interface Category {
   // the name of the category
-  name?: string;
+  name: string;
 
   // the icon font of the category
   icon?: string;

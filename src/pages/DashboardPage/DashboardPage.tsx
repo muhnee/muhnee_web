@@ -1,35 +1,32 @@
 import React, { FC, useContext, useEffect, useState } from "react";
-import clsx from "clsx";
-import { useHistory } from "react-router-dom";
-import moment, { Moment } from "moment";
+import moment from "moment";
 
 import { useDocumentData } from "react-firebase-hooks/firestore";
 
-import Button from "@material-ui/core/Button";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Divider from "@material-ui/core/Divider";
 import Fab from "@material-ui/core/Fab";
+import List from "@material-ui/core/List";
+import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 
-import SummaryCard from "../../components/dashboard/SummaryCard";
+import TransactionsListItem from "../../components/TransactionsListItem";
 
-import MonthlySpendingByCategoryContainer from "../../containers/MonthlySpendingByCategoryContainer";
+import LoadingContainer from "../../containers/LoadingContainer";
 
 import AddIcon from "@material-ui/icons/AddBox";
-import EditIcon from "@material-ui/icons/Edit";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
 import { useUIDispatch } from "../../contexts/UIProvider";
 import { Summary } from "../../types/Summary";
 
 import useStyles from "./styles";
-import { IconButton } from "@material-ui/core";
 import { useFirestore, useFunctions } from "../../firebase/firebase";
-import MoneyTypography from "../../components/core/MoneyTypography";
 import { Transaction } from "../../types/Transaction";
 
+import SummaryTitle from "../../components/dashboard/SummaryTitle";
+import MonthlySpendingByCategoryContainer from "../../containers/MonthlySpendingByCategoryContainer";
+
 const DashboardPage: FC = () => {
-  const history = useHistory();
   const uiDispatch = useUIDispatch();
   const firestore = useFirestore();
   const functions = useFunctions();
@@ -37,15 +34,12 @@ const DashboardPage: FC = () => {
   const { user } = useContext(AuthenticationContext);
 
   // TODO: add support for changing months on dashboard
-  const [thisMonth, setThisMonth] = useState<Moment>(moment());
+  const thisMonth = moment();
 
-  const [expenseTransactions, setExpenseTransactions] = useState<Transaction[]>(
-    []
-  );
-  const [incomeTransactions, setIncomeTransactions] = useState<Transaction[]>(
-    []
-  );
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isTransactionsLoading, setIsTransactionsLoading] = useState(false);
+
+  const [upcomingTransactions, setUpcomingTransactions] = useState(0);
 
   const classes = useStyles();
 
@@ -54,38 +48,35 @@ const DashboardPage: FC = () => {
   useEffect(() => {
     async function getData() {
       const getAllTransactions = functions.httpsCallable("getAllTransactions");
+      const getUserStats = functions.httpsCallable("getUserStats");
       setIsTransactionsLoading(true);
       const res = await getAllTransactions({
         date: thisMonth.toISOString(),
-        summaryType: "month"
+        summaryType: "week"
       });
 
-      const income: Transaction[] = [];
-      const expense: Transaction[] = [];
-      res.data.forEach((trans: any) => {
+      const transactions: Transaction[] = [];
+      res.data.slice(0, 6).forEach((trans: any) => {
         const transaction: Transaction = {
           id: trans.id,
           amount: trans.amount,
           description: trans.description,
-          category: trans.category.id,
+          category: trans.category,
           taxDeductible: trans.deductible,
           recurringDays: trans.recurringDays,
           type: trans.type,
           timestamp: trans.timestamp
         };
-
-        if (trans.type === "expense") {
-          expense.push(transaction);
-        } else {
-          income.push(transaction);
-        }
+        transactions.push(transaction);
       });
-      setIncomeTransactions(income);
-      setExpenseTransactions(expense);
+
+      const userStats = await getUserStats();
+      setUpcomingTransactions(userStats.data.queueSize as number);
+      setTransactions(transactions);
       setIsTransactionsLoading(false);
     }
     getData();
-  }, [functions, thisMonth]);
+  }, [functions]);
 
   const [summary] = useDocumentData<Summary>(
     user
@@ -106,136 +97,114 @@ const DashboardPage: FC = () => {
     currentSavings = (summary.income || 0) - (summary.expenses || 0);
   }
 
-  let progress = 0;
-  if (summary) {
-    if (currentSavings > summary.savingsGoal) {
-      progress = 100;
-    } else {
-      progress = (currentSavings / summary.savingsGoal) * 100;
-    }
-  }
-
   return (
     <div className={classes.root}>
       <div className={classes.row}>
         <div style={{ flex: 1 }}>
           <Typography variant="h5">
-            <strong>Overview -</strong>{" "}
-            <span className={classes.monthTitle}>
-              {thisMonth.format("MMMM YYYY")}
-            </span>
+            <strong>Hello,</strong>{" "}
+            <span className={classes.monthTitle}>{`${user.displayName}`}</span>
           </Typography>
         </div>
-        <ButtonGroup color="primary" aria-label=" outlined button group">
-          <Button
-            variant={
-              targetDate === `${moment().year()}-${moment().month() + 1}`
-                ? "contained"
-                : "outlined"
-            }
-            onClick={() => setThisMonth(moment())}
-          >
-            This Month
-          </Button>
-          <Button
-            variant={
-              targetDate ===
-              `${moment()
-                .subtract(1, "month")
-                .year()}-${moment()
-                .subtract(1, "month")
-                .month() + 1}`
-                ? "contained"
-                : "outlined"
-            }
-            onClick={() => setThisMonth(moment().subtract(1, "month"))}
-          >
-            Last Month
-          </Button>
-        </ButtonGroup>
       </div>
       <div className={classes.row} style={{ flexDirection: "column" }}>
-        <Typography variant="h5">Budget</Typography>
-        <div className={clsx(classes.row)} style={{ width: "100%" }}>
-          <div className={classes.leftContainer}>
-            <div className={classes.summaryContainer}>
-              <SummaryCard
-                title="Savings"
-                displayProgress={true}
-                progress={progress}
-                amount={
-                  <span style={{ display: "flex" }}>
-                    <MoneyTypography
-                      variant="body1"
-                      type={currentSavings < 0 ? "expense" : "income"}
-                    >
-                      {summary && currentSavings >= 0
-                        ? `$${currentSavings.toFixed(2)}/`
-                        : `-$${Math.abs(currentSavings).toFixed(2)}/`}
-                    </MoneyTypography>
-                    <Typography color="textSecondary">
-                      {summary && summary.savingsGoal
-                        ? `$${summary.savingsGoal.toFixed(2)}`
-                        : "$0.00"}
-                    </Typography>
-                    <IconButton
-                      style={{ padding: "0.1rem" }}
-                      onClick={() =>
-                        uiDispatch({
-                          type: "@@UI/EDIT_MONTHLY_GOAL_MODAL_OPEN",
-                          date: thisMonth
-                        })
-                      }
-                    >
-                      <EditIcon
-                        style={{ width: "0.75rem", height: "0.75rem" }}
-                      />
-                    </IconButton>
-                  </span>
-                }
-                isLoading={isTransactionsLoading}
-              />
+        <div className={classes.row}>
+          <div
+            style={{
+              border: "1px solid #ccc",
+              borderRadius: 10,
+              minWidth: 250,
+              minHeight: 100,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "30%",
+              backgroundImage: "url(/images/scheduled.svg)",
+              backgroundPosition: "90% 90%",
+              padding: "0.75rem",
+              display: "flex",
+              flexDirection: "column"
+            }}
+          >
+            <div style={{ flex: 1 }}>
+              <Typography variant="body2" color="textSecondary">
+                Upcoming Transactions
+              </Typography>
+              <Typography variant="body1" color="textPrimary">
+                {isTransactionsLoading ? "Loading..." : upcomingTransactions}
+              </Typography>
+              <Typography variant="caption" color="textSecondary">
+                in the next week
+              </Typography>
             </div>
-            <div className={classes.summaryContainer}>
-              <SummaryCard
-                title="Income"
-                amount={
-                  summary &&
-                  `$${summary.income ? summary.income.toFixed(2) : 0}`
-                }
-                transactions={incomeTransactions}
-                isLoading={isTransactionsLoading}
-                type="income"
-              />
-              <SummaryCard
-                title="Expenses"
-                amount={
-                  summary &&
-                  `-$${summary.expenses ? summary.expenses.toFixed(2) : 0}`
-                }
-                transactions={expenseTransactions}
-                isLoading={isTransactionsLoading}
-                type="expense"
-              />
-            </div>
-            <div style={{ display: "flex", flexDirection: "row-reverse" }}>
-              <Button
-                onClick={() => {
-                  history.push(
-                    `/months/${thisMonth.year()}-${thisMonth.month() + 1}`
-                  );
-                }}
-              >
-                View All Transactions
-              </Button>
-            </div>
+            <Link href="/scheduled">
+              <Typography variant="body2">View all</Typography>
+            </Link>
           </div>
-          <div className={classes.rightContainer}>
-            <Typography variant="h6">Spend by Category</Typography>
+        </div>
+      </div>
+      <Divider />
+      <div className={classes.row}>
+        <div className={classes.row} style={{ flex: 3 }}>
+          <div className={classes.row}>
+            <SummaryTitle
+              title="Monthly Savings Goal"
+              value={summary ? `$${summary.savingsGoal.toFixed(2)}` : "N/A"}
+            />
+            <SummaryTitle
+              title="Savings this month"
+              value={`$${currentSavings.toFixed(2)}` || "N/A"}
+            />
+            <SummaryTitle
+              title="Income this month"
+              value={summary ? `$${summary.income.toFixed(2)}` : "N/A"}
+            />
+            <SummaryTitle
+              title="Expenses this month"
+              value={summary ? `$${summary.expenses.toFixed(2)}` : "N/A"}
+            />
+          </div>
+          <div
+            className={classes.row}
+            style={{ flexDirection: "column", flex: 1 }}
+          >
+            <Typography variant="body1" color="textSecondary">
+              Spend by Category
+            </Typography>
             <MonthlySpendingByCategoryContainer date={thisMonth} />
           </div>
         </div>
-        <Divider style={{ margin: "0.25rem 0" }} />
+        <div
+          className={classes.row}
+          style={{
+            flex: 2,
+            marginLeft: "0.75rem",
+            borderLeft: "1px solid #ccc",
+            flexDirection: "column"
+          }}
+        >
+          <Typography variant="body2" color="textSecondary" gutterBottom>
+            Transactions this week
+          </Typography>
+          {isTransactionsLoading ? (
+            <LoadingContainer />
+          ) : (
+            <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+              <List style={{ flex: 1 }}>
+                {transactions.map((transaction, i) => {
+                  return (
+                    <TransactionsListItem transaction={transaction} key={i} />
+                  );
+                })}
+              </List>
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <Typography variant="body2">
+                  <Link href={`/months/${targetDate}`}>
+                    See All Transactions >>
+                  </Link>
+                </Typography>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <Fab
         variant="extended"
