@@ -1,25 +1,23 @@
 import React, { FC, useEffect, useState } from "react";
 import moment from "moment";
 
-import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 
 import { red } from "@material-ui/core/colors";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 
+import TransactionsListItem from "../../components/TransactionsListItem";
 import DeleteUpcomingTransactionDialog from "../../components/dialogs/DeleteUpcomingTransactionDialog";
 
 import LoadingContainer from "../../containers/LoadingContainer";
 
 import { useFunctions } from "../../firebase/firebase";
 
-import { FunctionsResponse, QueueItemResponse } from "../../types";
+import { QueueItemResponse } from "../../types";
+import { Transaction } from "../../types/Transaction";
 
 import useStyles from "./styles";
 
@@ -46,9 +44,31 @@ const UpcomingTransactionsPage: FC = () => {
       const getUserScheduledTransactions = functions.httpsCallable(
         "getUserScheduledTransactions"
       );
-      const res: FunctionsResponse<QueueItemResponse[]> = await getUserScheduledTransactions();
-      const data: QueueItemResponse[] = res.data;
-      const a = data.reduce((accumulator: SortedList, currentValue) => {
+      const res = await getUserScheduledTransactions();
+      const queue: QueueItemResponse[] = [];
+      console.log(res);
+      res.data.slice(0, 6).forEach((item: any) => {
+        const { transaction, id, timestamp } = item;
+        const trans: Transaction = {
+          id: transaction.id,
+          amount: transaction.amount,
+          description: transaction.description,
+          category: transaction.category,
+          taxDeductible: transaction.deductible,
+          recurringDays: transaction.recurringDays,
+          type: transaction.type,
+          timestamp: transaction.timestamp
+        };
+        const queueItem: QueueItemResponse = {
+          id,
+          timestamp,
+          transaction: trans
+        };
+        queue.push(queueItem);
+      });
+
+      console.log(queue);
+      const a = queue.reduce((accumulator: SortedList, currentValue) => {
         const key = moment(currentValue.timestamp)
           .startOf("d")
           .toISOString();
@@ -88,36 +108,15 @@ const UpcomingTransactionsPage: FC = () => {
                   <Typography>
                     {queueItem.date.format("DD MMM YYYY")}
                   </Typography>
-                  {queueItem.items.map((item, i) => {
-                    return (
-                      <React.Fragment key={i}>
-                        <ListItem
-                          style={{ backgroundColor: "#CDCDCD", color: "#777" }}
-                        >
-                          <ListItemText
-                            primary={`${
-                              item.transaction.type === "income"
-                                ? "Income"
-                                : "Expense"
-                            } - ${moment(item.timestamp).format(
-                              "DD-MMM-YYYY hh:mm a"
-                            )}`}
-                            primaryTypographyProps={{ variant: "body2" }}
-                            secondary={
-                              <>
-                                <Typography>
-                                  {`${item.transaction.description}`}
-                                </Typography>
-                                <Typography variant="body2">
-                                  {`This
-                                transaction occurs every ${item.transaction.recurringDays} day(s)`}
-                                </Typography>
-                              </>
-                            }
-                          />
-                          <ListItemSecondaryAction>
+                  <List>
+                    {queueItem.items.map((item, i) => {
+                      console.log(item.transaction);
+                      return (
+                        <TransactionsListItem
+                          transaction={item.transaction}
+                          secondaryAction={
                             <IconButton
-                              style={{ color: red[300] }}
+                              style={{ color: red[300], marginLeft: "0.5rem" }}
                               onClick={() => {
                                 if (item.id) {
                                   setSelectedTransactionId(item.id);
@@ -126,12 +125,13 @@ const UpcomingTransactionsPage: FC = () => {
                             >
                               <DeleteIcon />
                             </IconButton>
-                          </ListItemSecondaryAction>
-                        </ListItem>
-                        <Divider variant="inset" component="li" />
-                      </React.Fragment>
-                    );
-                  })}
+                          }
+                          isButton={false}
+                          key={i}
+                        />
+                      );
+                    })}
+                  </List>
                 </React.Fragment>
               );
             })}

@@ -1,3 +1,5 @@
+import { Transaction } from "./Transaction";
+
 export type Nullable<T> = T | null;
 
 type FirebaseConfig = {
@@ -14,7 +16,7 @@ type FirebaseConfig = {
 export interface QueueItemResponse {
   id?: string;
   timestamp: string;
-  transaction?: Transaction;
+  transaction: Transaction;
 }
 
 export type FunctionsResponse<T> = {

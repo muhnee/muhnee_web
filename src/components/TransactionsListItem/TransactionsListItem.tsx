@@ -17,25 +17,45 @@ import TransactionsListItemProps from "./types";
 
 import useStyles from "./styles";
 
+const CoreListItem: FC<TransactionsListItemProps> = ({
+  transaction,
+  isButton,
+  children
+}) => {
+  const classes = useStyles();
+  const history = useHistory();
+  const timestamp = moment(transaction.timestamp);
+  if (isButton) {
+    return (
+      <ListItem
+        className={classes.root}
+        onClick={() =>
+          history.push(
+            `/months/${timestamp.year()}-${timestamp.month() +
+              1}/transactions/${transaction.id}`
+          )
+        }
+        button
+      >
+        {children}
+      </ListItem>
+    );
+  } else {
+    return <ListItem className={classes.root}>{children}</ListItem>;
+  }
+};
+
 const TransactionsListItem: FC<TransactionsListItemProps> = ({
-  transaction
+  transaction,
+  secondaryAction,
+  isButton = true
 }) => {
   const timestamp = moment(transaction.timestamp);
 
   const classes = useStyles();
-  const history = useHistory();
+
   return (
-    <ListItem
-      className={classes.root}
-      onClick={() =>
-        history.push(
-          `/months/${timestamp.year()}-${timestamp.month() + 1}/transactions/${
-            transaction.id
-          }`
-        )
-      }
-      button
-    >
+    <CoreListItem transaction={transaction} isButton={isButton}>
       <ListItemAvatar>
         <CategoryItemAvatar
           category={transaction.category}
@@ -80,7 +100,8 @@ const TransactionsListItem: FC<TransactionsListItemProps> = ({
           {timestamp.format("hh:mmA")}
         </Typography>
       </div>
-    </ListItem>
+      {secondaryAction && secondaryAction}
+    </CoreListItem>
   );
 };
 

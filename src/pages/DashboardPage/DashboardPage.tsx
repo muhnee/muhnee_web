@@ -23,6 +23,7 @@ import { useFirestore, useFunctions } from "../../firebase/firebase";
 import { Transaction } from "../../types/Transaction";
 
 import SummaryTitle from "../../components/dashboard/SummaryTitle";
+import MonthlySpendingByCategoryContainer from "../../containers/MonthlySpendingByCategoryContainer";
 
 const DashboardPage: FC = () => {
   const uiDispatch = useUIDispatch();
@@ -51,7 +52,7 @@ const DashboardPage: FC = () => {
       });
 
       const transactions: Transaction[] = [];
-      res.data.forEach((trans: any) => {
+      res.data.slice(0, 6).forEach((trans: any) => {
         const transaction: Transaction = {
           id: trans.id,
           amount: trans.amount,
@@ -100,8 +101,8 @@ const DashboardPage: FC = () => {
         </div>
       </div>
       <div className={classes.row}>
-        <div className={classes.row} style={{ flex: 2 }}>
-          <div style={{ width: "100%", display: "flex", flexWrap: "wrap" }}>
+        <div className={classes.row} style={{ flex: 3 }}>
+          <div className={classes.row}>
             <SummaryTitle
               title="Monthly Savings Goal"
               value={summary ? `$${summary.savingsGoal.toFixed(2)}` : "N/A"}
@@ -119,19 +120,33 @@ const DashboardPage: FC = () => {
               value={summary ? `$${summary.expenses.toFixed(2)}` : "N/A"}
             />
           </div>
-          <div>
-            <Typography>This component is under construction </Typography>
+          <div
+            className={classes.row}
+            style={{ flexDirection: "column", flex: 1 }}
+          >
+            <Typography variant="body1" color="textSecondary">
+              Spend by Category
+            </Typography>
+            <MonthlySpendingByCategoryContainer date={thisMonth} />
           </div>
         </div>
-        <div className={classes.row} style={{ flex: 1 }}>
+        <div
+          className={classes.row}
+          style={{
+            flex: 2,
+            marginLeft: "0.75rem",
+            borderLeft: "1px solid #ccc",
+            flexDirection: "column"
+          }}
+        >
           <Typography variant="body2" color="textSecondary" gutterBottom>
             Transactions this week
           </Typography>
           {isTransactionsLoading ? (
             <LoadingContainer />
           ) : (
-            <div>
-              <List>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+              <List style={{ flex: 1 }}>
                 {transactions.map((transaction, i) => {
                   return (
                     <TransactionsListItem transaction={transaction} key={i} />

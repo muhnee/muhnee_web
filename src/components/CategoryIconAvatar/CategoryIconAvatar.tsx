@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 
 import Avatar from "@material-ui/core/Avatar";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import { CategoryIconAvatarProps } from "./types";
 import useStyles from "./styles";
@@ -48,7 +49,7 @@ const CategoryIconAvatar: FC<CategoryIconAvatarProps> = props => {
   ]);
   if (isLoading) {
     return (
-      <Avatar>
+      <Avatar style={{ borderRadius: "33% 0", padding: "10%" }}>
         <CircularProgress />
       </Avatar>
     );
@@ -56,17 +57,21 @@ const CategoryIconAvatar: FC<CategoryIconAvatarProps> = props => {
 
   if (avatarIcon) {
     return (
-      <Avatar
-        onClick={onClick}
-        src={avatarIcon}
-        style={{ borderRadius: "33% 0" }}
-      />
+      <Tooltip title={category.name || "N/A"}>
+        <Avatar
+          onClick={onClick}
+          src={avatarIcon}
+          style={{ borderRadius: "33% 0" }}
+        />
+      </Tooltip>
     );
   }
   return (
-    <Avatar onClick={onClick} className={classes.avatar}>
-      {category.name[0]}
-    </Avatar>
+    <Tooltip title={category.name || "N/A"}>
+      <Avatar onClick={onClick} className={classes.avatar}>
+        {category.name[0]}
+      </Avatar>
+    </Tooltip>
   );
 };
 

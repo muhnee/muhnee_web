@@ -19,7 +19,8 @@ import { Category } from "../../types/Category";
 import { useFunctions } from "../../firebase/firebase";
 
 const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerProps> = ({
-  date
+  date,
+  showTable = true
 }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const functions = useFunctions();
@@ -81,7 +82,7 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
   };
 
   if (isLoading) {
-    return <Skeleton variant="rect" width={"100%"} height={"100%"} />;
+    return <Skeleton variant="rect" width={"80%"} height={"100%"} />;
   }
 
   if (!summary || summary.length <= 0) {
@@ -101,56 +102,58 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
         onMouseEnter={onMouseOver}
         onMouseLeave={onMouseLeave}
       />
-      <TableContainer>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell></TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell align="right">Amount</TableCell>
-            </TableRow>
-          </TableHead>
-          {summary && (
-            <TableBody>
-              {summary.map((data, i) => {
-                const fontColor =
-                  activeIndex === null
-                    ? "#000"
-                    : activeIndex === i
-                    ? "#000"
-                    : "#ccc";
-                return (
-                  <TableRow key={i}>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        checked={i === activeIndex}
-                        onChange={event => onTableSelect(event, i)}
-                      />
-                    </TableCell>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      style={{
-                        color: fontColor
-                      }}
-                    >
-                      {data && data.name}
-                    </TableCell>
-                    <TableCell
-                      align="right"
-                      style={{
-                        color: fontColor
-                      }}
-                    >
-                      {data.amount ? `$${data.amount.toFixed(2)}` : "N/A"}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          )}
-        </Table>
-      </TableContainer>
+      {showTable && (
+        <TableContainer>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell></TableCell>
+                <TableCell>Category</TableCell>
+                <TableCell align="right">Amount</TableCell>
+              </TableRow>
+            </TableHead>
+            {summary && (
+              <TableBody>
+                {summary.map((data, i) => {
+                  const fontColor =
+                    activeIndex === null
+                      ? "#000"
+                      : activeIndex === i
+                      ? "#000"
+                      : "#ccc";
+                  return (
+                    <TableRow key={i}>
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={i === activeIndex}
+                          onChange={event => onTableSelect(event, i)}
+                        />
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        style={{
+                          color: fontColor
+                        }}
+                      >
+                        {data && data.name}
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        style={{
+                          color: fontColor
+                        }}
+                      >
+                        {data.amount ? `$${data.amount.toFixed(2)}` : "N/A"}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            )}
+          </Table>
+        </TableContainer>
+      )}
     </>
   );
 };
