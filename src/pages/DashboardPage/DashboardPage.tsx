@@ -3,6 +3,7 @@ import moment from "moment";
 
 import { useDocumentData } from "react-firebase-hooks/firestore";
 
+import Divider from "@material-ui/core/Divider";
 import Fab from "@material-ui/core/Fab";
 import List from "@material-ui/core/List";
 import Link from "@material-ui/core/Link";
@@ -38,6 +39,8 @@ const DashboardPage: FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isTransactionsLoading, setIsTransactionsLoading] = useState(false);
 
+  const [upcomingTransactions, setUpcomingTransactions] = useState(0);
+
   const classes = useStyles();
 
   const targetDate = `${thisMonth.year()}-${thisMonth.month() + 1}`;
@@ -45,6 +48,7 @@ const DashboardPage: FC = () => {
   useEffect(() => {
     async function getData() {
       const getAllTransactions = functions.httpsCallable("getAllTransactions");
+      const getUserStats = functions.httpsCallable("getUserStats");
       setIsTransactionsLoading(true);
       const res = await getAllTransactions({
         date: thisMonth.toISOString(),
@@ -65,6 +69,9 @@ const DashboardPage: FC = () => {
         };
         transactions.push(transaction);
       });
+
+      const userStats = await getUserStats();
+      setUpcomingTransactions(userStats.data.queueSize as number);
       setTransactions(transactions);
       setIsTransactionsLoading(false);
     }
@@ -100,6 +107,41 @@ const DashboardPage: FC = () => {
           </Typography>
         </div>
       </div>
+      <div className={classes.row} style={{ flexDirection: "column" }}>
+        <div className={classes.row}>
+          <div
+            style={{
+              border: "1px solid #ccc",
+              borderRadius: 10,
+              minWidth: 250,
+              minHeight: 100,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "30%",
+              backgroundImage: "url(/images/scheduled.svg)",
+              backgroundPosition: "90% 90%",
+              padding: "0.75rem",
+              display: "flex",
+              flexDirection: "column"
+            }}
+          >
+            <div style={{ flex: 1 }}>
+              <Typography variant="body2" color="textSecondary">
+                Upcoming Transactions
+              </Typography>
+              <Typography variant="body1" color="textPrimary">
+                {isTransactionsLoading ? "Loading..." : upcomingTransactions}
+              </Typography>
+              <Typography variant="caption" color="textSecondary">
+                in the next week
+              </Typography>
+            </div>
+            <Link href="/scheduled">
+              <Typography variant="body2">View all</Typography>
+            </Link>
+          </div>
+        </div>
+      </div>
+      <Divider />
       <div className={classes.row}>
         <div className={classes.row} style={{ flex: 3 }}>
           <div className={classes.row}>
