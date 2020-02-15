@@ -56,11 +56,7 @@ const Step2: FC<Step1Props> = ({ user }) => {
 
   return (
     <div className={classes.root}>
-      <img
-        src="/images/shopping.svg"
-        className={classes.images}
-        alt="shopping trolley"
-      />
+      <img src="/images/goals.svg" className={classes.images} alt="goal" />
       <div className={classes.textContainer}>
         <Typography variant="h4">
           <strong>Firstly</strong>, let's setup a savings goal for you.
