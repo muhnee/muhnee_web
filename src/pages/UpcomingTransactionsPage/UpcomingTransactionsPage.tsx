@@ -46,7 +46,6 @@ const UpcomingTransactionsPage: FC = () => {
       );
       const res = await getUserScheduledTransactions();
       const queue: QueueItemResponse[] = [];
-      console.log(res);
       res.data.slice(0, 6).forEach((item: any) => {
         const { transaction, id, timestamp } = item;
         const trans: Transaction = {
@@ -67,7 +66,6 @@ const UpcomingTransactionsPage: FC = () => {
         queue.push(queueItem);
       });
 
-      console.log(queue);
       const a = queue.reduce((accumulator: SortedList, currentValue) => {
         const key = moment(currentValue.timestamp)
           .startOf("d")

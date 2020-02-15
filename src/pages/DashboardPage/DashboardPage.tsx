@@ -147,7 +147,11 @@ const DashboardPage: FC = () => {
           <div className={classes.row}>
             <SummaryTitle
               title="Monthly Savings Goal"
-              value={summary ? `$${summary.savingsGoal.toFixed(2)}` : "N/A"}
+              value={
+                summary && summary.savingsGoal
+                  ? `$${summary.savingsGoal.toFixed(2)}`
+                  : "N/A"
+              }
             />
             <SummaryTitle
               title="Savings this month"
@@ -155,11 +159,19 @@ const DashboardPage: FC = () => {
             />
             <SummaryTitle
               title="Income this month"
-              value={summary ? `$${summary.income.toFixed(2)}` : "N/A"}
+              value={
+                summary && summary.income
+                  ? `$${summary.income.toFixed(2)}`
+                  : "N/A"
+              }
             />
             <SummaryTitle
               title="Expenses this month"
-              value={summary ? `$${summary.expenses.toFixed(2)}` : "N/A"}
+              value={
+                summary && summary.expenses
+                  ? `$${summary.expenses.toFixed(2)}`
+                  : "N/A"
+              }
             />
           </div>
           <div
