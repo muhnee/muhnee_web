@@ -112,6 +112,7 @@ const OnboardingPage: FC = () => {
               onClick={() => setStep(step - 1)}
               variant="outlined"
               color="primary"
+              disabled={step === 0}
             >
               Previous Step
             </Button>
