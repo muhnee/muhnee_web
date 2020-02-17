@@ -17,6 +17,7 @@ import EmptyStateContainer from "../EmptyStateContainer";
 import { MonthlySpendingByCategoryContainerProps } from "./types";
 import { Category } from "../../types/Category";
 import { useFunctions } from "../../firebase/firebase";
+import { FunctionsResponse } from "../../types";
 
 const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerProps> = ({
   date,
@@ -37,21 +38,14 @@ const MonthlySpendingByCategoryContainer: FC<MonthlySpendingByCategoryContainerP
         const getCurrentSummaryforTransactions = functions.httpsCallable(
           "getCurrentSummaryforTransactions"
         );
-        const res = await getCurrentSummaryforTransactions({
-          date: date.toISOString(),
-          transactionType: "expense",
-          summaryType: "month"
-        });
-        const resData = res.data;
-        const data = resData.map((catData: any) => {
-          const category: Category = {
-            id: catData.id,
-            amount: catData.amount,
-            name: catData.name,
-            icon: catData.icon
-          };
-          return category;
-        });
+        const resp: FunctionsResponse<Category[]> = await getCurrentSummaryforTransactions(
+          {
+            date: date.toISOString(),
+            transactionType: "expense",
+            summaryType: "month"
+          }
+        );
+        const data = resp.data;
         setSummary(data);
         setIsLoading(false);
       }

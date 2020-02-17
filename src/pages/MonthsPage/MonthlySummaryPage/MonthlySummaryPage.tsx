@@ -26,6 +26,7 @@ import { useFirestore, useFunctions } from "../../../firebase/firebase";
 import { Transaction } from "../../../types/Transaction";
 
 import useStyles from "./styles";
+import { FunctionsResponse } from "../../../types";
 
 /**
  * This page lists summarises the transactions for the month
@@ -54,26 +55,15 @@ const MonthlySummaryPage: FC = () => {
     async function getData() {
       const getAllTransactions = functions.httpsCallable("getAllTransactions");
       setIsTransactionsLoading(true);
-      const res = await getAllTransactions({
+      const res: FunctionsResponse<Transaction[]> = await getAllTransactions({
         date: month.toISOString(),
         summaryType: "month"
       });
 
       const income: Transaction[] = [];
       const expense: Transaction[] = [];
-      res.data.forEach((trans: any) => {
-        const transaction: Transaction = {
-          id: trans.id,
-          amount: trans.amount,
-          description: trans.description,
-          category: trans.category,
-          taxDeductible: trans.deductible,
-          recurringDays: trans.recurringDays,
-          type: trans.type,
-          timestamp: trans.timestamp
-        };
-
-        if (trans.type === "expense") {
+      res.data.forEach((transaction: Transaction) => {
+        if (transaction.type === "expense") {
           expense.push(transaction);
         } else {
           income.push(transaction);
