@@ -12,6 +12,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import TransactionsListItem from "../../components/TransactionsListItem";
 import DeleteUpcomingTransactionDialog from "../../components/dialogs/DeleteUpcomingTransactionDialog";
 
+import AuthenticatedContainer from "../../containers/AuthenticatedContainer";
 import LoadingContainer from "../../containers/LoadingContainer";
 
 import { useFunctions } from "../../firebase/firebase";
@@ -94,7 +95,7 @@ const UpcomingTransactionsPage: FC = () => {
   }, [functions]);
 
   return (
-    <React.Fragment>
+    <AuthenticatedContainer>
       <div className={classes.root}>
         <Typography variant="h5">Upcoming Transactions</Typography>
         {isLoading && <LoadingContainer />}
@@ -143,7 +144,7 @@ const UpcomingTransactionsPage: FC = () => {
           setSelectedTransactionId("");
         }}
       />
-    </React.Fragment>
+    </AuthenticatedContainer>
   );
 };
 

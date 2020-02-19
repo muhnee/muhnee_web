@@ -12,6 +12,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
+import AuthenticatedContainer from "../../containers/AuthenticatedContainer";
 import LoadingContainer from "../../containers/LoadingContainer";
 
 import AuthenticationContext from "../../contexts/AuthenticationContext";
@@ -73,66 +74,68 @@ const AccountPage: FC = () => {
   }
 
   return (
-    <div className={classes.root}>
-      <Card variant="outlined">
-        <CardContent className={classes.headerContainer}>
-          {user.photoURL && (
-            <Avatar src={user.photoURL} className={classes.avatar} />
-          )}
-          <div style={{ flex: 1, marginLeft: "0.75rem" }}>
-            {user.displayName && (
-              <Typography variant="h6">{user.displayName}</Typography>
+    <AuthenticatedContainer>
+      <div className={classes.root}>
+        <Card variant="outlined">
+          <CardContent className={classes.headerContainer}>
+            {user.photoURL && (
+              <Avatar src={user.photoURL} className={classes.avatar} />
             )}
-            {user.email && (
-              <Typography variant="body1" gutterBottom>
-                {user.email}
+            <div style={{ flex: 1, marginLeft: "0.75rem" }}>
+              {user.displayName && (
+                <Typography variant="h6">{user.displayName}</Typography>
+              )}
+              {user.email && (
+                <Typography variant="body1" gutterBottom>
+                  {user.email}
+                </Typography>
+              )}
+              <Typography variant="body1" color="textSecondary">
+                {`Saving Money Since ${moment(
+                  user.metadata.creationTime
+                ).format("Do MMM YYYY")}`}
               </Typography>
-            )}
-            <Typography variant="body1" color="textSecondary">
-              {`Saving Money Since ${moment(user.metadata.creationTime).format(
-                "Do MMM YYYY"
-              )}`}
-            </Typography>
-          </div>
-        </CardContent>
-      </Card>
-      <div></div>
-      <Divider />
-      <div className={classes.container}>
-        <Card variant="outlined" className={classes.settingsCard}>
-          <CardHeader
-            title="Budget Tool Settings"
-            titleTypographyProps={{ variant: "h6" }}
-          />
-          <CardContent>
-            <TextField
-              label="Savings Target"
-              value={monthlySavingsGoal}
-              type="number"
-              inputProps={{ min: 0, step: 0.01 }}
-              onChange={event => {
-                setMonthlySavingsGoal(parseFloat(event.target.value));
-              }}
-              onKeyDown={event => {
-                if (event.key === "Enter") {
-                  // then trigger save
-                  updateSavingsGoal();
-                }
-              }}
-              onBlur={event => {
-                updateSavingsGoal();
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">$</InputAdornment>
-                )
-              }}
-              fullWidth
-            />
+            </div>
           </CardContent>
         </Card>
+        <div></div>
+        <Divider />
+        <div className={classes.container}>
+          <Card variant="outlined" className={classes.settingsCard}>
+            <CardHeader
+              title="Budget Tool Settings"
+              titleTypographyProps={{ variant: "h6" }}
+            />
+            <CardContent>
+              <TextField
+                label="Savings Target"
+                value={monthlySavingsGoal}
+                type="number"
+                inputProps={{ min: 0, step: 0.01 }}
+                onChange={event => {
+                  setMonthlySavingsGoal(parseFloat(event.target.value));
+                }}
+                onKeyDown={event => {
+                  if (event.key === "Enter") {
+                    // then trigger save
+                    updateSavingsGoal();
+                  }
+                }}
+                onBlur={event => {
+                  updateSavingsGoal();
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">$</InputAdornment>
+                  )
+                }}
+                fullWidth
+              />
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </div>
+    </AuthenticatedContainer>
   );
 };
 

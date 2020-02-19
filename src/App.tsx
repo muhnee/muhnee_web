@@ -110,13 +110,11 @@ const App: React.FC = () => {
       <Switch>
         <Route path="/" component={LandingPage} exact />
         <Route path="/start" component={OnboardingPage} />
-        <AuthenticatedContainer>
-          <Route path="/dashboard" component={DashboardPage} exact />
-          <Route path="/account" component={AccountPage} exact />
-          <Route path="/months" component={MonthsPage} />
-          <Route path="/categories" component={CategoriesPage} />
-          <Route path="/scheduled" component={UpcomingTransactionsPage} />
-        </AuthenticatedContainer>
+        <Route path="/dashboard" component={DashboardPage} exact />
+        <Route path="/account" component={AccountPage} exact />
+        <Route path="/months" component={MonthsPage} />
+        <Route path="/categories" component={CategoriesPage} />
+        <Route path="/scheduled" component={UpcomingTransactionsPage} />
         <Route path="/" component={NotFoundPage} />
       </Switch>
       <Snackbar

@@ -1,6 +1,8 @@
 import React, { FC } from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 
+import AuthenticatedContainer from "../../containers/AuthenticatedContainer";
+
 import TransactionPage from "./TransactionPage";
 import MonthlySummaryPage from "./MonthlySummaryPage";
 
@@ -10,10 +12,14 @@ const MonthsPage: FC = () => {
   return (
     <Switch>
       <Route path={`${match.path}/:monthId`} exact>
-        <MonthlySummaryPage />
+        <AuthenticatedContainer>
+          <MonthlySummaryPage />
+        </AuthenticatedContainer>
       </Route>
       <Route path={`${match.path}/:monthId/transactions/:transactionId`}>
-        <TransactionPage />
+        <AuthenticatedContainer>
+          <TransactionPage />
+        </AuthenticatedContainer>
       </Route>
       <Route path={match.path}>
         <h3>Not found.</h3>

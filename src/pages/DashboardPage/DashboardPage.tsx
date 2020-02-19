@@ -11,6 +11,7 @@ import Typography from "@material-ui/core/Typography";
 
 import TransactionsListItem from "../../components/TransactionsListItem";
 
+import AuthenticatedContainer from "../../containers/AuthenticatedContainer";
 import LoadingContainer from "../../containers/LoadingContainer";
 
 import AddIcon from "@material-ui/icons/AddBox";
@@ -87,141 +88,147 @@ const DashboardPage: FC = () => {
   }
 
   return (
-    <div className={classes.root}>
-      <div className={classes.row}>
-        <div style={{ flex: 1 }}>
-          <Typography variant="h5">
-            <strong>Hello,</strong>{" "}
-            <span className={classes.monthTitle}>{`${user.displayName}`}</span>
-          </Typography>
-        </div>
-      </div>
-      <div className={classes.row} style={{ flexDirection: "column" }}>
+    <AuthenticatedContainer>
+      <div className={classes.root}>
         <div className={classes.row}>
-          <div
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: 10,
-              minWidth: 250,
-              minHeight: 100,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "30%",
-              backgroundImage: "url(/images/scheduled.svg)",
-              backgroundPosition: "90% 90%",
-              padding: "0.75rem",
-              display: "flex",
-              flexDirection: "column"
-            }}
-          >
-            <div style={{ flex: 1 }}>
-              <Typography variant="body2" color="textSecondary">
-                Upcoming Transactions
-              </Typography>
-              <Typography variant="body1" color="textPrimary">
-                {isTransactionsLoading ? "Loading..." : upcomingTransactions}
-              </Typography>
-              <Typography variant="caption" color="textSecondary">
-                in the next week
-              </Typography>
-            </div>
-            <Link href="/scheduled">
-              <Typography variant="body2">View all</Typography>
-            </Link>
+          <div style={{ flex: 1 }}>
+            <Typography variant="h5">
+              <strong>Hello,</strong>{" "}
+              <span
+                className={classes.monthTitle}
+              >{`${user.displayName}`}</span>
+            </Typography>
           </div>
         </div>
-      </div>
-      <Divider />
-      <div className={classes.row}>
-        <div className={classes.row} style={{ flex: 3 }}>
+        <div className={classes.row} style={{ flexDirection: "column" }}>
           <div className={classes.row}>
-            <SummaryTitle
-              title="Monthly Savings Goal"
-              value={
-                summary && summary.savingsGoal
-                  ? `$${summary.savingsGoal.toFixed(2)}`
-                  : "N/A"
-              }
-            />
-            <SummaryTitle
-              title="Savings this month"
-              value={`$${currentSavings.toFixed(2)}` || "N/A"}
-            />
-            <SummaryTitle
-              title="Income this month"
-              value={
-                summary && summary.income
-                  ? `$${summary.income.toFixed(2)}`
-                  : "N/A"
-              }
-            />
-            <SummaryTitle
-              title="Expenses this month"
-              value={
-                summary && summary.expenses
-                  ? `$${summary.expenses.toFixed(2)}`
-                  : "N/A"
-              }
-            />
+            <div
+              style={{
+                border: "1px solid #ccc",
+                borderRadius: 10,
+                minWidth: 250,
+                minHeight: 100,
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "30%",
+                backgroundImage: "url(/images/scheduled.svg)",
+                backgroundPosition: "90% 90%",
+                padding: "0.75rem",
+                display: "flex",
+                flexDirection: "column"
+              }}
+            >
+              <div style={{ flex: 1 }}>
+                <Typography variant="body2" color="textSecondary">
+                  Upcoming Transactions
+                </Typography>
+                <Typography variant="body1" color="textPrimary">
+                  {isTransactionsLoading ? "Loading..." : upcomingTransactions}
+                </Typography>
+                <Typography variant="caption" color="textSecondary">
+                  in the next week
+                </Typography>
+              </div>
+              <Link href="/scheduled">
+                <Typography variant="body2">View all</Typography>
+              </Link>
+            </div>
+          </div>
+        </div>
+        <Divider />
+        <div className={classes.row}>
+          <div className={classes.row} style={{ flex: 3 }}>
+            <div className={classes.row}>
+              <SummaryTitle
+                title="Monthly Savings Goal"
+                value={
+                  summary && summary.savingsGoal
+                    ? `$${summary.savingsGoal.toFixed(2)}`
+                    : "N/A"
+                }
+              />
+              <SummaryTitle
+                title="Savings this month"
+                value={`$${currentSavings.toFixed(2)}` || "N/A"}
+              />
+              <SummaryTitle
+                title="Income this month"
+                value={
+                  summary && summary.income
+                    ? `$${summary.income.toFixed(2)}`
+                    : "N/A"
+                }
+              />
+              <SummaryTitle
+                title="Expenses this month"
+                value={
+                  summary && summary.expenses
+                    ? `$${summary.expenses.toFixed(2)}`
+                    : "N/A"
+                }
+              />
+            </div>
+            <div
+              className={classes.row}
+              style={{ flexDirection: "column", flex: 1 }}
+            >
+              <Typography variant="body1" color="textSecondary">
+                Spend by Category
+              </Typography>
+              <MonthlySpendingByCategoryContainer date={thisMonth} />
+            </div>
           </div>
           <div
             className={classes.row}
-            style={{ flexDirection: "column", flex: 1 }}
+            style={{
+              flex: 2,
+              marginLeft: "0.75rem",
+              borderLeft: "1px solid #ccc",
+              flexDirection: "column"
+            }}
           >
-            <Typography variant="body1" color="textSecondary">
-              Spend by Category
+            <Typography variant="body2" color="textSecondary" gutterBottom>
+              Transactions this week
             </Typography>
-            <MonthlySpendingByCategoryContainer date={thisMonth} />
+            {isTransactionsLoading ? (
+              <LoadingContainer />
+            ) : (
+              <div
+                style={{ flex: 1, display: "flex", flexDirection: "column" }}
+              >
+                <List style={{ flex: 1 }}>
+                  {transactions.map((transaction, i) => {
+                    return (
+                      <TransactionsListItem transaction={transaction} key={i} />
+                    );
+                  })}
+                </List>
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <Typography variant="body2">
+                    <Link href={`/months/${targetDate}`}>
+                      See All Transactions >>
+                    </Link>
+                  </Typography>
+                </div>
+              </div>
+            )}
           </div>
         </div>
-        <div
-          className={classes.row}
-          style={{
-            flex: 2,
-            marginLeft: "0.75rem",
-            borderLeft: "1px solid #ccc",
-            flexDirection: "column"
-          }}
+        <Fab
+          variant="extended"
+          className={classes.fab}
+          color="primary"
+          onClick={() =>
+            uiDispatch({
+              type: "@@UI/ADD_TRANSACTION_MODAL_OPEN",
+              date: thisMonth
+            })
+          }
         >
-          <Typography variant="body2" color="textSecondary" gutterBottom>
-            Transactions this week
-          </Typography>
-          {isTransactionsLoading ? (
-            <LoadingContainer />
-          ) : (
-            <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-              <List style={{ flex: 1 }}>
-                {transactions.map((transaction, i) => {
-                  return (
-                    <TransactionsListItem transaction={transaction} key={i} />
-                  );
-                })}
-              </List>
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <Typography variant="body2">
-                  <Link href={`/months/${targetDate}`}>
-                    See All Transactions >>
-                  </Link>
-                </Typography>
-              </div>
-            </div>
-          )}
-        </div>
+          <AddIcon className={classes.extendedIcon} />
+          Add Transaction
+        </Fab>
       </div>
-      <Fab
-        variant="extended"
-        className={classes.fab}
-        color="primary"
-        onClick={() =>
-          uiDispatch({
-            type: "@@UI/ADD_TRANSACTION_MODAL_OPEN",
-            date: thisMonth
-          })
-        }
-      >
-        <AddIcon className={classes.extendedIcon} />
-        Add Transaction
-      </Fab>
-    </div>
+    </AuthenticatedContainer>
   );
 };
 
