@@ -21,6 +21,8 @@ import { Summary } from "../../types/Summary";
 
 import useStyles from "./styles";
 import { useFirestore, useFunctions } from "../../firebase/firebase";
+import { FunctionsResponse } from "../../types";
+import { UserStats } from "../../types/response/UserStats";
 import { Transaction } from "../../types/Transaction";
 
 import SummaryTitle from "../../components/dashboard/SummaryTitle";
@@ -50,27 +52,14 @@ const DashboardPage: FC = () => {
       const getAllTransactions = functions.httpsCallable("getAllTransactions");
       const getUserStats = functions.httpsCallable("getUserStats");
       setIsTransactionsLoading(true);
-      const res = await getAllTransactions({
+      const res: FunctionsResponse<Transaction[]> = await getAllTransactions({
         date: thisMonth.toISOString(),
         summaryType: "week"
       });
 
-      const transactions: Transaction[] = [];
-      res.data.slice(0, 6).forEach((trans: any) => {
-        const transaction: Transaction = {
-          id: trans.id,
-          amount: trans.amount,
-          description: trans.description,
-          category: trans.category,
-          taxDeductible: trans.deductible,
-          recurringDays: trans.recurringDays,
-          type: trans.type,
-          timestamp: trans.timestamp
-        };
-        transactions.push(transaction);
-      });
+      const transactions = res.data.slice(0, 6);
 
-      const userStats = await getUserStats();
+      const userStats: FunctionsResponse<UserStats> = await getUserStats();
       setUpcomingTransactions(userStats.data.queueSize as number);
       setTransactions(transactions);
       setIsTransactionsLoading(false);

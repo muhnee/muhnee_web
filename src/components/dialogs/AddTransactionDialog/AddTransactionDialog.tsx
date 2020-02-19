@@ -319,7 +319,9 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
         <DialogActions>
           <Button
             onClick={addData}
-            disabled={!isFormFilled || isSubmitting || isDescriptionTooLong}
+            disabled={
+              !isFormFilled || isSubmitting || isDescriptionTooLong || !category
+            }
             variant="contained"
             className={classes.actionButton}
           >
