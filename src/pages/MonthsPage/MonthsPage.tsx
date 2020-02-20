@@ -22,7 +22,9 @@ const MonthsPage: FC = () => {
         </AuthenticatedContainer>
       </Route>
       <Route path={match.path}>
-        <h3>Not found.</h3>
+        <AuthenticatedContainer>
+          <h3>Not found.</h3>
+        </AuthenticatedContainer>
       </Route>
     </Switch>
   );

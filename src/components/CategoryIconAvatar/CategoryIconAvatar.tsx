@@ -49,7 +49,7 @@ const CategoryIconAvatar: FC<CategoryIconAvatarProps> = props => {
   ]);
   if (isLoading) {
     return (
-      <Avatar style={{ borderRadius: "33% 0", padding: "10%" }}>
+      <Avatar style={{ borderRadius: "33% 0" }}>
         <CircularProgress />
       </Avatar>
     );

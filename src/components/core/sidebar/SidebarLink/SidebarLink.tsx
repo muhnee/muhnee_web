@@ -16,7 +16,7 @@ const SidebarLink: FC<SidebarLinkProps> = props => {
   const classes = useStyles(props);
   const { to, label, icon } = props;
 
-  const isPageOpen = location.pathname === to;
+  const isPageOpen = `/${location.pathname.split("/")[1]}` === to;
 
   return (
     <ListItem

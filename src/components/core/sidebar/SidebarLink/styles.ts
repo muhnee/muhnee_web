@@ -6,7 +6,7 @@ const useStyles = makeStyles<Theme, SidebarLinkProps>(theme => {
 
   return createStyles({
     root: ({ to }) => {
-      const isPageOpen = window.location.pathname === to;
+      const isPageOpen = `/${window.location.pathname.split("/")[1]}` === to;
       return {
         color: isPageOpen ? "#eee" : `#555`,
         borderRight: isPageOpen ? `3px solid ${highlightColor}` : "none",
@@ -15,7 +15,7 @@ const useStyles = makeStyles<Theme, SidebarLinkProps>(theme => {
       };
     },
     avatar: ({ to }) => {
-      const isPageOpen = window.location.pathname === to;
+      const isPageOpen = `/${window.location.pathname.split("/")[1]}` === to;
       return {
         color: isPageOpen ? highlightColor : `#555`,
         backgroundColor: "white"

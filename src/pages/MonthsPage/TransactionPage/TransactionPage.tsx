@@ -93,9 +93,7 @@ const TransactionPage: FC = () => {
           setCategory(docData.category || "");
           setRecurringDays(docData.recurringDays);
           if (docData.receipt) {
-            const firebaseRef = storage.refFromURL(
-              `gs://muhnee-app.appspot.com/${docData.receipt}`
-            );
+            const firebaseRef = storage.ref(`${docData.receipt}`);
             try {
               setGSStorageURL(`gs://muhnee-app.appspot.com/${docData.receipt}`);
               setReceiptFilePath(await firebaseRef.getDownloadURL());

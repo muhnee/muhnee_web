@@ -14,16 +14,16 @@ import AddCategoryDialog from "./components/dialogs/AddCategoryDialog";
 
 import LoadingContainer from "./containers/LoadingContainer";
 
-import LandingPage from "./pages/LandingPage";
-import NotFoundPage from "./pages/NotFoundPage";
-import DashboardPage from "./pages/DashboardPage";
-import MonthsPage from "./pages/MonthsPage";
-import OnboardingPage from "./pages/OnboardingPage";
-import CategoriesPage from "./pages/CategoriesPage";
 import AccountPage from "./pages/AccountPage";
+import CategoriesPage from "./pages/CategoriesPage";
+import DashboardPage from "./pages/DashboardPage";
+import LandingPage from "./pages/LandingPage";
 import MaintenancePage from "./pages/MaintenancePage";
+import MonthsPage from "./pages/MonthsPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import OnboardingPage from "./pages/OnboardingPage";
+import ReportingPage from "./pages/ReportingPage";
 
-import AuthenticatedContainer from "./containers/AuthenticatedContainer";
 import CategoriesProvider from "./providers/CategoriesProvider";
 import GlobalConfigProvider from "./providers/GlobalConfigProvider";
 import UserProvider from "./providers/UserProvider";
@@ -113,6 +113,7 @@ const App: React.FC = () => {
         <Route path="/dashboard" component={DashboardPage} exact />
         <Route path="/account" component={AccountPage} exact />
         <Route path="/months" component={MonthsPage} />
+        <Route path="/reports" component={ReportingPage} />
         <Route path="/categories" component={CategoriesPage} />
         <Route path="/scheduled" component={UpcomingTransactionsPage} />
         <Route path="/" component={NotFoundPage} />
