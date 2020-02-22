@@ -24,6 +24,8 @@ import Typography from "@material-ui/core/Typography";
 import { DropzoneDialog } from "material-ui-dropzone";
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 
+import { Editor } from "@tinymce/tinymce-react";
+
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import DeleteTransactionWarningDialog from "../../../components/dialogs/DeleteTransactionWarningDialog";
@@ -64,7 +66,7 @@ const TransactionPage: FC = () => {
   const [recieptFilePath, setReceiptFilePath] = useState("");
   const [gsStorageURL, setGSStorageURL] = useState("");
   const [recurringDays, setRecurringDays] = useState<RecurringDays>(0);
-
+  const [notes, setNotes] = useState("");
   const history = useHistory();
   let { monthId, transactionId } = useParams();
   const firestore = useFirestore();
@@ -92,6 +94,7 @@ const TransactionPage: FC = () => {
           setTaxDeductible(docData.taxDeductible);
           setCategory(docData.category || "");
           setRecurringDays(docData.recurringDays);
+          setNotes(docData.notes);
           if (docData.receipt) {
             const firebaseRef = storage.ref(`${docData.receipt}`);
             try {
@@ -193,7 +196,8 @@ const TransactionPage: FC = () => {
         timestamp: firebase.firestore.Timestamp.fromDate(selectedDate.toDate()),
         category,
         receipt: filesMetadata ? filesMetadata.metadata.fullPath || null : null,
-        recurringDays: recurringDays
+        recurringDays: recurringDays,
+        notes
       };
 
       firestore
@@ -355,6 +359,25 @@ const TransactionPage: FC = () => {
                           ? `Too many characters (${description.length}/50)`
                           : `Enter a description for your transaction (${description.length}/50)`
                       }
+                    />
+                    <Editor
+                      value={notes}
+                      apiKey={process.env.REACT_APP_TINYMCE_API_KEY}
+                      init={{
+                        menubar: false,
+                        plugins: [
+                          "advlist autolink lists link image charmap print preview anchor",
+                          "searchreplace visualblocks code ",
+                          "insertdatetime media table paste code help wordcount"
+                        ],
+                        toolbar:
+                          "formatselect | undo redo | bold italic | \
+                   alignleft aligncenter alignright alignjustify | \
+                   bullist numlist outdent indent | table | removeformat | help"
+                      }}
+                      onEditorChange={(content, editor) => {
+                        setNotes(content);
+                      }}
                     />
                     <div className={classes.transactionAmount}>
                       <TextField

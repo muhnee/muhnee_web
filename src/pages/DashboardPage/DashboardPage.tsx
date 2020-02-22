@@ -28,6 +28,7 @@ import { Transaction } from "../../types/Transaction";
 
 import SummaryTitle from "../../components/dashboard/SummaryTitle";
 import MonthlySpendingByCategoryContainer from "../../containers/MonthlySpendingByCategoryContainer";
+import { Redirect } from "react-router-dom";
 
 const DashboardPage: FC = () => {
   const uiDispatch = useUIDispatch();
@@ -79,7 +80,7 @@ const DashboardPage: FC = () => {
   );
 
   if (!user || !user.displayName) {
-    return <p>An Error Occurred.</p>;
+    return <Redirect to="/" />;
   }
 
   let currentSavings = 0;
@@ -92,11 +93,14 @@ const DashboardPage: FC = () => {
       <div className={classes.root}>
         <div className={classes.row}>
           <div style={{ flex: 1 }}>
-            <Typography variant="h5">
+            <Typography variant="h5" gutterBottom>
               <strong>Hello,</strong>{" "}
               <span
                 className={classes.monthTitle}
               >{`${user.displayName}`}</span>
+            </Typography>
+            <Typography variant="body1" color="textSecondary">
+              Welcome to Muhnee.
             </Typography>
           </div>
         </div>

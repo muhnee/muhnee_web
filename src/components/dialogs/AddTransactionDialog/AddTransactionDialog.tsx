@@ -10,6 +10,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Divider from "@material-ui/core/Divider";
 import FormControl from "@material-ui/core/FormGroup";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormLabel from "@material-ui/core/FormLabel";
@@ -28,6 +29,10 @@ import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import { DropzoneArea } from "material-ui-dropzone";
 
+import { Editor } from "@tinymce/tinymce-react";
+
+import DropdownSelect from "./fields/DropdownSelect";
+
 import AuthenticationContext from "../../../contexts/AuthenticationContext";
 import CategoriesContext from "../../../contexts/CategoriesContext";
 import { useNotificationDispatch } from "../../../contexts/NotificationProvider";
@@ -36,7 +41,11 @@ import useStyles from "./styles";
 import { FILE_UPLOAD } from "../../../config/settings";
 import { colors } from "../../../config/colors";
 import AddTransactionDialogProps from "./types";
-import { TransactionTypes, RecurringDays } from "../../../types/Transaction";
+import {
+  Transaction,
+  TransactionTypes,
+  RecurringDays
+} from "../../../types/Transaction";
 import { useFirestore, useStorage } from "../../../firebase/firebase";
 
 const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
@@ -61,6 +70,7 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
   );
   const [recurringDays, setRecurringDays] = useState<RecurringDays>(0);
   const [files, setFiles] = useState<File[]>([]);
+  const [notes, setNotes] = useState("");
 
   const resetData = () => {
     setType("expense");
@@ -71,6 +81,7 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
     handleDateChange(moment());
     setFiles([]);
     setRecurringDays(0);
+    setNotes("");
   };
 
   useEffect(() => {
@@ -93,7 +104,8 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
         timestamp: firebase.firestore.Timestamp.fromDate(selectedDate.toDate()),
         category: category,
         receipt: filesMetadata ? filesMetadata.metadata.fullPath || null : null,
-        recurringDays: recurringDays || 0
+        recurringDays: recurringDays || 0,
+        notes: notes
       };
 
       firestore
@@ -173,7 +185,7 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
   const isDescriptionTooLong = description.length > 50;
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
-      <Dialog open={open} maxWidth="md" fullWidth onClose={onClose}>
+      <Dialog open={open} maxWidth="lg" fullWidth onClose={onClose}>
         <DialogTitle>Add a new transaction</DialogTitle>
         <DialogContent className={classes.dialogContent}>
           <div className={classes.rowCenter}>
@@ -215,101 +227,126 @@ const AddTransactionDialog: FC<AddTransactionDialogProps> = ({
               </div>
             )}
           </div>
-          <div className={classes.rowCenter}>
-            <FormGroup>
-              <FormLabel>Type</FormLabel>
-              <RadioGroup value={type} onChange={handleTransactionTypeChange}>
-                <FormControlLabel
-                  value="income"
-                  control={<Radio />}
-                  label="Income"
-                />
-                <FormControlLabel
-                  value="expense"
-                  control={<Radio />}
-                  label="Expense"
-                />
-              </RadioGroup>
-            </FormGroup>
-          </div>
-          <InputLabel id="category-label">Category</InputLabel>
-          <div className={clsx(classes.rowCenter, classes.rowSelect)}>
-            {categoryData &&
-              categoryData.size >= 0 &&
-              categoryData.docs.map((cat, i) => {
-                let data: any = cat.data();
-                return (
-                  <div
-                    key={i}
-                    onClick={() => {
-                      setCategory(cat.id);
-                    }}
-                    style={{
-                      backgroundColor:
-                        category === cat.id ? colors.button[type] : "#999",
-                      color: "white",
-                      padding: "0.25rem",
-                      borderRadius: "5px",
-                      margin: "0.75rem 0.5rem"
-                    }}
-                  >
-                    <Typography variant="body2">{data.name}</Typography>
-                  </div>
-                );
-              })}
-          </div>
-          <FormControl>
-            <InputLabel id="recurring-days-label">Recurring Days</InputLabel>
-            <Select
-              labelId="recurring-days-label"
-              id="recurring-days"
-              value={recurringDays}
-              onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-                setRecurringDays(event.target.value as RecurringDays);
+          <div style={{ display: "flex" }}>
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                padding: "0.5rem 0.25rem"
               }}
-              variant="filled"
             >
-              <MenuItem value={0}>0</MenuItem>
-              <MenuItem value={1}>1</MenuItem>
-              <MenuItem value={2}>2</MenuItem>
-              <MenuItem value={5}>5</MenuItem>
-              <MenuItem value={7}>7</MenuItem>
-              <MenuItem value={14}>14</MenuItem>
-              <MenuItem value={21}>21</MenuItem>
-              <MenuItem value={28}>28</MenuItem>
-              <MenuItem value={32}>32</MenuItem>
-            </Select>
-          </FormControl>
-          <TextField
-            required
-            id="description"
-            label="Description"
-            value={description}
-            margin="normal"
-            onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-              setDescription(event.target.value as string);
-            }}
-            disabled={isSubmitting}
-            error={isDescriptionTooLong}
-            helperText={
-              isDescriptionTooLong
-                ? `Too many characters (${description.length}/50)`
-                : `Enter a description for your transaction (${description.length}/50)`
-            }
-          />
+              <FormGroup>
+                <FormLabel>Type</FormLabel>
+                <RadioGroup value={type} onChange={handleTransactionTypeChange}>
+                  <FormControlLabel
+                    value="income"
+                    control={<Radio />}
+                    label="Income"
+                  />
+                  <FormControlLabel
+                    value="expense"
+                    control={<Radio />}
+                    label="Expense"
+                  />
+                </RadioGroup>
+              </FormGroup>
+              <DropdownSelect
+                label="Category"
+                value={category}
+                onChange={value => setCategory(value)}
+                options={
+                  (categoryData &&
+                    categoryData.size >= 0 &&
+                    categoryData.docs.map(cat => {
+                      return { value: cat.id, label: cat.data().name };
+                    })) ||
+                  []
+                }
+              />
+              <DropdownSelect
+                label="Recurring Days"
+                value={recurringDays}
+                onChange={value => setRecurringDays(value as RecurringDays)}
+                options={[
+                  { value: 0, label: 0 },
+                  { value: 1, label: 1 },
+                  { value: 2, label: 2 },
+                  { value: 5, label: 5 },
+                  { value: 7, label: 7 },
+                  { value: 14, label: 14 },
+                  { value: 21, label: 21 },
+                  { value: 28, label: 28 },
+                  { value: 32, label: 32 }
+                ]}
+              />
+            </div>
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                padding: "0.5rem 0.25rem"
+              }}
+            >
+              <DateTimePicker
+                label="Transaction Date Time"
+                inputVariant="outlined"
+                value={selectedDate}
+                onChange={handleDateChange}
+                disabled={isSubmitting}
+                style={{ margin: "0.75rem 0" }}
+              />
+              <TextField
+                required
+                id="description"
+                label="Description"
+                value={description}
+                margin="normal"
+                onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+                  setDescription(event.target.value as string);
+                }}
+                disabled={isSubmitting}
+                error={isDescriptionTooLong}
+                helperText={
+                  isDescriptionTooLong
+                    ? `Too many characters (${description.length}/50)`
+                    : `Enter a description for your transaction (${description.length}/50)`
+                }
+                style={{ margin: "1rem 0" }}
+              />
+              <Divider />
+              <Typography>Notes</Typography>
+              <Editor
+                value={notes}
+                apiKey={process.env.REACT_APP_TINYMCE_API_KEY}
+                init={{
+                  menubar: false,
+                  plugins: [
+                    "advlist autolink lists link image charmap print preview anchor",
+                    "searchreplace visualblocks code ",
+                    "insertdatetime media table paste code help wordcount"
+                  ],
+                  toolbar:
+                    "formatselect | undo redo | bold italic | \
+             alignleft aligncenter alignright alignjustify | \
+             bullist numlist outdent indent | table | removeformat | help"
+                }}
+                onEditorChange={(content, editor) => {
+                  setNotes(content);
+                }}
+              />
+            </div>
+          </div>
 
-          <DateTimePicker
-            label="Transaction Date Time"
-            inputVariant="outlined"
-            value={selectedDate}
-            onChange={handleDateChange}
-            disabled={isSubmitting}
-          />
-
-          <div>
-            <Typography>Receipt Photo</Typography>
+          <div style={{ margin: "0.5rem 0" }}>
+            <Typography gutterBottom>Receipt</Typography>
+            <Typography variant="body2" color="textSecondary" gutterBottom>
+              Max File Size (5mb)
+            </Typography>
             <DropzoneArea
               onChange={files => setFiles(files)}
+              maxFileSize={5000000}
               filesLimit={1}
               acceptedFiles={FILE_UPLOAD.ACCEPTED_MIME_TYPES}
               dropzoneText="Drag a file or click to upload"

@@ -8,6 +8,7 @@
     "@material-ui/icons": "^4.5.1",
     "@material-ui/lab": "^4.0.0-alpha.38",
     "@material-ui/pickers": "^3.2.8",
+    "@tinymce/tinymce-react": "^3.4.0",
     "clsx": "^1.0.4",
     "firebase": "^7.5.0",
     "material-ui-dropzone": "^2.4.7",
